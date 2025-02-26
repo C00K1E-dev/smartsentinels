@@ -1,0 +1,140 @@
+/* Presale Section Styles */
+.presale {
+  background: rgba(31, 31, 31, 0.7);
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  color: white;
+  text-align: center;
+}
+
+.presaleTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.presaleDescription {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.presaleContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.presaleInfo {
+  text-align: left;
+  flex: 1;
+  margin-right: 20px;
+}
+
+.presaleInfoItem {
+  margin-bottom: 10px;
+}
+
+.presaleImage {
+  flex: 1;
+  max-width: 400px; /* Increased max-width */
+  height: auto;
+  margin-left: 20px;
+}
+
+.presaleButton {
+  background-color: #f8f442;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.presaleButton:hover {
+  background-color: #e6e600;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .presale {
+    padding: 30px 15px;
+  }
+
+  .presaleTitle {
+    font-size: 1.5rem;
+  }
+
+  .presaleDescription {
+    font-size: 1rem;
+  }
+
+  .presaleContent {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .presaleInfo {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .presaleImage {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .presaleButton {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .presale {
+    padding: 20px 10px;
+  }
+
+  .presaleTitle {
+    font-size: 1.2rem;
+  }
+
+  .presaleDescription {
+    font-size: 0.9rem;
+  }
+
+  .presaleButton {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .presaleTitle {
+    font-size: 1rem;
+  }
+
+  .presaleDescription {
+    font-size: 0.8rem;
+  }
+
+  .presaleButton {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .presaleTitle {
+    font-size: 0.9rem;
+  }
+
+  .presaleDescription {
+    font-size: 0.7rem;
+  }
+
+  .presaleButton {
+    font-size: 0.6rem;
+  }
+}

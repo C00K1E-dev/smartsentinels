@@ -1,0 +1,118 @@
+.navbar {
+  background: rgba(31, 31, 31, 0.7);
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.navbarBrand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  gap: 10px;
+}
+
+.brandLogo {
+  width: 150px;
+  height: 150px;
+}
+
+.brandText {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-transform: capitalize;
+}
+
+.navbarMenu {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  margin: 0;
+}
+
+.navbarMenu li {
+  display: flex;
+  align-items: center;
+}
+
+.navbarMenu a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbarMenu a:hover {
+  color: #f8f442;
+}
+
+.burgerButton {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  z-index: 1200;
+}
+
+.burgerButton div {
+  width: 25px;
+  height: 3px;
+  background-color: #f8f442;
+}
+
+@media (max-width: 768px) {
+  .burgerButton {
+    display: flex;
+  }
+
+  .navbarMenu {
+    display: none;
+  }
+}
+
+.navbarMenuMobile {
+  display: none;
+  list-style: none;
+  position: fixed;
+  width: 100%;
+  height: 20vh;
+  top: 44px;
+  right: 0;
+  background: rgba(31, 31, 31, 0.7);
+  padding: 20px;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1100;
+  align-items: flex-end; /* Align items to the right */
+}
+
+.navbarMenuMobile a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbarMenuMobile a:hover {
+  color: #f8f442;
+}
+
+.navbarMenuMobile.active {
+  display: flex;
+}
