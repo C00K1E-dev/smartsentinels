@@ -1,18 +1,21 @@
 /* Presale Section Styles */
 .presale {
-  background: rgba(31, 31, 31, 0.7);
+  background-color: rgba(31, 31, 31, 0.9); /* Match the background color */
   padding: 40px 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
+  margin: 40px auto 0; /* Center the container and add margin */
   color: white;
   text-align: center;
+  width: 100%;
+  max-width: 1200px; /* Match the max-width */
 }
 
 .presaleTitle {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #f8f442; /* Yellow color */
 }
 
 .presaleDescription {
@@ -37,9 +40,13 @@
   margin-bottom: 10px;
 }
 
+.presaleInfoItem strong {
+  color: #f8f442; /* Yellow color for bold text */
+}
+
 .presaleImage {
   flex: 1;
-  max-width: 400px; /* Increased max-width */
+  max-width: 500px; /* Increased max-width */
   height: auto;
   margin-left: 20px;
 }
@@ -56,6 +63,48 @@
 }
 
 .presaleButton:hover {
+  background-color: #e6e600;
+}
+
+.purchaseContainer {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.label {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.totalCost {
+  font-size: 1.2rem;
+}
+
+.purchaseButton {
+  background-color: #f8f442;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.purchaseButton:hover {
   background-color: #e6e600;
 }
 
@@ -91,6 +140,10 @@
   .presaleButton {
     font-size: 0.9rem;
   }
+
+  .purchaseButton {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 425px) {
@@ -109,6 +162,10 @@
   .presaleButton {
     font-size: 0.8rem;
   }
+
+  .purchaseButton {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 375px) {
@@ -123,6 +180,10 @@
   .presaleButton {
     font-size: 0.7rem;
   }
+
+  .purchaseButton {
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 320px) {
@@ -135,6 +196,10 @@
   }
 
   .presaleButton {
+    font-size: 0.6rem;
+  }
+
+  .purchaseButton {
     font-size: 0.6rem;
   }
 }

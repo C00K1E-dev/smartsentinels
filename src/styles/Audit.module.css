@@ -1,0 +1,117 @@
+/*Bronzestyles
+/* General Styles */
+
+/* Content Wrapper */
+.contentWrapper {
+    padding-top: 80px;
+  }
+  
+  /* Form Section Styles */
+  .title {
+    text-align: center;
+    color: #f8f442;
+    margin-top: 80px;
+    margin-bottom: 20px;
+  }
+  
+  .form {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #2d2d2d;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: white; /* Set label text color to white */
+  }
+  
+  .textarea {
+    width: 100%;
+    padding-right: -20px;
+    border-radius: 4px;
+    border: none;
+    resize: vertical;
+    font-size: 1rem;
+    color: #1f1f1f;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f8f442;
+    color: #1f1f1f;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .button:hover {
+    background-color: #c7b300;
+  }
+  
+  /* Payment Section Styles */
+  .paymentSection {
+    margin-top: 20px;
+  }
+  
+  .cardElement {
+    background: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+  }
+  
+  .cardErrors {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .form {
+      padding: 10px;
+    }
+  
+    .button {
+      width: 100%;
+    }
+  }
+  
+  /* Center the Stripe Button */
+  .stripeButtonWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .responseContent {
+    white-space: pre-wrap; /* Preserves newlines and spaces */
+    word-wrap: break-word; /* Ensures long lines wrap properly */
+    background-color: rgba(31, 31, 31, 0.7); /* Optional: Adds background for contrast */
+    padding: 15px; /* Adds padding for better readability */
+    border-radius: 8px; /* Optional: Rounds the edges */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Adds subtle shadow */
+    font-family: "Courier New", Courier, monospace; /* Optional: Uses a monospaced font */
+    font-size: 1rem; /* Adjusts font size */
+    line-height: 1.5; /* Improves readability */
+    margin-top: 10px;
+    color: white; /* Matches the theme */
+  }
+  
+  .responseSection {
+    max-width: 800px; /* Sets a maximum width */
+    margin: 20px auto; /* Centers the container */
+    padding: 20px; /* Adds padding for spacing */
+    text-align: left; /* Aligns text properly */
+    background-color: rgba(31, 31, 31, 0.7); /* Optional: Background styling */
+    border-radius: 8px; /* Optional: Rounds edges */
+    color: white; /* Set response section text color to white */
+  }

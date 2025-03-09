@@ -14,15 +14,15 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
-        <a href="index.tsx" className={styles.navbarBrand}>
+        <Link href="/" className={styles.navbarBrand}>
           <Image src="/logo.png" alt="Logo" width={150} height={150} className={styles.brandLogo} />
-        </a>
+        </Link>
         <ul className={styles.navbarMenu}>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="#">Presale</a></li>
-          <li><a href="#">Audit</a></li>
-          <li><a href="#">NFTs</a></li>
-          <ConnectButton/>
+          <li><Link href="/">Home</Link></li>
+          <li><Link href="/presale">Presale</Link></li>
+          <li><Link href="/audit">Audit</Link></li>
+          <li><Link href="/nfts">NFTs</Link></li>
+          <ConnectButton />
         </ul>
         <div className={styles.burgerButton} onClick={toggleMenu}>
           <div></div>
@@ -31,11 +31,11 @@ const Navbar = () => {
         </div>
       </div>
       <ul className={`${styles.navbarMenuMobile} ${isOpen ? styles.active : ''}`}>
-        <li><a href="index.tsx">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Audit</a></li>
-        <li><a href="#">Contact</a></li>
-        <ConnectButton/>
+        <li><Link href="/">Home</Link></li>
+        <li><Link href="/presale">Presale</Link></li>
+        <li><Link href="/audit">Audit</Link></li>
+        <li><Link href="/nfts">NFTs</Link></li>
+        <ConnectButton />
       </ul>
     </nav>
   );

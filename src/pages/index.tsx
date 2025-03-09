@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Presale from "../components/Presale";
+import Roadmap from "../components/Roadmap";
+import Footer from "../components/Footer";
 
 const Home: NextPage = () => {
   return (
@@ -18,7 +19,9 @@ const Home: NextPage = () => {
       <Hero />
       <main className={styles.main}>
         <Presale />
+        <Roadmap />
       </main>
+      <Footer />
     </div>
   );
 };

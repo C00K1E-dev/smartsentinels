@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/Presale.module.css';
 
 const Presale: React.FC = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [amount, setAmount] = useState('');
+  const [totalCost, setTotalCost] = useState(0);
+
+  const handleJoinPresaleClick = () => {
+    setIsExpanded(true);
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAmount(value);
+    setTotalCost(Number(value) * 0.03);
+  };
+
+  const handlePurchase = () => {
+    // Implement the purchase logic here
+    alert(`You have purchased ${amount} SSTL tokens for $${totalCost.toFixed(2)}`);
+  };
+
   return (
     <section className={styles.presale}>
       <h2 className={styles.presaleTitle}>Join Our Presale</h2>
@@ -12,14 +31,32 @@ const Presale: React.FC = () => {
         <div className={styles.presaleInfo}>
           <p className={styles.presaleInfoItem}><strong>Total Supply:</strong> 1,000,000,000 SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Presale Allocation:</strong> 30% of total supply</p>
-          <p className={styles.presaleInfoItem}><strong>Token Price:</strong> $0.05 per SSTL</p>
+          <p className={styles.presaleInfoItem}><strong>Token Price:</strong> $0.03 per SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Minimum Purchase:</strong> 1,000 SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Maximum Purchase:</strong> 1,000,000 SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Token Distribution:</strong> Immediately after purchase</p>
         </div>
         <img src="/4.png" alt="Presale" className={styles.presaleImage} />
       </div>
-      <button className={styles.presaleButton}>Join Presale</button>
+      {!isExpanded && (
+        <button className={styles.presaleButton} onClick={handleJoinPresaleClick}>Join Presale</button>
+      )}
+      {isExpanded && (
+        <div className={styles.purchaseContainer}>
+          <label htmlFor="amount" className={styles.label}>Amount of SSTL tokens:</label>
+          <div className={styles.inputContainer}>
+            <input
+              type="number"
+              id="amount"
+              value={amount}
+              onChange={handleAmountChange}
+              className={styles.input}
+            />
+            <p className={styles.totalCost}>Total Cost: ${totalCost.toFixed(2)}</p>
+          </div>
+          <button onClick={handlePurchase} className={styles.purchaseButton}>Buy</button>
+        </div>
+      )}
     </section>
   );
 };
