@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import type { AppProps } from 'next/app';
 import { useEffect, useRef } from 'react';
+import ComingSoonOverlay from '../components/ComingSoonOverlay';
 
 declare global {
   interface Window {
@@ -66,6 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" strategy="beforeInteractive" />
           <Script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js" strategy="beforeInteractive" onLoad={loadVanta} />
           <div ref={vantaRef} style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: -1 }}></div>
+          <ComingSoonOverlay />
           <Component {...pageProps} />
         </RainbowKitProvider>
       </QueryClientProvider>
