@@ -7,6 +7,7 @@ import Presale from "../components/Presale";
 import Roadmap from "../components/Roadmap";
 import Footer from "../components/Footer";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const Home: NextPage = () => {
   return (
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
         <link href="/favicon.ico" rel="icon" />
       </Head>
       <Analytics />
+      <SpeedInsights />
       <Navbar />
       <Hero />
       <main className={styles.main}>
