@@ -6,7 +6,7 @@ export default function ComingSoonOverlay() {
       <div className={styles.content}>
         <img src="/ai-agent.png" alt="AI Agent" className={styles.image} />
         <h1 className={styles.text}>
-          Coming SOON! AI Agents working on delivering the most rewarding experience.
+         COMING SOON! AI Agents working on delivering the most rewarding experience.
         </h1>
       </div>
     </div>
