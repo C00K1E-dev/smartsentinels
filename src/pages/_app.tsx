@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import { useEffect, useRef } from 'react';
 import ComingSoonOverlay from '../components/ComingSoonOverlay';
 
+
 declare global {
   interface Window {
     VANTA: any;

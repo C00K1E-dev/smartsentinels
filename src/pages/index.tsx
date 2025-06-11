@@ -6,6 +6,7 @@ import Hero from "../components/Hero";
 import Presale from "../components/Presale";
 import Roadmap from "../components/Roadmap";
 import Footer from "../components/Footer";
+import { Analytics } from "@vercel/analytics/next"
 
 const Home: NextPage = () => {
   return (
@@ -15,6 +16,7 @@ const Home: NextPage = () => {
         <meta content="Smart Sentinels - A Crypto Project" name="description" />
         <link href="/favicon.ico" rel="icon" />
       </Head>
+      <Analytics />
       <Navbar />
       <Hero />
       <main className={styles.main}>
