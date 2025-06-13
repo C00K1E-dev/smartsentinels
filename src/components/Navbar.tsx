@@ -4,6 +4,7 @@ import { useState } from 'react';
 import styles from '../styles/Navbar.module.css';
 import Image from 'next/image';
 
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -19,9 +20,9 @@ const Navbar = () => {
         </Link>
         <ul className={styles.navbarMenu}>
           <li><Link href="/">Home</Link></li>
-          <li><Link href="/presale">Presale</Link></li>
+          <li><Link href={{ pathname: '/', hash: 'presale' }} scroll={true}>Presale</Link></li>
           <li><Link href="/audit">Audit</Link></li>
-          <li><Link href="/nfts">NFTs</Link></li>
+          <li><Link href="/NFTs">NFTs</Link></li>
           <ConnectButton />
         </ul>
         <div className={styles.burgerButton} onClick={toggleMenu}>
@@ -32,7 +33,7 @@ const Navbar = () => {
       </div>
       <ul className={`${styles.navbarMenuMobile} ${isOpen ? styles.active : ''}`}>
         <li><Link href="/">Home</Link></li>
-        <li><Link href="/presale">Presale</Link></li>
+        <li><Link href={{ pathname: '/', hash: 'presale' }} scroll={true}>Presale</Link></li>
         <li><Link href="/audit">Audit</Link></li>
         <li><Link href="/nfts">NFTs</Link></li>
         <ConnectButton />

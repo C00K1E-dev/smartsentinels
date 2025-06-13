@@ -21,7 +21,7 @@ const Hero = () => {
   const bp = useBreakpoint();
 
   return (
-    <section className={styles.hero}>
+    <section id="home" className={styles.hero}>
       <div className={styles.heroMain}>
         <div className={styles.heroText}>
           <h1>Smart Sentinels</h1>

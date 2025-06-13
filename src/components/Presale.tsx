@@ -22,7 +22,7 @@ const Presale: React.FC = () => {
   };
 
   return (
-    <section className={styles.presale}>
+    <section id="presale" className={styles.presale}>
       <h2 className={styles.presaleTitle}>Join Our Presale</h2>
       <p className={styles.presaleDescription}>
         Be a part of the Smart Sentinels revolution. Join our presale and get exclusive access to our AI-powered NFT staking platform.

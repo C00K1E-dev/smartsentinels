@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { jsPDF } from 'jspdf'; // Import jsPDF
 import styles from '../styles/Audit.module.css';
+import Navbar from '../components/Navbar';
+
 
 const Audit: React.FC = () => {
   const [code, setCode] = useState('');
@@ -91,6 +93,8 @@ const Audit: React.FC = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className={styles.container}>
       <Head>
         <title>Audit</title>
@@ -122,6 +126,7 @@ const Audit: React.FC = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
