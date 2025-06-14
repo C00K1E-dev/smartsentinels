@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../styles/Presale.module.css';
+import Image from 'next/image';
 
 const Presale: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -36,7 +37,7 @@ const Presale: React.FC = () => {
           <p className={styles.presaleInfoItem}><strong>Maximum Purchase:</strong> 1,000,000 SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Token Distribution:</strong> Immediately after purchase</p>
         </div>
-        <img src="/4.png" alt="Presale" className={styles.presaleImage} />
+        <Image src="/4.png" alt="Presale" className={styles.presaleImage} />
       </div>
       {!isExpanded && (
         <button className={styles.presaleButton} onClick={handleJoinPresaleClick}>Join Presale</button>

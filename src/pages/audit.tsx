@@ -117,7 +117,7 @@ const Audit: React.FC = () => {
       </form>
 
       <div id="response-section" className={styles.responseSection} style={{ display: response ? 'block' : 'none' }}>
-        <h3 className={styles.label}>Smart Sentinel's Response:</h3>
+        <h3 className={styles.label}>Smart Sentinels Response:</h3>
         <pre id="response-content" className={styles.responseContent}>{response}</pre>
         {showDownloadButton && (
           <button id="download-pdf" className={styles.button} onClick={handleDownloadPDF}>
