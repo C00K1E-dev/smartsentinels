@@ -1,5 +1,5 @@
 import Navbar from '../components/Navbar';
-import MintButton from '../components/MintButton';
+import MintButton from '../components/TheButtonToMint';
 import styles from '../styles/NFTs.module.css';
 import Image from 'next/image';
 
