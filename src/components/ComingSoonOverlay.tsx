@@ -17,7 +17,12 @@ export default function ComingSoonOverlay() {
         >
           ×
         </button>
-        <Image src="/ai-agent.png" alt="AI Agent" className={styles.image} />
+        <Image
+  src="/ai-agent.png"
+  alt="AI Agent"
+  width={400}    // <-- set to your image's actual width in pixels
+  height={400}   // <-- set to your image's actual height in pixels
+/>
         <h1 className={styles.text}>
          COMING SOON! AI Agents working on delivering the most rewarding experience.
         </h1>

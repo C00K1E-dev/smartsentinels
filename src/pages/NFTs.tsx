@@ -48,7 +48,11 @@ const nfts = () => (
         <h2 className={styles.upcomingTitle}>Upcoming Collections</h2>
         <div className={styles.upcomingContainer}>
           <div className={styles.upcomingCard}>
-            <img src="/collection1.png" alt="Collection 1" className={styles.upcomingImage} />
+            <Image 
+            src="/collection1.png"alt="Collection 1"
+            width={180}
+            height={180}
+            className={styles.upcomingImage}/>
             <h3 className={styles.upcomingName}>Nvidia Powered Agents</h3>
             <p className={styles.upcomingDesc}>
               Acces to exclusive AI agents powered by Nvidia Orin devices. These agents will perform complex tasks and generating rewards for NFT holders.

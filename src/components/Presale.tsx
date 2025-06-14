@@ -37,7 +37,8 @@ const Presale: React.FC = () => {
           <p className={styles.presaleInfoItem}><strong>Maximum Purchase:</strong> 1,000,000 SSTL</p>
           <p className={styles.presaleInfoItem}><strong>Token Distribution:</strong> Immediately after purchase</p>
         </div>
-        <Image src="/4.png" alt="Presale" className={styles.presaleImage} />
+        <Image src="/4.png" alt="Presale" width={500}    // <-- set to your image's actual width in pixels
+  height={300}    className={styles.presaleImage} />
       </div>
       {!isExpanded && (
         <button className={styles.presaleButton} onClick={handleJoinPresaleClick}>Join Presale</button>
