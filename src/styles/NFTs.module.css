@@ -35,6 +35,7 @@
   color: #e6e6e6;
 }
 
+
 .nftsMedia {
   flex: 1 1 400px;
   max-width: 400px;
@@ -42,6 +43,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nftCard {
+  background: #1f1f1f;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nftVideo {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
 }
 
 .nftImage, .nftVideo {
@@ -61,4 +79,91 @@
   .nftsMedia {
     max-width: 320px;
   }
+}
+.mintButtonWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; /* Increase for more space below the text */
+}
+
+.upcomingWrapper {
+  width: 100%;
+  background: none;
+  padding: 0;
+  margin-top: 24px; /* Less space above */
+}
+
+.upcomingTitle {
+  font-size: 2rem;
+  color: #f8f442;
+  text-align: center;
+  margin-bottom: 24px;
+  font-weight: bold;
+}
+
+.upcomingContainer {
+  display: flex;
+  justify-content: center;
+  gap: 300px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.upcomingCard {
+  background: #1f1f1f;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  padding: 28px 24px 24px 24px;
+  max-width: 320px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upcomingImage {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  background: #181a20;
+}
+
+.upcomingName {
+  font-size: 1.3rem;
+  color: #f8f442;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.upcomingDesc {
+  color: #e6e6e6;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .upcomingContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+}
+
+.nftsMainDescription {
+  max-width: 800px;
+  margin: 0 auto 32px auto;
+  text-align: center;
+  color: #e6e6e6;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.nftSubtitle {
+  font-size: 1.3rem;
+  color: #f8f442;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
