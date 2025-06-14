@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar';
 import MintButton from '../components/MintButton';
 import styles from '../styles/NFTs.module.css';
+import Image from 'next/image';
 
 const nfts = () => (
   <>
@@ -54,7 +55,11 @@ const nfts = () => (
             </p>
           </div>
           <div className={styles.upcomingCard}>
-            <img src="/collection2.png" alt="Collection 2" className={styles.upcomingImage} />
+            <Image 
+            src="/collection1.png"alt="Collection 1"
+            width={180}
+            height={180}
+            className={styles.upcomingImage}/>
             <h3 className={styles.upcomingName}>Sentinel Legends</h3>
             <p className={styles.upcomingDesc}>
               Legendary Sentinels with rare traits and enhanced staking rewards. Only a select few will own these!
