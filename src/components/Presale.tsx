@@ -36,6 +36,7 @@ return (
     <li>💎 <strong><span className={styles.yellow}>Revenue Sharing:</span></strong> NFT holders are rewarded from service fees</li>
     <li>💎 <strong><span className={styles.yellow}>Growth Loop:</span></strong> More devices → More tasks → More rewards → Larger ecosystem</li>
   </ul>
+  <button className={styles.tokenomicsButton}>Tokenomics</button>
     </div>
     <section id="presale" className={styles.presale}>
       <h2 className={styles.presaleTitle}>Join Our Presale</h2>
