@@ -49,7 +49,7 @@ const nfts = () => (
         <div className={styles.upcomingContainer}>
           <div className={styles.upcomingCard}>
             <Image 
-            src="/collection1.png"alt="Collection 1"
+            src="/comingsoon.png"alt="Collection 1"
             width={180}
             height={180}
             className={styles.upcomingImage}/>
@@ -60,7 +60,7 @@ const nfts = () => (
           </div>
           <div className={styles.upcomingCard}>
             <Image 
-            src="/collection1.png"alt="Collection 1"
+            src="/comingsoon.png"alt="Collection 1"
             width={180}
             height={180}
             className={styles.upcomingImage}/>
