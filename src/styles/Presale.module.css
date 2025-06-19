@@ -203,3 +203,39 @@
     font-size: 0.6rem;
   }
 }
+
+.tokenTitle {
+  text-align: center;
+  color: #f8f442;
+  font-size: 2rem;
+  margin-top: 40px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.tokenDescription {
+  max-width: 700px;
+  margin: 0 auto 24px auto;
+  color: #e6e6e6;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.tokenList {
+  list-style: none;
+  padding-left: 0;
+  margin: 18px 0 0 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.tokenDescription ul {
+  text-align: left;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+.yellow {
+  color: #f8f442;
+  font-weight: bold;
+}

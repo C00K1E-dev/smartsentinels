@@ -333,3 +333,14 @@
     font-size: 1rem;
   }
 }
+
+.bulletList {
+  padding-left: 0;
+  margin-left: 0;
+  display: inline-block;
+  text-align: center; /* Center bullets and text */
+  list-style-position: inside; /* Bullets closer to text */
+}
+.bulletList li {
+  margin-bottom: 8px;
+}

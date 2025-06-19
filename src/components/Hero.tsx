@@ -72,8 +72,20 @@ const Hero = () => {
             />
           </div>
           <p>
-            Our AI Agents utilize advanced machine learning algorithms to analyze and optimize blockchain transactions, ensuring maximum efficiency and security. By leveraging the power of AI, we are able to provide unparalleled services in smart contract audits, AI-driven call centers, and tech support.
+            At Smart Sentinels, AI Agents are deployed across a network of physical devices owned or contributed by the community. These AI Agents perform real-world useful tasks such as smart contract auditing, customer support, and advanced AI-driven services.
           </p>
+          <p>
+            Every completed task proves useful work and triggers token generation based on our Proof of Useful Work (PoUW) protocol. The rewards are fairly distributed:
+          </p>
+          <ul className={styles.bulletList}>
+            <li>70% to NFT holders</li>
+            <li>20% to the Smart Sentinels treasury for growth and development</li>
+            <li>10% are burned to promote scarcity</li>
+          </ul>
+          <p>
+            By combining cutting-edge AI, real services, and a sustainable tokenomics model, Smart Sentinels creates an ecosystem where mining is no longer wasted effort—it’s real work that pays real rewards.
+          </p>
+          <h2><strong>You mint. Your AI works. You earn.</strong></h2>
         </div>
       </div>
     </section>

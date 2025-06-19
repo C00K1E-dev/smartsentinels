@@ -22,7 +22,21 @@ const Presale: React.FC = () => {
     alert(`You have purchased ${amount} SSTL tokens for $${totalCost.toFixed(2)}`);
   };
 
-  return (
+return (
+  <>
+<h1 className={styles.tokenTitle}>Token</h1>
+<div className={styles.tokenDescription}>
+  <p><strong>Token Utility and Economy</strong></p>
+  <p>
+    The SmartSentinels token is designed with a scarcity-driven and revenue-backed model:
+  </p>
+  <ul className={styles.tokenList}>
+    <li>💎 <strong><span className={styles.yellow}>Scarcity:</span></strong> Limited token emission tied to real-world completed tasks</li>
+    <li>💎 <strong><span className={styles.yellow}>Utility:</span></strong> Used to pay for services provided by the AI agents</li>
+    <li>💎 <strong><span className={styles.yellow}>Revenue Sharing:</span></strong> NFT holders are rewarded from service fees</li>
+    <li>💎 <strong><span className={styles.yellow}>Growth Loop:</span></strong> More devices → More tasks → More rewards → Larger ecosystem</li>
+  </ul>
+    </div>
     <section id="presale" className={styles.presale}>
       <h2 className={styles.presaleTitle}>Join Our Presale</h2>
       <p className={styles.presaleDescription}>
@@ -60,7 +74,8 @@ const Presale: React.FC = () => {
         </div>
       )}
     </section>
-  );
+  </>
+);
 };
 
 export default Presale;
