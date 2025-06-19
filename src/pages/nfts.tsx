@@ -6,7 +6,7 @@ import Image from 'next/image';
 const nfts = () => (
   <>
     <Navbar />
-    <section id="nfts_temp" className={styles.nftsSection}>
+    <section id="nfts" className={styles.nftsSection}>
       <h2 className={styles.nftsTitle}>Smart Sentinels NFTs</h2>
       <div className={styles.nftsMainDescription}>
         <p>

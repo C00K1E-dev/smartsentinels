@@ -22,7 +22,7 @@ const Navbar = () => {
           <li><Link href="/">Home</Link></li>
           <li><Link href={{ pathname: '/', hash: 'presale' }} scroll={true}>Presale</Link></li>
           <li><Link href="/audit">Audit</Link></li>
-          <li><Link href="/nfts_temp">NFTs</Link></li>
+          <li><Link href="/nfts">NFTs</Link></li>
           <ConnectButton />
         </ul>
         <div className={styles.burgerButton} onClick={toggleMenu}>
