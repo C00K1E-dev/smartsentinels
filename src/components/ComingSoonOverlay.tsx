@@ -18,10 +18,11 @@ export default function ComingSoonOverlay() {
           ×
         </button>
 <Image
-  src="/ai-agent.png"
-  alt="AI Agent"
-  width={400}
-  height={400}
+  src="/comingsoon.png"
+  alt="ComingSoon"
+  width={350}
+  height={200}
+  className={styles.comingSoonImage}
   priority
 />
         <h1 className={styles.text}>
