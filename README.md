@@ -31,6 +31,7 @@ http://localhost:3000
 
 
 📄 License
+
 This project is protected under a Proprietary License.
 
 You may view the code in this repository for personal and educational purposes.
