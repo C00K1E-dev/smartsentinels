@@ -1,29 +1,54 @@
-This is a [RainbowKit](https://rainbowkit.com) + [wagmi](https://wagmi.sh) + [Next.js](https://nextjs.org/) project bootstrapped with [`create-rainbowkit`](/packages/create-rainbowkit).
+SmartSentinels
+Welcome to SmartSentinels – an innovative platform that combines AI and blockchain to deliver cutting-edge smart contract auditing powered by a new mining model: Proof of Useful Work (PoUW).
 
-## Getting Started
+SmartSentinels is not just a smart contract auditor. It’s a decentralized network where users can contribute their own hardware or mint NFTs to become stakeholders in AI-powered devices. When these devices perform useful tasks, such as auditing smart contracts, new tokens are generated and distributed to NFT holders. This ecosystem brings a fresh and fair approach to mining and resource sharing.
 
-First, run the development server:
+🚀 Project Overview
+Blockchain + AI-powered auditing system
 
-```bash
+Proof of Useful Work (PoUW) mining model
+
+NFT-based revenue sharing
+
+Smart contract audit automation with detailed PDF reports
+
+SmartSentinels is designed to be scalable, starting with smart contract audits but aiming to expand into other real-world AI-powered tasks that generate tangible value.
+
+📦 Installation
+To get started with SmartSentinels locally, follow these simple steps:
+
+bash
+Copy
+Edit
+npm install
+This will install all required dependencies.
+
+💻 Running the Project
+Once the dependencies are installed, launch the development server with:
+
+bash
+Copy
+Edit
 npm run dev
-```
+The application should now be running on:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+arduino
+Copy
+Edit
+http://localhost:3000
+📄 License
+This project is protected under a Proprietary License.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You may view the code in this repository for personal and educational purposes.
 
-## Learn More
+Cloning, copying, downloading, redistributing, or using this code in any form is strictly prohibited without explicit written permission from the owner.
 
-To learn more about this stack, take a look at the following resources:
+Commercial use or integration into other products is not allowed.
 
-- [RainbowKit Documentation](https://rainbowkit.com) - Learn how to customize your wallet connection flow.
-- [wagmi Documentation](https://wagmi.sh) - Learn how to interact with Ethereum.
-- [Next.js Documentation](https://nextjs.org/docs) - Learn how to build a Next.js application.
+By accessing this repository, you agree to comply with these terms.
 
-You can check out [the RainbowKit GitHub repository](https://github.com/rainbow-me/rainbowkit) - your feedback and contributions are welcome!
+For licensing inquiries or special permissions, please contact the repository owner directly.
 
-## Deploy on Vercel
+🛡️ Disclaimer
+The SmartSentinels platform is under active development. Features, tokenomics, and system design may evolve over time. Please stay updated with the latest commits and official announcements.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
