@@ -4,6 +4,7 @@ Welcome to SmartSentinels – an innovative platform that combines AI and blockc
 SmartSentinels is not just a smart contract auditor. It’s a decentralized network where users can contribute their own hardware or mint NFTs to become stakeholders in AI-powered devices. When these devices perform useful tasks, such as auditing smart contracts, new tokens are generated and distributed to NFT holders. This ecosystem brings a fresh and fair approach to mining and resource sharing.
 
 🚀 Project Overview
+
 Blockchain + AI-powered auditing system
 
 Proof of Useful Work (PoUW) mining model
@@ -15,16 +16,19 @@ Smart contract audit automation with detailed PDF reports
 SmartSentinels is designed to be scalable, starting with smart contract audits but aiming to expand into other real-world AI-powered tasks that generate tangible value.
 
 📦 Installation
+
 To get started with SmartSentinels locally, follow these simple steps:
 
 npm install
+
 This will install all required dependencies.
 
 💻 Running the Project
+
 Once the dependencies are installed, launch the development server with:
 
-
 npm run dev
+
 The application should now be running on:
 
 http://localhost:3000
@@ -45,5 +49,6 @@ By accessing this repository, you agree to comply with these terms.
 For licensing inquiries or special permissions, please contact the repository owner directly.
 
 🛡️ Disclaimer
+
 The SmartSentinels platform is under active development. Features, tokenomics, and system design may evolve over time. Please stay updated with the latest commits and official announcements.
 
