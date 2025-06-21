@@ -1,4 +1,5 @@
 SmartSentinels
+
 Welcome to SmartSentinels – an innovative platform that combines AI and blockchain to deliver cutting-edge smart contract auditing powered by a new mining model: Proof of Useful Work (PoUW).
 
 SmartSentinels is not just a smart contract auditor. It’s a decentralized network where users can contribute their own hardware or mint NFTs to become stakeholders in AI-powered devices. When these devices perform useful tasks, such as auditing smart contracts, new tokens are generated and distributed to NFT holders. This ecosystem brings a fresh and fair approach to mining and resource sharing.
