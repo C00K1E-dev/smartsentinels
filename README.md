@@ -17,24 +17,16 @@ SmartSentinels is designed to be scalable, starting with smart contract audits b
 📦 Installation
 To get started with SmartSentinels locally, follow these simple steps:
 
-bash
-Copy
-Edit
 npm install
 This will install all required dependencies.
 
 💻 Running the Project
 Once the dependencies are installed, launch the development server with:
 
-bash
-Copy
-Edit
+
 npm run dev
 The application should now be running on:
 
-arduino
-Copy
-Edit
 http://localhost:3000
 📄 License
 This project is protected under a Proprietary License.
