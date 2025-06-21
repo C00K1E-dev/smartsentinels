@@ -28,6 +28,8 @@ npm run dev
 The application should now be running on:
 
 http://localhost:3000
+
+
 📄 License
 This project is protected under a Proprietary License.
 
