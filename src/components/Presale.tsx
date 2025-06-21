@@ -25,6 +25,15 @@ const Presale: React.FC = () => {
 return (
   <>
 <h1 className={styles.tokenTitle}>Token</h1>
+<div className={styles.tokenImageWrapper}>
+    <Image
+      src="/token-image.png"
+      alt="Token"
+      width={320}
+      height={320}
+      className={styles.tokenImage}
+    />
+  </div>
 <div className={styles.tokenDescription}>
   <p><strong>Token Utility and Economy</strong></p>
   <p>
