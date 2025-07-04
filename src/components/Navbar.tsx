@@ -113,7 +113,7 @@ const Navbar = () => {
                             onClick={closeMenu}
                         >
                             <span className={styles.mobileLinkText}>
-                                fundraise
+                                Fundraise
                             </span>
                             <div className={styles.mobileLinkIcon}>🚀</div>
                         </Link>
