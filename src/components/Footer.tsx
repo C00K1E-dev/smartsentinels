@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import styles from '../styles/Footer.module.css';
 
 const Footer: React.FC = () => {
@@ -18,9 +19,9 @@ const Footer: React.FC = () => {
           <div className={styles.footerSection}>
             <h4 className={styles.sectionTitle}>Quick Links</h4>
             <div className={styles.footerLinks}>
-              <a href="/" className={styles.footerLink}>Home</a>
-              <a href="/nfts" className={styles.footerLink}>NFTs</a>
-              <a href="/audit" className={styles.footerLink}>Audit</a>
+              <Link href="/" className={styles.footerLink}>Home</Link>
+              <Link href="/nfts" className={styles.footerLink}>NFTs</Link>
+              <Link href="/audit" className={styles.footerLink}>Audit</Link>
               <a href="#presale" className={styles.footerLink}>Presale</a>
             </div>
           </div>
@@ -28,8 +29,8 @@ const Footer: React.FC = () => {
           <div className={styles.footerSection}>
             <h4 className={styles.sectionTitle}>Legal</h4>
             <div className={styles.footerLinks}>
-              <a href="/terms" className={styles.footerLink}>Terms</a>
-              <a href="/privacy" className={styles.footerLink}>Privacy Policy</a>
+              <Link href="/terms" className={styles.footerLink}>Terms</Link>
+              <Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link>
             </div>
           </div>
           
@@ -54,8 +55,8 @@ const Footer: React.FC = () => {
           <div className={styles.copyrightSection}>
             <p className={styles.copyright}>&copy; 2025 Smart Sentinels. All rights reserved.</p>
             <div className={styles.footerMenu}>
-              <a href="/terms" className={styles.bottomLink}>Terms</a>
-              <a href="/privacy" className={styles.bottomLink}>Privacy Policy</a>
+              <Link href="/terms" className={styles.bottomLink}>Terms</Link>
+              <Link href="/privacy" className={styles.bottomLink}>Privacy Policy</Link>
             </div>
           </div>
         </div>
