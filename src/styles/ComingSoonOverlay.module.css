@@ -99,6 +99,12 @@
 }
 
 /* Ultra-wide screens (2560px+) */
+@media (min-width: 2160px) {
+  .comingSoonImage {
+    max-width: 600px;
+  }
+}
+
 @media (min-width: 2560px) {
   .comingSoonImage {
     max-width: 700px;

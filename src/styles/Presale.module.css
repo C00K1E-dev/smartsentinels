@@ -265,3 +265,9 @@
 
   object-fit: contain;
 }
+@media (min-width: 1440px) {
+  .presale { max-width: 1400px; }
+}
+@media (min-width: 2160px) {
+  .presale { max-width: 1800px; }
+}
