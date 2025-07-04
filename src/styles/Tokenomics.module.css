@@ -75,3 +75,52 @@
     padding: 12px 0;
   }
 }
+
+/* Additional responsive breakpoints */
+@media (max-width: 1024px) {
+  .tokenomicsContent {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tokenomicsTitle {
+    font-size: 2rem;
+  }
+  .tokenomicsContent {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 425px) {
+  .tokenomicsTitle {
+    font-size: 1.8rem;
+  }
+  .tokenomicsInfo {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .tokenomicsTitle {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .tokenomicsTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .tokenomicsContent {
+    max-width: 1300px;
+  }
+}
+
+@media (min-width: 2160px) {
+  .tokenomicsContent {
+    max-width: 1500px;
+  }
+}
