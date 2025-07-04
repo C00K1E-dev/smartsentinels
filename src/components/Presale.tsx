@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/Presale.module.css';
 import Image from 'next/image';
+import Tokenomics from './Tokenomics';
 
 const Presale: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -48,7 +49,7 @@ return (
           <li>💎 <strong><span className={styles.yellow}>Revenue Sharing:</span></strong> NFT holders are rewarded from service fees</li>
           <li>💎 <strong><span className={styles.yellow}>Growth Loop:</span></strong> More devices → More tasks → More rewards → Larger ecosystem</li>
         </ul>
-        <button className={styles.tokenomicsButton}>Tokenomics</button>
+        <Tokenomics/>
       </div>
     </div>
 
