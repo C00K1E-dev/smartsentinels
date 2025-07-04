@@ -25,12 +25,12 @@ const pieData = {
     {
       data: [40, 10, 10, 20, 10, 10],
       backgroundColor: [
-        '#f8f442',
-        '#f8b442',
-        '#42f8e6',
-        '#4287f8',
-        '#f842a0',
-        '#a042f8'
+        '#f8f442', // Yellow (PoUW)
+        '#f8b442', // Gold/Orange (Fundraising)
+        '#4287f8', // Blue (Team)
+        '#23272f', // Dark (Exchange & Liquidity)
+        '#42f8e6', // Teal (Marketing & BizDev)
+        '#a042f8'  // Purple (Ecosystem & Partnerships)
       ],
       borderWidth: 2,
       borderColor: '#181a20'

@@ -1,5 +1,5 @@
-/* Presale Section Styles */
-.presale {
+/* fundraise Section Styles */
+.fundraise {
   background-color: rgba(31, 31, 31, 0.9); /* Match the background color */
   padding: 40px 20px;
   border-radius: 10px;
@@ -11,47 +11,47 @@
   max-width: 1200px; /* Match the max-width */
 }
 
-.presaleTitle {
+.fundraiseTitle {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 20px;
   color: #f8f442; /* Yellow color */
 }
 
-.presaleDescription {
+.fundraiseDescription {
   font-size: 1.2rem;
   margin-bottom: 20px;
 }
 
-.presaleContent {
+.fundraiseContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.presaleInfo {
+.fundraiseInfo {
   text-align: left;
   flex: 1;
   margin-right: 20px;
 }
 
-.presaleInfoItem {
+.fundraiseInfoItem {
   margin-bottom: 10px;
 }
 
-.presaleInfoItem strong {
+.fundraiseInfoItem strong {
   color: #f8f442; /* Yellow color for bold text */
 }
 
-.presaleImage {
+.fundraiseImage {
   flex: 1;
   max-width: 500px; /* Increased max-width */
   height: auto;
   margin-left: 20px;
 }
 
-.presaleButton {
+.fundraiseButton {
   background-color: #f8f442;
   color: black;
   padding: 10px 20px;
@@ -62,7 +62,7 @@
   transition: background-color 0.3s ease;
 }
 
-.presaleButton:hover {
+.fundraiseButton:hover {
   background-color: #e6e600;
 }
 
@@ -110,34 +110,34 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .presale {
+  .fundraise {
     padding: 30px 15px;
   }
 
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 1.5rem;
   }
 
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 1rem;
   }
 
-  .presaleContent {
+  .fundraiseContent {
     flex-direction: column;
     align-items: center;
   }
 
-  .presaleInfo {
+  .fundraiseInfo {
     margin-right: 0;
     margin-bottom: 20px;
   }
 
-  .presaleImage {
+  .fundraiseImage {
     margin-left: 0;
     max-width: 100%;
   }
 
-  .presaleButton {
+  .fundraiseButton {
     font-size: 0.9rem;
   }
 
@@ -147,19 +147,19 @@
 }
 
 @media (max-width: 425px) {
-  .presale {
+  .fundraise {
     padding: 20px 10px;
   }
 
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 1.2rem;
   }
 
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 0.9rem;
   }
 
-  .presaleButton {
+  .fundraiseButton {
     font-size: 0.8rem;
   }
 
@@ -169,15 +169,15 @@
 }
 
 @media (max-width: 375px) {
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 1rem;
   }
 
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 0.8rem;
   }
 
-  .presaleButton {
+  .fundraiseButton {
     font-size: 0.7rem;
   }
 
@@ -187,15 +187,15 @@
 }
 
 @media (max-width: 320px) {
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 0.9rem;
   }
 
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 0.7rem;
   }
 
-  .presaleButton {
+  .fundraiseButton {
     font-size: 0.6rem;
   }
 
@@ -214,8 +214,21 @@
 }
 
 .tokenDescription {
+ 
   max-width: 700px;
   margin: 0 auto 24px auto;
+  color: #e6e6e6;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.tokenDescription2 {
+  background-color: rgba(31, 31, 31, 0.9); /* Match the background color */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  margin: 40px auto 0; /* Center the container and add margin */
+  padding: 60px 0 40px 0;
   color: #e6e6e6;
   text-align: center;
   font-size: 1.1rem;
@@ -266,8 +279,8 @@
   object-fit: contain;
 }
 @media (min-width: 1440px) {
-  .presale { max-width: 1400px; }
+  .fundraise { max-width: 1400px; }
 }
 @media (min-width: 2160px) {
-  .presale { max-width: 1800px; }
+  .fundraise { max-width: 1800px; }
 }
