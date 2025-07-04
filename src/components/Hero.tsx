@@ -116,7 +116,7 @@ const Hero = () => {
             <div className={styles.contentBlock}>
               <h3>💎 Sustainable Ecosystem</h3>
               <p>
-                By combining cutting-edge AI, real services, and a sustainable tokenomics model, Smart Sentinels creates an ecosystem where mining is no longer wasted effort—it's real work that pays real rewards.
+                By combining cutting-edge AI, real services, and a sustainable tokenomics model, Smart Sentinels creates an ecosystem where mining is no longer wasted effort—it&apos;s real work that pays real rewards.
               </p>
             </div>
           </div>
