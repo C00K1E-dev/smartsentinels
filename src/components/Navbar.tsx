@@ -1,45 +1,147 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import Link from 'next/link';
-import { useState } from 'react';
-import styles from '../styles/Navbar.module.css';
-import Image from 'next/image';
-
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import styles from "../styles/Navbar.module.css";
+import Image from "next/image";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
 
-  return (
-    <nav className={styles.navbar}>
-      <div className={styles.navbarContainer}>
-        <Link href="/" className={styles.navbarBrand}>
-          <Image src="/logo.png" alt="Logo" width={150} height={150} className={styles.brandLogo} />
-        </Link>
-        <ul className={styles.navbarMenu}>
-          <li><Link href="/">Home</Link></li>
-          <li><Link href={{ pathname: '/', hash: 'presale' }} scroll={true}>Presale</Link></li>
-          <li><Link href="/audit">Audit</Link></li>
-          <li><Link href="/nfts">NFTs</Link></li>
-          <ConnectButton />
-        </ul>
-        <div className={styles.burgerButton} onClick={toggleMenu}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-      <ul className={`${styles.navbarMenuMobile} ${isOpen ? styles.active : ''}`}>
-        <li><Link href="/">Home</Link></li>
-        <li><Link href={{ pathname: '/', hash: 'presale' }} scroll={true}>Presale</Link></li>
-        <li><Link href="/audit">Audit</Link></li>
-        <li><Link href="/nfts">NFTs</Link></li>
-        <ConnectButton />
-      </ul>
-    </nav>
-  );
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const closeMenu = () => {
+        setIsOpen(false);
+    };
+
+    return (
+        <nav
+            className={`${styles.navbar} ${isScrolled ? styles.scrolled : ""}`}
+        >
+            <div className={styles.navbarContainer}>
+                <Link
+                    href="/"
+                    className={styles.navbarBrand}
+                    onClick={closeMenu}
+                >
+                    <div className={styles.brandWrapper}>
+                        <Image
+                            src="/logo.png"
+                            alt="Smart Sentinels Logo"
+                            width={250}
+                            height={250}
+                            className={styles.brandLogo}
+                        />
+                        {/* <span className={styles.brandText}>
+                            Smart Sentinels
+                        </span> */}
+                    </div>
+                </Link>
+
+                <div className={styles.navbarMenu}>
+                    <div className={styles.navLinks}>
+                        <Link href="/" className={styles.navLink}>
+                            <span className={styles.linkText}>Home</span>
+                            <div className={styles.linkUnderline}></div>
+                        </Link>
+                        <Link
+                            href={{ pathname: "/", hash: "presale" }}
+                            scroll={true}
+                            className={styles.navLink}
+                        >
+                            <span className={styles.linkText}>Presale</span>
+                            <div className={styles.linkUnderline}></div>
+                        </Link>
+                        <Link href="/audit" className={styles.navLink}>
+                            <span className={styles.linkText}>Audit</span>
+                            <div className={styles.linkUnderline}></div>
+                        </Link>
+                        <Link href="/nfts" className={styles.navLink}>
+                            <span className={styles.linkText}>NFTs</span>
+                            <div className={styles.linkUnderline}></div>
+                        </Link>
+                    </div>
+
+                    <div className={styles.connectButtonWrapper}>
+                        <ConnectButton />
+                    </div>
+                </div>
+
+                <div
+                    className={`${styles.burgerButton} ${
+                        isOpen ? styles.active : ""
+                    }`}
+                    onClick={toggleMenu}
+                    aria-label="Toggle navigation menu"
+                >
+                    <div className={styles.burgerLine}></div>
+                    <div className={styles.burgerLine}></div>
+                    <div className={styles.burgerLine}></div>
+                </div>
+            </div>
+
+            <div
+                className={`${styles.mobileMenu} ${
+                    isOpen ? styles.active : ""
+                }`}
+            >
+                <div className={styles.mobileMenuContent}>
+                    <div className={styles.mobileNavLinks}>
+                        <Link
+                            href="/"
+                            className={styles.mobileNavLink}
+                            onClick={closeMenu}
+                        >
+                            <span className={styles.mobileLinkText}>Home</span>
+                            <div className={styles.mobileLinkIcon}>🏠</div>
+                        </Link>
+                        <Link
+                            href={{ pathname: "/", hash: "presale" }}
+                            scroll={true}
+                            className={styles.mobileNavLink}
+                            onClick={closeMenu}
+                        >
+                            <span className={styles.mobileLinkText}>
+                                Presale
+                            </span>
+                            <div className={styles.mobileLinkIcon}>🚀</div>
+                        </Link>
+                        <Link
+                            href="/audit"
+                            className={styles.mobileNavLink}
+                            onClick={closeMenu}
+                        >
+                            <span className={styles.mobileLinkText}>Audit</span>
+                            <div className={styles.mobileLinkIcon}>🔍</div>
+                        </Link>
+                        <Link
+                            href="/nfts"
+                            className={styles.mobileNavLink}
+                            onClick={closeMenu}
+                        >
+                            <span className={styles.mobileLinkText}>NFTs</span>
+                            <div className={styles.mobileLinkIcon}>🎨</div>
+                        </Link>
+                    </div>
+
+                    <div className={styles.mobileConnectWrapper}>
+                        <ConnectButton />
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
 };
 
 export default Navbar;

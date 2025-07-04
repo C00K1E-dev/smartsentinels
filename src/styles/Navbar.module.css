@@ -1,119 +1,431 @@
-/* Navbar Styles */
+/* Main Navbar */
 .navbar {
-  background: rgba(31, 31, 31, 0.9); /* Ensure the background is solid */
-  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(248, 244, 66, 0.1);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.98);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(248, 244, 66, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .navbarContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  height: 80px;
 }
 
+/* Brand Section */
 .navbarBrand {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: white;
-  gap: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.navbarBrand:hover {
+  transform: scale(1.05);
+}
+
+.brandWrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .brandLogo {
-  width: 150px;
-  height: 150px;
+  width: 180px !important;
+  height: 180px !important;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(248, 244, 66, 0.3));
 }
 
 .brandText {
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  text-transform: capitalize;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 50%, #f8f442 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(248, 244, 66, 0.3);
+  transition: all 0.3s ease;
 }
 
+.navbarBrand:hover .brandLogo {
+  filter: drop-shadow(0 0 15px rgba(248, 244, 66, 0.5));
+}
+
+.navbarBrand:hover .brandText {
+  text-shadow: 0 0 25px rgba(248, 244, 66, 0.5);
+}
+
+/* Desktop Menu */
 .navbarMenu {
   display: flex;
-  list-style: none;
-  gap: 20px;
-  margin: 0;
+  align-items: center;
+  gap: 40px;
 }
 
-.navbarMenu li {
+.navLinks {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.navLink {
+  position: relative;
+  text-decoration: none;
+  color: #e6e6e6;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 10px 0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.linkText {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.linkUnderline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #f8f442, #ffd700);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+.navLink:hover {
+  color: #f8f442;
+}
+
+.navLink:hover .linkText {
+  transform: translateY(-2px);
+}
+
+.navLink:hover .linkUnderline {
+  width: 100%;
+}
+
+/* Connect Button Wrapper */
+.connectButtonWrapper {
   display: flex;
   align-items: center;
 }
 
-.navbarMenu a {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.navbarMenu a:hover {
-  color: #f8f442;
-}
-
+/* Burger Button */
 .burgerButton {
   display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
   z-index: 1200;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(248, 244, 66, 0.1);
+  border: 1px solid rgba(248, 244, 66, 0.2);
 }
 
-.burgerButton div {
+.burgerButton:hover {
+  background: rgba(248, 244, 66, 0.2);
+  border-color: rgba(248, 244, 66, 0.4);
+}
+
+.burgerLine {
   width: 25px;
   height: 3px;
-  background-color: #f8f442;
+  background: #f8f442;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burgerButton.active .burgerLine:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burgerButton.active .burgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerButton.active .burgerLine:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Menu */
+.mobileMenu {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 80px);
+  background: rgba(0, 0, 0, 0.98);
+  backdrop-filter: blur(30px);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: 1100;
+  border-top: 1px solid rgba(248, 244, 66, 0.1);
+}
+
+.mobileMenu.active {
+  transform: translateX(0);
+}
+
+.mobileMenuContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 40px 20px;
+  gap: 40px;
+}
+
+.mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  color: #e6e6e6;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 15px 25px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.mobileNavLink::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(248, 244, 66, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.mobileNavLink:hover::before {
+  left: 100%;
+}
+
+.mobileNavLink:hover {
+  color: #f8f442;
+  background: rgba(248, 244, 66, 0.05);
+  transform: translateX(10px);
+}
+
+.mobileLinkText {
+  position: relative;
+  z-index: 1;
+}
+
+.mobileLinkIcon {
+  font-size: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.mobileConnectWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .navbarContainer {
+    padding: 0 16px;
+  }
+  
+  .brandText {
+    font-size: 1.3rem;
+  }
+  
+  .brandLogo {
+    width: 150px !important;
+    height: 150px !important;
+  }
+  
+  .navLinks {
+    gap: 25px;
+  }
+  
+  .navLink {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .burgerButton {
-    display: flex;
+  .navbarContainer {
+    padding: 0 15px;
+    height: 70px;
   }
-
+  
+  .brandText {
+    font-size: 1.2rem;
+  }
+  
+  .brandLogo {
+    width: 110px !important;
+    height: 110px !important;
+  }
+  
   .navbarMenu {
     display: none;
   }
+  
+  .burgerButton {
+    display: flex;
+  }
+  
+  .mobileMenu {
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .mobileMenuContent {
+    padding: 30px 15px;
+    gap: 30px;
+  }
+  
+  .mobileNavLink {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    min-width: 180px;
+  }
+  
+  .mobileLinkIcon {
+    font-size: 1.3rem;
+  }
 }
 
-.navbarMenuMobile {
-  display: none;
-  list-style: none;
-  position: fixed;
-  width: 100%;
-  height: 100vh;
-  top: 43.9px;
-  right: 0;
-  background: rgba(31, 31, 31, 0.9); /* Ensure the background is solid */
-  padding: 20px;
-  flex-direction: column;
-  gap: 20px;
-  z-index: 1100;
-  align-items: flex-end; /* Align items to the right */
+@media (max-width: 480px) {
+  .navbarContainer {
+    padding: 0 12px;
+    height: 65px;
+  }
+  
+  .brandLogo {
+    width: 90px !important;
+    height: 90px !important;
+  }
+  
+  .brandText {
+    font-size: 1.1rem;
+  }
+  
+  .burgerButton {
+    padding: 8px;
+  }
+  
+  .burgerLine {
+    width: 22px;
+    height: 2.5px;
+  }
+  
+  .mobileMenu {
+    top: 65px;
+    height: calc(100vh - 65px);
+  }
+  
+  .mobileMenuContent {
+    padding: 25px 12px;
+    gap: 25px;
+  }
+  
+  .mobileNavLinks {
+    gap: 20px;
+  }
+  
+  .mobileNavLink {
+    font-size: 1rem;
+    padding: 10px 18px;
+    min-width: 160px;
+  }
+  
+  .mobileLinkIcon {
+    font-size: 1.2rem;
+  }
 }
 
-.navbarMenuMobile a {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.navbarMenuMobile a:hover {
-  color: #f8f442;
-}
-
-.navbarMenuMobile.active {
-  display: flex;
+@media (max-width: 375px) {
+  .navbarContainer {
+    padding: 0 10px;
+    height: 60px;
+  }
+  
+  .brandLogo {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .brandText {
+    font-size: 1rem;
+  }
+  
+  .burgerLine {
+    width: 20px;
+    height: 2px;
+  }
+  
+  .mobileMenu {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+  
+  .mobileMenuContent {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .mobileNavLink {
+    font-size: 0.95rem;
+    padding: 8px 15px;
+    min-width: 140px;
+  }
+  
+  .mobileLinkIcon {
+    font-size: 1.1rem;
+  }
 }

@@ -1,267 +1,661 @@
-/* Presale Section Styles */
-.presale {
-  background-color: rgba(31, 31, 31, 0.9); /* Match the background color */
-  padding: 40px 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 40px auto 0; /* Center the container and add margin */
-  color: white;
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Token Section */
+.tokenSection {
   text-align: center;
-  width: 100%;
-  max-width: 1200px; /* Match the max-width */
+  margin-bottom: 80px;
+  padding: 60px 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
 }
 
-.presaleTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #f8f442; /* Yellow color */
-}
-
-.presaleDescription {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-}
-
-.presaleContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.presaleInfo {
-  text-align: left;
-  flex: 1;
-  margin-right: 20px;
-}
-
-.presaleInfoItem {
-  margin-bottom: 10px;
-}
-
-.presaleInfoItem strong {
-  color: #f8f442; /* Yellow color for bold text */
-}
-
-.presaleImage {
-  flex: 1;
-  max-width: 500px; /* Increased max-width */
-  height: auto;
-  margin-left: 20px;
-}
-
-.presaleButton {
-  background-color: #f8f442;
-  color: black;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.presaleButton:hover {
-  background-color: #e6e600;
-}
-
-.purchaseContainer {
-  margin-top: 20px;
-  text-align: left;
-}
-
-.label {
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-.inputContainer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.input {
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.totalCost {
-  font-size: 1.2rem;
-}
-
-.purchaseButton {
-  background-color: #f8f442;
-  color: black;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.purchaseButton:hover {
-  background-color: #e6e600;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .presale {
-    padding: 30px 15px;
-  }
-
-  .presaleTitle {
-    font-size: 1.5rem;
-  }
-
-  .presaleDescription {
-    font-size: 1rem;
-  }
-
-  .presaleContent {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .presaleInfo {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-
-  .presaleImage {
-    margin-left: 0;
-    max-width: 100%;
-  }
-
-  .presaleButton {
-    font-size: 0.9rem;
-  }
-
-  .purchaseButton {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 425px) {
-  .presale {
-    padding: 20px 10px;
-  }
-
-  .presaleTitle {
-    font-size: 1.2rem;
-  }
-
-  .presaleDescription {
-    font-size: 0.9rem;
-  }
-
-  .presaleButton {
-    font-size: 0.8rem;
-  }
-
-  .purchaseButton {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 375px) {
-  .presaleTitle {
-    font-size: 1rem;
-  }
-
-  .presaleDescription {
-    font-size: 0.8rem;
-  }
-
-  .presaleButton {
-    font-size: 0.7rem;
-  }
-
-  .purchaseButton {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 320px) {
-  .presaleTitle {
-    font-size: 0.9rem;
-  }
-
-  .presaleDescription {
-    font-size: 0.7rem;
-  }
-
-  .presaleButton {
-    font-size: 0.6rem;
-  }
-
-  .purchaseButton {
-    font-size: 0.6rem;
-  }
+.tokenSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(248, 244, 66, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(248, 244, 66, 0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .tokenTitle {
-  text-align: center;
-  color: #f8f442;
-  font-size: 2rem;
-  margin-top: 40px;
-  margin-bottom: 12px;
-  font-weight: bold;
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 50%, #f8f442 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 40px;
+  text-shadow: 0 0 40px rgba(248, 244, 66, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.tokenImageWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 1;
+}
+
+.tokenImage {
+  width: 70% !important;
+  height: 70% !important;
+  object-fit: contain !important;
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(248, 244, 66, 0.2);
+  transition: all 0.4s ease;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.tokenImage:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(248, 244, 66, 0.4);
 }
 
 .tokenDescription {
-  max-width: 700px;
-  margin: 0 auto 24px auto;
+  max-width: 800px;
+  margin: 0 auto;
   color: #e6e6e6;
-  text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 25px;
+  border: 1px solid rgba(248, 244, 66, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+.tokenDescription p {
+  margin-bottom: 20px;
+}
+
+.tokenDescription strong {
+  color: #f8f442;
+  font-weight: 700;
 }
 
 .tokenList {
   list-style: none;
-  padding-left: 0;
-  margin: 18px 0 0 0;
-  text-align: left;
-  display: inline-block;
+  padding: 0;
+  margin: 30px 0;
+  display: grid;
+  gap: 15px;
 }
 
-.tokenDescription ul {
-  text-align: left;
-  margin: 0 auto;
-  display: inline-block;
+.tokenDescription li {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  border-left: 4px solid #f8f442;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+}
+
+.tokenDescription li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(248, 244, 66, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.tokenDescription li:hover::before {
+  left: 100%;
+}
+
+.tokenDescription li:hover {
+  background: rgba(248, 244, 66, 0.1);
+  transform: translateX(10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .yellow {
   color: #f8f442;
-  font-weight: bold;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(248, 244, 66, 0.3);
 }
 
 .tokenomicsButton {
-  display: block;
-  margin: 24px auto 0 auto;
-  padding: 12px 32px;
-  background-color: #f8f442;
-  color: #181a20;
-  font-weight: bold;
-  font-size: 1.1rem;
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 100%);
+  color: #1a1a1a;
+  padding: 18px 40px;
   border: none;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, transform 0.1s;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(248, 244, 66, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.tokenomicsButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.tokenomicsButton:hover::before {
+  left: 100%;
 }
 
 .tokenomicsButton:hover {
- 
-  color: #23272f;
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(248, 244, 66, 0.4);
+  background: linear-gradient(135deg, #ffd700 0%, #f8f442 100%);
 }
 
-.tokenImage {
+/* Presale Section */
+.presale {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%);
+  padding: 80px 40px;
+  border-radius: 30px;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(248, 244, 66, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
 
-  object-fit: contain;
+.presale::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(248, 244, 66, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(248, 244, 66, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.presaleHeader {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.presaleTitle {
+  font-size: 3.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 50%, #f8f442 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+  text-shadow: 0 0 40px rgba(248, 244, 66, 0.5);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.presaleDescription {
+  font-size: 1.3rem;
+  color: #e6e6e6;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.presaleContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.presaleInfo {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 25px;
+  border: 1px solid rgba(248, 244, 66, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.presaleInfo:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.infoCard {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 25px;
+  border-radius: 20px;
+  border: 1px solid rgba(248, 244, 66, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.infoCard:hover {
+  background: rgba(248, 244, 66, 0.1);
+  border-color: rgba(248, 244, 66, 0.3);
+  transform: translateY(-3px);
+}
+
+.infoLabel {
+  display: block;
+  font-size: 0.9rem;
+  color: #f8f442;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.infoValue {
+  display: block;
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.presaleImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.presaleImage {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(248, 244, 66, 0.2);
+  transition: all 0.4s ease;
+}
+
+.presaleImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.buttonContainer {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.presaleButton {
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 100%);
+  color: #1a1a1a;
+  padding: 20px 50px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 15px 30px rgba(248, 244, 66, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonGlow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.presaleButton:hover .buttonGlow {
+  left: 100%;
+}
+
+.presaleButton:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(248, 244, 66, 0.4);
+}
+
+.purchaseContainer {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 25px;
+  border: 1px solid rgba(248, 244, 66, 0.2);
+  backdrop-filter: blur(10px);
+  margin-top: 40px;
+  animation: slideUp 0.5s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.purchaseForm {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.label {
+  display: block;
+  font-size: 1.1rem;
+  color: #f8f442;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.inputContainer {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 18px 20px;
+  border: 2px solid rgba(248, 244, 66, 0.3);
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #f8f442;
+  box-shadow: 0 0 20px rgba(248, 244, 66, 0.2);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.totalCostDisplay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 15px 20px;
+  background: rgba(248, 244, 66, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(248, 244, 66, 0.2);
+}
+
+.totalCostLabel {
+  font-size: 1rem;
+  color: #e6e6e6;
+  font-weight: 600;
+}
+
+.totalCost {
+  font-size: 1.2rem;
+  color: #f8f442;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(248, 244, 66, 0.3);
+}
+
+.purchaseButton {
+  width: 100%;
+  background: linear-gradient(135deg, #f8f442 0%, #ffd700 100%);
+  color: #1a1a1a;
+  padding: 18px 40px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(248, 244, 66, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.purchaseButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(248, 244, 66, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .tokenTitle {
+    font-size: 3.5rem;
+  }
+  
+  .presaleTitle {
+    font-size: 3rem;
+  }
+  
+  .presaleContent {
+    gap: 40px;
+  }
+  
+  .presale {
+    padding: 60px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tokenSection {
+    margin-bottom: 60px;
+    padding: 40px 20px;
+  }
+  
+  .tokenTitle {
+    font-size: 3rem;
+  }
+  
+  .presaleTitle {
+    font-size: 2.5rem;
+  }
+  
+  .presaleDescription {
+    font-size: 1.1rem;
+  }
+  
+  .presaleContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .presale {
+    padding: 50px 25px;
+  }
+  
+  .presaleInfo {
+    padding: 30px;
+  }
+  
+  .tokenDescription {
+    padding: 30px;
+    font-size: 1rem;
+  }
+  
+  .tokenDescription li {
+    padding: 15px;
+    font-size: 1rem;
+  }
+  
+  .presaleButton,
+  .purchaseButton {
+    padding: 16px 40px;
+    font-size: 1.1rem;
+  }
+  
+  .input {
+    padding: 16px 18px;
+    font-size: 1rem;
+  }
+  
+  .totalCost {
+    font-size: 1.1rem;
+  }
+  
+  .purchaseContainer {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tokenSection {
+    margin-bottom: 50px;
+    padding: 30px 15px;
+  }
+  
+  .tokenTitle {
+    font-size: 2.5rem;
+  }
+  
+  .presaleTitle {
+    font-size: 2rem;
+  }
+  
+  .presaleDescription {
+    font-size: 1rem;
+  }
+  
+  .presaleInfo {
+    padding: 25px;
+  }
+  
+  .infoCard {
+    padding: 20px;
+  }
+  
+  .tokenDescription {
+    padding: 25px;
+    font-size: 0.95rem;
+  }
+  
+  .tokenDescription li {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .presaleButton,
+  .purchaseButton {
+    padding: 14px 30px;
+    font-size: 1rem;
+  }
+  
+  .input {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+  
+  .totalCost {
+    font-size: 1rem;
+  }
+  
+  .label {
+    font-size: 1rem;
+  }
+  
+  .purchaseContainer {
+    padding: 25px;
+  }
+  
+  .presale {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .tokenTitle {
+    font-size: 2.2rem;
+  }
+  
+  .presaleTitle {
+    font-size: 1.8rem;
+  }
+  
+  .presaleDescription {
+    font-size: 0.95rem;
+  }
+  
+  .infoCard {
+    padding: 18px;
+  }
+  
+  .tokenDescription {
+    padding: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .tokenDescription li {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .presaleButton,
+  .purchaseButton {
+    padding: 12px 25px;
+    font-size: 0.95rem;
+  }
 }
