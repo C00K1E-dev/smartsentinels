@@ -179,8 +179,8 @@
   background: linear-gradient(135deg, #ffd700 0%, #f8f442 100%);
 }
 
-/* Presale Section */
-.presale {
+/* fundraise Section */
+.fundraise {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%);
   padding: 80px 40px;
   border-radius: 30px;
@@ -192,7 +192,7 @@
   margin-bottom: 60px;
 }
 
-.presale::before {
+.fundraise::before {
   content: '';
   position: absolute;
   top: 0;
@@ -210,14 +210,14 @@
   50% { opacity: 1; }
 }
 
-.presaleHeader {
+.fundraiseHeader {
   text-align: center;
   margin-bottom: 60px;
   position: relative;
   z-index: 1;
 }
 
-.presaleTitle {
+.fundraiseTitle {
   font-size: 3.5rem;
   font-weight: 900;
   background: linear-gradient(135deg, #f8f442 0%, #ffd700 50%, #f8f442 100%);
@@ -229,7 +229,7 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
-.presaleDescription {
+.fundraiseDescription {
   font-size: 1.3rem;
   color: #e6e6e6;
   line-height: 1.6;
@@ -238,7 +238,7 @@
   opacity: 0.9;
 }
 
-.presaleContent {
+.fundraiseContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
@@ -248,7 +248,7 @@
   z-index: 1;
 }
 
-.presaleInfo {
+.fundraiseInfo {
   background: rgba(255, 255, 255, 0.05);
   padding: 40px;
   border-radius: 25px;
@@ -257,7 +257,7 @@
   transition: all 0.3s ease;
 }
 
-.presaleInfo:hover {
+.fundraiseInfo:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
@@ -301,13 +301,13 @@
   line-height: 1.4;
 }
 
-.presaleImageContainer {
+.fundraiseImageContainer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.presaleImage {
+.fundraiseImage {
   width: 100%;
   max-width: 500px;
   height: auto;
@@ -318,7 +318,7 @@
   transition: all 0.4s ease;
 }
 
-.presaleImage:hover {
+.fundraiseImage:hover {
   transform: scale(1.05);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
 }
@@ -329,7 +329,7 @@
   z-index: 1;
 }
 
-.presaleButton {
+.fundraiseButton {
   background: linear-gradient(135deg, #f8f442 0%, #ffd700 100%);
   color: #1a1a1a;
   padding: 20px 50px;
@@ -356,11 +356,11 @@
   transition: left 0.6s ease;
 }
 
-.presaleButton:hover .buttonGlow {
+.fundraiseButton:hover .buttonGlow {
   left: 100%;
 }
 
-.presaleButton:hover {
+.fundraiseButton:hover {
   transform: translateY(-5px);
   box-shadow: 0 25px 50px rgba(248, 244, 66, 0.4);
 }
@@ -488,15 +488,15 @@
     font-size: 3.5rem;
   }
   
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 3rem;
   }
   
-  .presaleContent {
+  .fundraiseContent {
     gap: 40px;
   }
   
-  .presale {
+  .fundraise {
     padding: 60px 30px;
   }
 }
@@ -511,24 +511,24 @@
     font-size: 3rem;
   }
   
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 2.5rem;
   }
   
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 1.1rem;
   }
   
-  .presaleContent {
+  .fundraiseContent {
     grid-template-columns: 1fr;
     gap: 40px;
   }
   
-  .presale {
+  .fundraise {
     padding: 50px 25px;
   }
   
-  .presaleInfo {
+  .fundraiseInfo {
     padding: 30px;
   }
   
@@ -542,7 +542,7 @@
     font-size: 1rem;
   }
   
-  .presaleButton,
+  .fundraiseButton,
   .purchaseButton {
     padding: 16px 40px;
     font-size: 1.1rem;
@@ -572,15 +572,15 @@
     font-size: 2.5rem;
   }
   
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 2rem;
   }
   
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 1rem;
   }
   
-  .presaleInfo {
+  .fundraiseInfo {
     padding: 25px;
   }
   
@@ -598,7 +598,7 @@
     font-size: 0.95rem;
   }
   
-  .presaleButton,
+  .fundraiseButton,
   .purchaseButton {
     padding: 14px 30px;
     font-size: 1rem;
@@ -621,7 +621,7 @@
     padding: 25px;
   }
   
-  .presale {
+  .fundraise {
     padding: 40px 20px;
   }
 }
@@ -631,11 +631,11 @@
     font-size: 2.2rem;
   }
   
-  .presaleTitle {
+  .fundraiseTitle {
     font-size: 1.8rem;
   }
   
-  .presaleDescription {
+  .fundraiseDescription {
     font-size: 0.95rem;
   }
   
@@ -653,7 +653,7 @@
     font-size: 0.9rem;
   }
   
-  .presaleButton,
+  .fundraiseButton,
   .purchaseButton {
     padding: 12px 25px;
     font-size: 0.95rem;

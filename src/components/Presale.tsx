@@ -53,93 +53,89 @@ return (
     </div>
 
     {/* Presale Section */}
-    <section id="presale" className={styles.presale}>
-      <div className={styles.presaleHeader}>
-        <h2 className={styles.presaleTitle}>Join Our Presale</h2>
-        <p className={styles.presaleDescription}>
-          Be a part of the Smart Sentinels revolution. Join our presale and get exclusive access to our AI-powered NFT staking platform.
-        </p>
-      </div>
-      
-      <div className={styles.presaleContent}>
-        <div className={styles.presaleInfo}>
-          <div className={styles.infoGrid}>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Total Supply</span>
-              <span className={styles.infoValue}>1,000,000,000 SSTL</span>
-            </div>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Presale Allocation</span>
-              <span className={styles.infoValue}>30% of total supply</span>
-            </div>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Token Price</span>
-              <span className={styles.infoValue}>$0.03 per SSTL</span>
-            </div>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Minimum Purchase</span>
-              <span className={styles.infoValue}>1,000 SSTL</span>
-            </div>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Maximum Purchase</span>
-              <span className={styles.infoValue}>1,000,000 SSTL</span>
-            </div>
-            <div className={styles.infoCard}>
-              <span className={styles.infoLabel}>Token Distribution</span>
-              <span className={styles.infoValue}>Immediately after purchase</span>
-            </div>
-          </div>
+    <section id="fundraise" className={styles.fundraise}>
+  <div className={styles.fundraiseHeader}>
+    <h2 className={styles.fundraiseTitle}>Join Our Fundraise</h2>
+    <p className={styles.fundraiseDescription}>
+      Support the Smart Sentinels vision. Join our fundraise and secure your share of our AI-powered ecosystem.
+    </p>
+  </div>
+  
+  <div className={styles.fundraiseContent}>
+    <div className={styles.fundraiseInfo}>
+      <div className={styles.infoGrid}>
+        <div className={styles.infoCard}>
+          <span className={styles.infoLabel}>Tokens for Sale</span>
+          <span className={styles.infoValue}>10,000,000 SSTL</span>
         </div>
-        
-        <div className={styles.presaleImageContainer}>
-          <Image 
-            src="/4.png" 
-            alt="Presale" 
-            width={500}
-            height={300} 
-            className={styles.presaleImage}
-            style={{ objectFit: 'cover' }}
+        <div className={styles.infoCard}>
+          <span className={styles.infoLabel}>Token Price</span>
+          <span className={styles.infoValue}>$0.03 per SSTL</span>
+        </div>
+        <div className={styles.infoCard}>
+          <span className={styles.infoLabel}>Minimum Purchase</span>
+          <span className={styles.infoValue}>1,000 SSTL</span>
+        </div>
+        <div className={styles.infoCard}>
+          <span className={styles.infoLabel}>Maximum Purchase</span>
+          <span className={styles.infoValue}>1,000,000 SSTL</span>
+        </div>
+        <div className={styles.infoCard}>
+          <span className={styles.infoLabel}>Token Distribution</span>
+          <span className={styles.infoValue}>Immediately after purchase</span>
+        </div>
+      </div>
+    </div>
+    
+    <div className={styles.fundraiseImageContainer}>
+      <Image 
+        src="/4.png" 
+        alt="Fundraise" 
+        width={500}
+        height={300} 
+        className={styles.fundraiseImage}
+        style={{ objectFit: 'cover' }}
+      />
+    </div>
+  </div>
+  
+  {!isExpanded && (
+    <div className={styles.buttonContainer}>
+      <button className={styles.fundraiseButton} onClick={handleJoinPresaleClick}>
+        <span>Join Fundraise</span>
+        <div className={styles.buttonGlow}></div>
+      </button>
+    </div>
+  )}
+  
+  {isExpanded && (
+    <div className={styles.purchaseContainer}>
+      <div className={styles.purchaseForm}>
+        <label htmlFor="amount" className={styles.label}>Amount of SSTL tokens:</label>
+        <div className={styles.inputContainer}>
+          <input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={handleAmountChange}
+            className={styles.input}
+            placeholder="Enter amount..."
+            min="1000"
+            max="1000000"
           />
-        </div>
-      </div>
-      
-      {!isExpanded && (
-        <div className={styles.buttonContainer}>
-          <button className={styles.presaleButton} onClick={handleJoinPresaleClick}>
-            <span>Join Presale</span>
-            <div className={styles.buttonGlow}></div>
-          </button>
-        </div>
-      )}
-      
-      {isExpanded && (
-        <div className={styles.purchaseContainer}>
-          <div className={styles.purchaseForm}>
-            <label htmlFor="amount" className={styles.label}>Amount of SSTL tokens:</label>
-            <div className={styles.inputContainer}>
-              <input
-                type="number"
-                id="amount"
-                value={amount}
-                onChange={handleAmountChange}
-                className={styles.input}
-                placeholder="Enter amount..."
-                min="1000"
-                max="1000000"
-              />
-              <div className={styles.totalCostDisplay}>
-                <span className={styles.totalCostLabel}>Total Cost:</span>
-                <span className={styles.totalCost}>${totalCost.toFixed(2)}</span>
-              </div>
-            </div>
-            <button onClick={handlePurchase} className={styles.purchaseButton}>
-              <span>Buy Tokens</span>
-              <div className={styles.buttonGlow}></div>
-            </button>
+          <div className={styles.totalCostDisplay}>
+            <span className={styles.totalCostLabel}>Total Cost:</span>
+            <span className={styles.totalCost}>${totalCost.toFixed(2)}</span>
           </div>
         </div>
-      )}
-    </section>
+        <button onClick={handlePurchase} className={styles.purchaseButton}>
+          <span>Buy Tokens</span>
+          <div className={styles.buttonGlow}></div>
+        </button>
+      </div>
+    </div>
+  )}
+</section>
   </div>
 );
 };

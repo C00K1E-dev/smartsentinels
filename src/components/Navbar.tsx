@@ -56,11 +56,11 @@ const Navbar = () => {
                             <div className={styles.linkUnderline}></div>
                         </Link>
                         <Link
-                            href={{ pathname: "/", hash: "presale" }}
+                            href={{ pathname: "/", hash: "fundraise" }}
                             scroll={true}
                             className={styles.navLink}
                         >
-                            <span className={styles.linkText}>Presale</span>
+                            <span className={styles.linkText}>Fundraise</span>
                             <div className={styles.linkUnderline}></div>
                         </Link>
                         <Link href="/audit" className={styles.navLink}>
@@ -107,13 +107,13 @@ const Navbar = () => {
                             <div className={styles.mobileLinkIcon}>🏠</div>
                         </Link>
                         <Link
-                            href={{ pathname: "/", hash: "presale" }}
+                            href={{ pathname: "/", hash: "fundraise" }}
                             scroll={true}
                             className={styles.mobileNavLink}
                             onClick={closeMenu}
                         >
                             <span className={styles.mobileLinkText}>
-                                Presale
+                                fundraise
                             </span>
                             <div className={styles.mobileLinkIcon}>🚀</div>
                         </Link>
