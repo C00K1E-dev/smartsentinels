@@ -19,7 +19,7 @@ const Fundraise: React.FC = () => {
   };
 
   const handlePurchase = () => {
-    alert(`You have purchased ${amount} SST tokens for $${totalCost.toFixed(2)}`);
+    alert(`You have purchased ${amount} SSTL tokens for $${totalCost.toFixed(2)}`);
   };
 
   return (
@@ -37,8 +37,8 @@ const Fundraise: React.FC = () => {
       <div className={styles.tokenDescription}>
         <div className={styles.tokenDescription2}>
           <p><strong><span className={styles.yellow}>Token Name:</span></strong> SmartSentinels</p>
-          <p><strong><span className={styles.yellow}>Symbol:</span></strong> SSTL</p>
-          <p><strong><span className={styles.yellow}>Total Supply:</span></strong> 100,000,000 SST (fixed, deflationary)</p>
+          <p><strong><span className={styles.yellow}>Symbol:</span></strong> SSTLL</p>
+          <p><strong><span className={styles.yellow}>Total Supply:</span></strong> 100,000,000 SSTL (fixed, deflationary)</p>
           <p><strong><span className={styles.yellow}>Blockchain:</span></strong> BNB Chain</p>
         <p><strong><span className={styles.yellow}>Token Utility and Economy</span></strong></p>
         <p>
@@ -60,10 +60,10 @@ const Fundraise: React.FC = () => {
         </p>
         <div className={styles.fundraiseContent}>
           <div className={styles.fundraiseInfo}>
-            <p className={styles.fundraiseInfoItem}><strong>Tokens for Sale:</strong> 10,000,000 SST</p>
-            <p className={styles.fundraiseInfoItem}><strong>Token Price:</strong> $0.03 per SST</p>
-            <p className={styles.fundraiseInfoItem}><strong>Minimum Purchase:</strong> 1,000 SST</p>
-            <p className={styles.fundraiseInfoItem}><strong>Maximum Purchase:</strong> 1,000,000 SST</p>
+            <p className={styles.fundraiseInfoItem}><strong>Tokens for Sale:</strong> 10,000,000 SSTL</p>
+            <p className={styles.fundraiseInfoItem}><strong>Token Price:</strong> $0.03 per SSTL</p>
+            <p className={styles.fundraiseInfoItem}><strong>Minimum Purchase:</strong> 1,000 SSTL</p>
+            <p className={styles.fundraiseInfoItem}><strong>Maximum Purchase:</strong> 1,000,000 SSTL</p>
             <p className={styles.fundraiseInfoItem}><strong>Token Distribution:</strong> Immediately after purchase</p>
           </div>
           <Image
@@ -79,7 +79,7 @@ const Fundraise: React.FC = () => {
         )}
         {isExpanded && (
           <div className={styles.purchaseContainer}>
-            <label htmlFor="amount" className={styles.label}>Amount of SST tokens:</label>
+            <label htmlFor="amount" className={styles.label}>Amount of SSTL tokens:</label>
             <div className={styles.inputContainer}>
               <input
                 type="number"

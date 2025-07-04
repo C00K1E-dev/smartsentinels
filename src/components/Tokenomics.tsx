@@ -56,25 +56,25 @@ const Tokenomics: React.FC = () => (
     <h2 className={styles.tokenomicsTitle}>Tokenomics</h2>
     <div className={styles.tokenomicsContent}>
       <div className={styles.tokenomicsInfo}>
-        <p><strong>Total Supply:</strong> 100,000,000 SST (fixed, deflationary)</p>
+        <p><strong>Total Supply:</strong> 100,000,000 SSTL (fixed, deflationary)</p>
         <ul className={styles.tokenomicsList}>
           <li>
-            <span className={styles.yellow}>PoUW:</span> 40% (40,000,000 SST), released gradually over 4 years, max. 1,000,000 SST/month
+            <span className={styles.yellow}>PoUW:</span> 40% (40,000,000 SSTL), released gradually over 4 years, max. 1,000,000 SSTL/month
           </li>
           <li>
-            <span className={styles.yellow}>Fundraising:</span> 10% (10,000,000 SST), locked for 6 months, then linear vesting over 6 months
+            <span className={styles.yellow}>Fundraising:</span> 10% (10,000,000 SSTL), locked for 6 months, then linear vesting over 6 months
           </li>
           <li>
-            <span className={styles.yellow}>Team:</span> 10% (10,000,000 SST), locked for 1 year, then linear vesting over 12 months
+            <span className={styles.yellow}>Team:</span> 10% (10,000,000 SSTL), locked for 1 year, then linear vesting over 12 months
           </li>
           <li>
-            <span className={styles.yellow}>Exchange &amp; Liquidity:</span> 20% (20,000,000 SST), no vesting, DAO controlled
+            <span className={styles.yellow}>Exchange &amp; Liquidity:</span> 20% (20,000,000 SSTL), no vesting, DAO controlled
           </li>
           <li>
-            <span className={styles.yellow}>Marketing &amp; BizDev:</span> 10% (10,000,000 SST), linear vesting over 6–12 months
+            <span className={styles.yellow}>Marketing &amp; BizDev:</span> 10% (10,000,000 SSTL), linear vesting over 6–12 months
           </li>
           <li>
-            <span className={styles.yellow}>Ecosystem &amp; Partnerships:</span> 10% (10,000,000 SST), flexible allocation
+            <span className={styles.yellow}>Ecosystem &amp; Partnerships:</span> 10% (10,000,000 SSTL), flexible allocation
           </li>
         </ul>
         <p className={styles.tokenomicsSubtitle}><strong>Distribution for AI-generated tokens:</strong></p>
