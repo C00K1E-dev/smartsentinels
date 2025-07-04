@@ -429,3 +429,27 @@
     font-size: 1.1rem;
   }
 }
+
+@media (max-width: 425px) {
+  .navbarContainer {
+    padding: 0 11px;
+  }
+}
+
+@media (max-width: 320px) {
+  .brandText {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .navbarContainer {
+    max-width: 1400px;
+  }
+}
+
+@media (min-width: 2160px) {
+  .navbarContainer {
+    max-width: 1600px;
+  }
+}
