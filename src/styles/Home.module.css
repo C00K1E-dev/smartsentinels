@@ -78,3 +78,57 @@
   font-size: 1.25rem;
   line-height: 1.5;
 }
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
+  .description {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  .description {
+    font-size: 1.1rem;
+    margin: 2rem 0;
+  }
+}
+
+@media (max-width: 425px) {
+  .title {
+    font-size: 2rem;
+  }
+  .description {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .title {
+    font-size: 1.6rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .title {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 2160px) {
+  .title {
+    font-size: 5rem;
+  }
+}

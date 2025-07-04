@@ -458,6 +458,15 @@
   }
 }
 
+@media (min-width: 2160px) {
+  .heroMain {
+    max-width: 1800px;
+  }
+  .expandedSection {
+    max-width: 1600px;
+  }
+}
+
 @media (min-width: 1440px) and (max-width: 1919px) {
   .heroMain {
     max-width: 1400px;
@@ -631,7 +640,7 @@
   }
 }
 
-@media (max-width: 424px) and (min-width: 320px) {
+@media (max-width: 425px) and (min-width: 320px) {
   .hero {
     padding: 40px 0 25px 0;
   }
@@ -715,7 +724,7 @@
   }
 }
 
-@media (max-width: 374px) {
+@media (max-width: 375px) {
   .hero {
     padding: 35px 0 20px 0;
   }
@@ -801,5 +810,11 @@
   .bulletList li::before {
     left: 0;
     top: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .heroText h1 {
+    font-size: 1.8rem;
   }
 }
