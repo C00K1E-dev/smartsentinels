@@ -166,4 +166,18 @@
   color: #f8f442;
   margin-bottom: 10px;
   font-weight: 600;
+}@media (max-width: 425px) {
+  .nftsTitle { font-size: 1.8rem; }
+}
+@media (max-width: 375px) {
+  .nftsTitle { font-size: 1.6rem; }
+}
+@media (max-width: 320px) {
+  .nftsTitle { font-size: 1.4rem; }
+}
+@media (min-width: 1440px) {
+  .nftsContainer { max-width: 1400px; }
+}
+@media (min-width: 2160px) {
+  .nftsContainer { max-width: 1800px; }
 }

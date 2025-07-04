@@ -57,3 +57,11 @@ main {
   display: flex;
   flex-direction: column;
 }
+/* Responsive root font sizes */
+@media (max-width: 1024px) { html { font-size: 15px; } }
+@media (max-width: 768px) { html { font-size: 14px; } }
+@media (max-width: 425px) { html { font-size: 13px; } }
+@media (max-width: 375px) { html { font-size: 12px; } }
+@media (max-width: 320px) { html { font-size: 11px; } }
+@media (min-width: 1440px) { html { font-size: 17px; } }
+@media (min-width: 2160px) { html { font-size: 18px; } }
