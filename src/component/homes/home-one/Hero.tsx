@@ -74,11 +74,11 @@ const Hero = () => {
             </div>
           </div>
 
-          <p className="sec-text">
-            This private Seed Round marks Phase 1 of our capital roadmap. We're offering up to 5% of the total SSTL supply
-            at an early-stage valuation, fueling the development of the SmartSentinels platform, expansion of the AI agent
-            network, and the foundations of a decentralized Proof of Useful Work (PoUW) ecosystem designed to scale across industries.
-          </p>
+          <p className="sec-text"> 
+  This private Seed Round marks Phase 1 of our capital roadmap. We&#39;re offering up to 5% of the total SSTL supply
+  at an early-stage valuation, fueling the development of the SmartSentinels platform, expansion of the AI agent
+  network, and the foundations of a decentralized Proof of Useful Work (PoUW) ecosystem designed to scale across industries.
+</p>
 
           <ul className="skill-feature_list style2">
             <li><strong>25%</strong> unlocked at TGE</li>
