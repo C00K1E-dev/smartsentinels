@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+SmartSentinels
 
-## Getting Started
+Welcome to SmartSentinels – an innovative platform that combines AI and blockchain to deliver cutting-edge smart contract auditing powered by a new mining model: Proof of Useful Work (PoUW).
 
-First, run the development server:
+SmartSentinels is not just a smart contract auditor. It’s a decentralized network where users can contribute their own hardware or mint NFTs to become stakeholders in AI-powered devices. When these devices perform useful tasks, such as auditing smart contracts, new tokens are generated and distributed to NFT holders. This ecosystem brings a fresh and fair approach to mining and resource sharing.
 
-```bash
+🚀 Project Overview
+
+Blockchain + AI-powered auditing system
+
+Proof of Useful Work (PoUW) mining model
+
+NFT-based revenue sharing
+
+Smart contract audit automation with detailed PDF reports
+
+SmartSentinels is designed to be scalable, starting with smart contract audits but aiming to expand into other real-world AI-powered tasks that generate tangible value.
+
+📦 Installation
+
+To get started with SmartSentinels locally, follow these simple steps:
+
+npm install
+
+This will install all required dependencies.
+
+💻 Running the Project
+
+Once the dependencies are installed, launch the development server with:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application should now be running on:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+📄 License
 
-To learn more about Next.js, take a look at the following resources:
+This project is protected under a Proprietary License.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You may view the code in this repository for personal and educational purposes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Cloning, copying, downloading, redistributing, or using this code in any form is strictly prohibited without explicit written permission from the owner.
 
-## Deploy on Vercel
+Commercial use or integration into other products is not allowed.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+By accessing this repository, you agree to comply with these terms.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+For licensing inquiries or special permissions, please contact the repository owner directly.
+
+🛡️ Disclaimer
+
+The SmartSentinels platform is under active development. Features, tokenomics, and system design may evolve over time. Please stay updated with the latest commits and official announcements.
