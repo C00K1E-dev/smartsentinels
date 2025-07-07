@@ -1,0 +1,17 @@
+ .yellow {
+  color: #f8f442;
+  font-weight: bold;
+}
+
+.green {
+  color: #00ff00;
+  font-weight: bold;
+}
+
+
+.title-style3 {
+  color: var(--tg-purple);
+  font-weight: 700;
+  letter-spacing: -2.8px;
+  font-size: 70px;
+}
