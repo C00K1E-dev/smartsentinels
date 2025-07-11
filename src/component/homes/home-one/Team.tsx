@@ -11,7 +11,7 @@ const Team = () => {
    
    return (
       <div className="pt-130 pb-140 overflow-hidden position-relative z-index-common">
-         <div className="bg-gradient-3">
+         <div className="bg-gradient-2">
             <Image src={team_bg} alt="img" />
          </div>
          <TeamFounder />

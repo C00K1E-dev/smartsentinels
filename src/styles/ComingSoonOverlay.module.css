@@ -1,0 +1,111 @@
+.overlay {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(31, 31, 31, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5vw;
+}
+
+.content {
+  text-align: center;
+  background: rgba(45, 45, 45, 0.95);
+  padding: 5vw 4vw;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  max-width: 90vw;
+  width: 100%;
+}
+
+.image {
+  width: 480px;
+  max-width: 90vw;
+  margin-bottom: 24px;
+}
+
+.text {
+  color: #f8f442;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  word-break: break-word;
+}
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #fff;
+  z-index: 10;
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 8vw 2vw;
+    border-radius: 10px;
+  }
+  .image {
+    max-width: 90vw;
+    margin-bottom: 16px;
+  }
+  .text {
+    font-size: 1.1rem;
+  }
+}
+
+.comingSoonImage {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+/* Extra small devices (phones, 320px - 425px) */
+@media (max-width: 425px) {
+  .comingSoonImage {
+    max-width: 90vw;
+  }
+}
+
+/* Small tablets (426px - 767px) */
+@media (max-width: 768px) {
+  .comingSoonImage {
+    max-width: 95vw;
+  }
+}
+
+/* Medium devices (769px - 1024px) */
+@media (max-width: 1024px) {
+  .comingSoonImage {
+    max-width: 80vw;
+  }
+}
+
+/* Large screens (1440px+) */
+@media (min-width: 1440px) {
+  .comingSoonImage {
+    max-width: 500px;
+  }
+}
+
+/* Ultra-wide screens (2560px+) */
+@media (min-width: 2160px) {
+  .comingSoonImage {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .comingSoonImage {
+    max-width: 700px;
+  }
+}

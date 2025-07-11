@@ -43,7 +43,7 @@ const intro_data: DataType[] = [
 
 const IntroArea = () => {
    return (
-      <div className="pt-130 overflow-hidden bg-black2">
+      <div className="pt-130 overflow-hidden bg-gradient-0">
          <div className="container">
             <div className="row">
                <div className="col-xl-6">

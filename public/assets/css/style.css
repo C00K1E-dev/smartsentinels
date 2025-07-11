@@ -44,7 +44,7 @@
     --tg-body-font-family: 'Outfit', sans-serif;
     --tg-heading-font-family: 'Plus Jakarta Sans', sans-serif;
     --tg-primary-color: #f8f442;
-    --tg-secondary-color: #0F101E;
+    --tg-secondary-color: #000000;
     --tg-body-font-color: #92939E;
     --tg-heading-font-color: #FFFFFF;
     --tg-paragraph-color: #92939E;
@@ -64,7 +64,7 @@
     --tg-teal: #20c997;
     --tg-cyan: #0dcaf0;
     --tg-white: #ffffff;
-    --tg-black: #010314;
+    --tg-black: #000000;
     --tg-gray: #93B2C8;
     --facebook: #3b5998;
     --twitter: #00acee;
@@ -324,7 +324,7 @@ label {
     transition: all 0.3s ease 0s;
 }
 .btn:hover {
-    background: var(--tg-secondary-color);
+    background: var(--tg-black);
     color: var(--tg-white);
 }
 .btn:hover::after {
@@ -578,7 +578,7 @@ label {
 	top: 0;
 	width: 100%;
 	z-index: 99;
-	background: var(--tg-secondary-color);
+	background: var(--tg-black);
 	-webkit-animation: 1000ms ease-in-out 0s normal none 1 running fadeInDown;
 	animation: 1000ms ease-in-out 0s normal none 1 running fadeInDown;
 	-webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
@@ -599,7 +599,7 @@ label {
 	line-height: 50px;
 	cursor: pointer;
 	display: none;
-	color: var(--tg-white);
+	color: var(--tg-black);
 	margin-right: 30px;
 	top: 15px;
 }
@@ -674,7 +674,7 @@ label {
 	max-height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
-	background: var(--tg-secondary-color);
+	background: var(--tg-black);
 	padding: 0px 0px;
 	z-index: 5;
 	box-shadow: -9px 0 14px 0px rgb(0 0 0 / 6%);
@@ -771,7 +771,7 @@ label {
 	text-align: center;
 	font-size: 16px;
 	line-height: 32px;
-	color: var(--tg-white);
+	color: var(--tg-black);
 	background: var(--tg-primary-color);
 	cursor: pointer;
 	border-radius: 2px;
@@ -845,7 +845,7 @@ label {
     background: var(--tg-primary-color);
     font-size: 16px;
     border-radius: 50%;
-    color: var(--tg-white);
+    color: var(--tg-black);
 }
 
 
@@ -1645,7 +1645,7 @@ label {
 }
 .roadmap-content {
     border: 1px solid rgba(43 44 56 / 46%);
-    background: var(--tg-secondary-color);
+    background: #1f1f1f;
     border-radius: 15px;
     padding: 75px 50px 65px;
 }
@@ -3250,7 +3250,21 @@ label {
 .bg-gradient-4:after {
     content: '';
     position: absolute;
-    background: linear-gradient(to top, var(--tg-primary-color) -5.52%, rgba(31, 31, 31, 1) 46.38%, var(--tg-secondary-color) 217.11%);
+    position: absolute;
+    left: 50%;
+    z-index: -1;
+    background: linear-gradient(
+        0.41deg,
+        #1f1f1f 19.48%,     /* Replace primary color with dark gray */
+        #1f1f1f -13.62%,     /* Keep it solid dark */
+        #000 267.11%         /* Pure black for deep fade */
+    );
+    filter: blur(225px);
+    top: -1292px;
+    width: 1873px;
+    height: 2191px;
+    transform: translate(-50%, 0);
+    border-radius: 0 0 50% 50%;
     filter: blur(175px);
     inset: 500px 0 0;
 }
@@ -3282,7 +3296,7 @@ label {
 }
 
 .bg-black2 {
-    background: var(--tg-black2);
+    background: var(--tg-black);
 }
 .z-index-common {
     position: relative;
@@ -3305,7 +3319,7 @@ label {
 }
 .social-btn a:hover {
     background: var(--tg-primary-color);
-    color: var(--tg-white);
+    color: var(--tg-black);
     border-color: var(--tg-primary-color);
 }
 /* Header 1 ---------------------------------- */
@@ -3406,7 +3420,12 @@ label {
     position: absolute;
     left: 50%;
     z-index: -1;
-    background: linear-gradient(0.41deg, var(--tg-primary-color) 19.48%, rgba(31, 31, 31, 1) -13.62%, var(--tg-black) 267.11%);
+    background: linear-gradient(
+        0.41deg,
+        #1f1f1f 19.48%,     /* Replace primary color with dark gray */
+        #1f1f1f -13.62%,     /* Keep it solid dark */
+        #000 267.11%         /* Pure black for deep fade */
+    );
     filter: blur(225px);
     top: -1292px;
     width: 1873px;
@@ -3594,7 +3613,7 @@ label {
     }
 }
 .hero-countdown-wrap {
-    background: var(--tg-black2);
+    background: #1f1f1f;
     border-radius: 16px;
     text-align: center;
     padding: 80px 90px;
@@ -3607,7 +3626,7 @@ label {
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
-    background: var(--tg-secondary-color);
+    background: var(--tg-blue);
     border-radius: 10px;
     min-width: 110px;
     color: var(--tg-paragraph-color);
@@ -3621,7 +3640,7 @@ label {
     line-height: .9;
     font-size: 35px;
     font-weight: 700;
-    color: var(--tg-white);
+    color: var(--tg-black);
     font-family: var(--tg-heading-font-family);
     display: block;
     margin-top: 7px;
@@ -3692,7 +3711,7 @@ label {
     position: absolute;
     width: 22px;
     height: 19px;
-    border-bottom: solid 19px var(--tg-secondary-color);
+    border-bottom: solid 19px var(--tg-black);
     border-left: solid 11px transparent;
     border-right: solid 11px transparent;
     bottom: 0;
@@ -3770,7 +3789,7 @@ label {
     display: none;
 }
 .hero-countdown-wrap .skill-feature {
-    background: var(--tg-secondary-color);
+    background: var(--tg-black);
     border-radius: 8px;
     padding: 43px 36px 43px 24px;
     display: flex;
@@ -3795,7 +3814,7 @@ label {
     position: absolute;
     height: 100%;
     width: 0.5px;
-    background: #1C1D34;
+    background: #000000;
     top: 0;
     left: 22%;
     z-index: -1;
@@ -3986,7 +4005,7 @@ label {
 .feature-card {
     box-shadow: 0px 16px 18px rgba(1, 12, 50, 0.1);
     border-radius: 15px;
-    background: var(--tg-black2);
+    background: #1f1f1f;
     max-width: 570px;
     min-height: 206px;
     margin-left: auto;
@@ -4063,7 +4082,12 @@ label {
     position: absolute;
     width: 479.43px;
     height: 71.62px;
-    background: linear-gradient(0.41deg, var(--tg-primary-color) 7.48%, rgba(46, 32, 255, 0.27) 36.38%, var(--tg-secondary-color) 67.11%);
+   background: linear-gradient(
+        0.41deg,
+        #1f1f1f 19.48%,     /* Replace primary color with dark gray */
+        #1f1f1f -13.62%,     /* Keep it solid dark */
+        #000 267.11%         /* Pure black for deep fade */
+    );
     filter: blur(23px);
     border-radius: 50%;
     bottom: 0;
@@ -4196,7 +4220,7 @@ label {
 }
 /* Founder 1 ---------------------------------- */
 .founder-card {
-    background: var(--tg-secondary-color2);
+    background: #1f1f1f;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
@@ -4234,12 +4258,12 @@ label {
   }
   .founder-card .social-btn a {
     background: var(--tg-white);
-    color: #5729D6;
+    color: #000000;
     font-size: 18px;
   }
   .founder-card .social-btn a:hover {
     background: rgba(255, 255, 255, 0.1);
-    color: var(--tg-white);
+    color: var(--tg-primary-color);
   }
   .founder-card:hover .founder-card-img img {
     transform: scale(1.05);
@@ -6265,8 +6289,8 @@ label {
   margin-bottom: 40px;
 }
 .menu-nav .logo{
-  width: 102px;
-  height: 35px;
+  width: 180px;
+  height: 55px;
 }
 
 
