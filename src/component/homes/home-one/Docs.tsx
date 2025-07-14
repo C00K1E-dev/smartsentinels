@@ -3,7 +3,7 @@ import Link from "next/link"
 
 const doc_data: string[] = ["Whitepaper", "Token Sale Terms", "Presentation", "Lightpaper"]
 
-const Documents = () => {
+const Docs = () => {
    return (
       <>
          
@@ -42,4 +42,4 @@ const Documents = () => {
       </>
    )
 }
-export default Documents
+export default Docs

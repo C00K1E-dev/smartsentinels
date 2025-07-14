@@ -1,4 +1,4 @@
-import Documents from "@/pages/Documents";
+import Docs from "@/component/homes/home-one/Docs";
 import Wrapper from "@/layouts/Wrapper";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterOne from "@/layouts/footers/FooterOne";
@@ -11,7 +11,7 @@ const index = () => {
   return (
     <Wrapper>
       <HeaderOne />
-      <Documents />
+      <Docs />
       <FooterOne />
     </Wrapper>
   )
