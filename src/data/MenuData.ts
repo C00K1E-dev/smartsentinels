@@ -49,6 +49,13 @@ const menu_data: MenuItem[] = [
         id: 5,
         page:"nav_1",
         has_dropdown: false,
+        title: "SmartSentinels Hub",
+        link: "/smartsentinels-hub",
+    },
+    {
+        id: 6,
+        page:"nav_1",
+        has_dropdown: false,
         title: "Marketplace(Coming Soon)",
         link: "/Marketplace",
     },
