@@ -34,23 +34,13 @@ const menu_data: MenuItem[] = [
         title: "RoadMap",
         link: "/#roadMap",
     },
+    
     {
         id: 4,
         page:"nav_1",
         has_dropdown: false,
-        title: "Dashboard",
-        link: "/#Dashboard",
-        sub_menus: [
-            { link: "/blog", title: "Our Blog" },
-            { link: "/blog-details", title: "Blog-Details", },
-        ],
-    },
-    {
-        id: 5,
-        page:"nav_1",
-        has_dropdown: false,
-        title: "Marketplace(Coming Soon)",
-        link: "/Marketplace",
+        title: "SmartSentinels HUB",
+        link: "/SmartSentinels HUB",
     },
     
     {

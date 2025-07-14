@@ -31,9 +31,7 @@ const HeaderOne = () => {
                                         </div>
                                         <div className="header-action">
                                             <ul className="list-wrap">
-                                                <li>
-                                                    
-                                                </li>
+                                                
                                                 <li className="header-login"><Link className="btn btn" href="/login">LOGIN</Link></li>
                                             </ul>
                                         </div>

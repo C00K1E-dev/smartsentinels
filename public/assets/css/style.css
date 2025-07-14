@@ -4648,7 +4648,7 @@ label {
 .accordion-card {
     transition: 0.4s ease-in-out;
     overflow: hidden;
-    background: var(--tg-secondary-color2);
+    background: #1f1f1f;
     border-radius: 33px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 18px 30px;
@@ -6530,3 +6530,113 @@ label {
     margin-bottom: 20px;
     text-align: left;
  }
+
+
+ /* Responsive styles for Documents page */
+.document-area {
+  padding: 150px 0;
+}
+
+.document-inner-wrap {
+  background: rgba(31, 31, 31, 0.85);
+  border-radius: 18px;
+  padding: 48px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+.section-title .title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.document-wrap {
+  background: #1f1f1f;
+  border-radius: 12px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+
+.list-wrap {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-wrap li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  background: #232323;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: background 0.2s;
+}
+
+.list-wrap li:last-child {
+  margin-bottom: 0;
+}
+
+.list-wrap li:hover {
+  background: #282828;
+}
+
+.list-wrap .icon {
+  color: var(--tg-primary-color, #f8f442);
+  margin-right: 1rem;
+  font-size: 1.5rem;
+}
+
+.document-wrap .btn {
+  margin-top: 2rem;
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--tg-primary-color, #f8f442);
+  color: #191919;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.document-wrap .btn:hover {
+  background: #ffe600;
+  color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .document-inner-wrap {
+    padding: 32px 12px;
+  }
+  .document-wrap {
+    padding: 24px 10px;
+  }
+  .section-title .title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .document-area {
+    padding: 150px 0;
+  }
+  .document-inner-wrap {
+    padding: 16px 4px;
+  }
+  .document-wrap {
+    padding: 12px 2px;
+  }
+  .section-title .title {
+    font-size: 1.3rem;
+  }
+  .list-wrap li {
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem;
+  }
+  .document-wrap .btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+}
