@@ -14,13 +14,13 @@ const FooterOne = () => {
                <div className="row gy-4 justify-content-between align-items-center">
                   <div className="col-xl-5 col-lg-4">
                      <div className="social-btn justify-content-center justify-content-lg-start">
-   <Link href="#" target="_blank" rel="noopener noreferrer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-         <path
-            d="M10.0596 7.34522L15.8879 0.570312H14.5068L9.44607 6.45287L5.40411 0.570312H0.742188L6.85442 9.46578L0.742188 16.5703H2.12338L7.4676 10.3581L11.7362 16.5703H16.3981L10.0593 7.34522H10.0596ZM8.16787 9.54415L7.54857 8.65836L2.62104 1.61005H4.74248L8.71905 7.29827L9.33834 8.18405L14.5074 15.5779H12.386L8.16787 9.54449V9.54415Z"
-            fill="currentColor"></path>
-      </svg>
-   </Link>
+   <Link href="https://x.com/SmartSentinels_" target="_blank" rel="noopener noreferrer">
+   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+         d="M10.0596 7.34522L15.8879 0.570312H14.5068L9.44607 6.45287L5.40411 0.570312H0.742188L6.85442 9.46578L0.742188 16.5703H2.12338L7.4676 10.3581L11.7362 16.5703H16.3981L10.0593 7.34522H10.0596ZM8.16787 9.54415L7.54857 8.65836L2.62104 1.61005H4.74248L8.71905 7.29827L9.33834 8.18405L14.5074 15.5779H12.386L8.16787 9.54449V9.54415Z"
+         fill="currentColor"></path>
+   </svg>
+</Link>
    <Link href="https://t.me/SmartSentinelsCommunity" target="_blank" rel="noopener noreferrer">
       <i className="fab fa-telegram"></i>
    </Link>

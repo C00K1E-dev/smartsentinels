@@ -2,6 +2,7 @@
 import Link from "next/link.js";
 import { usePathname } from "next/navigation";
 import menu_data from "../../../data/MenuData";
+import exp from "constants";
 
 const NavMenu = () => {
     const currentRoute = usePathname();
@@ -20,8 +21,13 @@ const NavMenu = () => {
                 <li key={menu.id}
                     className={menu.has_dropdown ? "menu-item-has-children" : ""}
                 >
-                    <Link href={menu.link}
-                        className={`section-link ${(isMenuItemActive(menu.link) || (menu.sub_menus && menu.sub_menus.some((sub_m: any) => sub_m.link && isSubMenuItemActive(sub_m.link)))) ? "active" : ""}`}>
+                    <Link
+                        href={menu.link}
+                        className={`section-link ${(isMenuItemActive(menu.link) || (menu.sub_menus && menu.sub_menus.some((sub_m: any) => sub_m.link && isSubMenuItemActive(sub_m.link)))) ? "active" : ""}`}
+                        {...(menu.target === "_blank"
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                    >
                         {menu.title}
                     </Link>
 
@@ -34,7 +40,9 @@ const NavMenu = () => {
                                             <Link
                                                 href={sub_m.link}
                                                 className={
-                                                    sub_m.link && isSubMenuItemActive(sub_m.link) ? "active" : ""}>
+                                                    sub_m.link && isSubMenuItemActive(sub_m.link) ? "active" : ""
+                                                }
+                                            >
                                                 {sub_m.title}
                                             </Link>
                                         </li>
