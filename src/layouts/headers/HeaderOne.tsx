@@ -29,12 +29,7 @@ const HeaderOne = () => {
                                         <div className="navbar-wrap main-menu d-none d-lg-flex">
                                             <NavMenu />
                                         </div>
-                                        <div className="header-action">
-                                            <ul className="list-wrap">
-                                                
-                                                <li className="header-login"><Link className="btn btn" href="/login">LOGIN</Link></li>
-                                            </ul>
-                                        </div>
+                                        
                                         <div onClick={() => setIsActive(true)} className="mobile-nav-toggler"><i className="fas fa-bars"></i></div>
                                     </nav>
                                 </div>

@@ -41,11 +41,7 @@ const MobileMenus = ({ setIsActive }: any) => {
                                 className={` ${(isMenuItemActive(menu.link) || (menu.sub_menus && menu.sub_menus.some((sub_m) => sub_m.link && isSubMenuItemActive(sub_m.link)))) ? "active" : ""}`}>
                                 {menu.title}
                             </Link>
-                            <div
-                                className={`dropdown-btn ${navTitle === menu.title ? "open" : ""}`}
-                                onClick={() => openMobileMenu(menu.title)} >
-                                <i className={`${navTitle === menu.title ? "fas fa-angle-up" : "fas fa-angle-down"}`}></i>
-                            </div>
+                            
                             {menu.sub_menus && menu.sub_menus.length > 0 && (
                                 <ul className="sub-menu" style={{ display: navTitle === menu.title ? "block" : "none" }}>
                                     {menu.sub_menus.map((sub, index) => (

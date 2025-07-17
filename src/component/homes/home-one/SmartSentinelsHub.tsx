@@ -87,20 +87,15 @@ const SmartSentinelsHub = () => {
     <Wrapper>
       <HeaderOne />
       <div className="hub-layout">
-        {/* Hamburger button and label */}
+        {/* Semicircle toggle button */}
         <button
           className="hub-sidebar-toggle"
           onClick={() => setSidebarOpen((v) => !v)}
           aria-label={sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
         >
-          <div className="hamburger-bars">
-            <span />
-            <span />
-            <span />
+          <div className="semicircle-toggle">
+            <span className="arrow-icon"></span>
           </div>
-          <span className="hub-sidebar-toggle-text">
-            {sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-          </span>
         </button>
         {/* Sidebar */}
         <aside className={`hub-sidebar${sidebarOpen ? " open" : ""}`}>
@@ -218,26 +213,40 @@ const SmartSentinelsHub = () => {
         .hub-sidebar-toggle {
           display: none;
           position: fixed;
-          top: 554px;
-          left: 34px;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
           background: none;
           border: none;
-          flex-direction: row;
-          align-items: center;
-          gap: 12px;
           z-index: 2001;
+          padding: 0;
+          cursor: pointer;
         }
-        .hamburger-bars {
+        .semicircle-toggle {
+          width: 40px;
+          height: 60px;
+          background: #f8f442;
+          border-radius: 0 40px 40px 0;
           display: flex;
-          flex-direction: column;
-          gap: 4px;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
         }
-        .hamburger-bars span {
-          display: block;
-          width: 28px;
-          height: 3px;
-          background: #fff;
-          border-radius: 2px;
+        .semicircle-toggle:hover {
+          background: #faf956;
+        }
+        .arrow-icon {
+          color: #000;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1;
+        }
+        .arrow-icon::after {
+          content: "${sidebarOpen ? "\\f053" : "\\f054"}";
+          font-family: "Font Awesome 5 Free";
+          font-weight: 700;
+          color: #000;
+          line-height: 1;
         }
         .hub-sidebar-toggle-text {
           color: var(--tg-primary-color);
