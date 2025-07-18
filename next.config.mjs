@@ -1,5 +1,4 @@
 import { createCivicAuthPlugin } from "@civic/auth/nextjs"
-import webpack from 'webpack'
 
 const nextConfig = {
   // Add headers to handle iframe detection issues in development
@@ -27,7 +26,7 @@ const nextConfig = {
     } : false,
   },
   // Webpack configuration to handle Sentry warnings and multiple instances
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev, isServer, webpack }) => {
     // Suppress Sentry warnings and prevent multiple instances
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -42,7 +41,7 @@ const nextConfig = {
     }
     
     // Suppress console warnings for Sentry in production
-    if (!dev) {
+    if (!dev && webpack) {
       config.plugins = config.plugins || [];
       config.plugins.push(
         new webpack.DefinePlugin({
