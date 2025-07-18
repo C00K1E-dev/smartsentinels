@@ -1,4 +1,5 @@
 import { createCivicAuthPlugin } from "@civic/auth/nextjs"
+import webpack from 'webpack'
 
 const nextConfig = {
   // Add headers to handle iframe detection issues in development
@@ -44,7 +45,7 @@ const nextConfig = {
     if (!dev) {
       config.plugins = config.plugins || [];
       config.plugins.push(
-        new config.webpack.DefinePlugin({
+        new webpack.DefinePlugin({
           'process.env.SENTRY_DEBUG': JSON.stringify(false),
         })
       );
