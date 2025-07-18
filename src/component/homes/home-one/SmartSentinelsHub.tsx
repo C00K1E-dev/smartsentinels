@@ -20,9 +20,10 @@ import { UserButton, useUser, SignInButton } from "@civic/auth/react";
 const AuthButton = () => {
   const [authError, setAuthError] = useState(false);
   
+  // Call hooks at the top level - not inside try-catch
+  const { user } = useUser();
+  
   try {
-    const { user } = useUser();
-
     if (user) {
       return (
         <div className="auth-button-wrapper">
@@ -403,6 +404,14 @@ const SmartSentinelsHub = () => {
           background: rgba(250, 249, 86, 0.15) !important;
           border-color: rgba(250, 249, 86, 0.4) !important;
           transform: translateY(-1px) !important;
+        }
+        /* Hide the dropdown arrow */
+        .sidebar-auth-section .custom-civic-button button::after,
+        .sidebar-auth-section .custom-civic-button .login-button::after,
+        .sidebar-auth-section .custom-civic-button svg,
+        .sidebar-auth-section .custom-civic-button [data-testid*="arrow"],
+        .sidebar-auth-section .custom-civic-button [class*="arrow"] {
+          display: none !important;
         }
         /* Custom dropdown styling */
         .custom-civic-dropdown {
