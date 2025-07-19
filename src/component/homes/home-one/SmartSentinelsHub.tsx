@@ -13,6 +13,7 @@ import {
   Wallet,
   Copy,
   ExternalLink,
+  Globe,
 } from "lucide-react";
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
@@ -286,40 +287,66 @@ const AuthButton = () => {
   }
 };
 
-type HubSection =
-  | "dashboard"
-  | "nfts"
-  | "agents"
-  | "devices"
-  | "marketplace"
-  | "logs"
-  | "settings";
-
-const menuItems = [
-  { label: "Dashboard", icon: <LayoutDashboard size={20} />, key: "dashboard" },
-  { label: "My NFTs", icon: <LucideImage size={20} />, key: "nfts" },
-  { label: "My Agents", icon: <Bot size={20} />, key: "agents" },
-  { label: "Devices Status", icon: <Cpu size={20} />, key: "devices" },
-  { label: "Marketplace(Coming Soon)", icon: <ShoppingCart size={20} />, key: "marketplace" },
-  { label: "Activity Logs", icon: <List size={20} />, key: "logs" },
-  { label: "Settings", icon: <Settings size={20} />, key: "settings" },
-];
-
 // Dashboard Wallet Widget Component
-const DashboardWalletWidget = () => {
+const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: string) => void }) => {
   const [isClient, setIsClient] = useState(false);
+  const [showFullAddress, setShowFullAddress] = useState(false);
   const userContext = useUser();
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, chain } = useAccount();
   const { data: balance } = useBalance({ address });
+  const { connect, connectors } = useConnect();
+  const { switchChain } = useSwitchChain();
+
+  // Auto connect hook for automatic wallet connection
+  useAutoConnect();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // Auto-connect effect when user has wallet but isn't connected
+  useEffect(() => {
+    if (isClient && userContext.user && userHasWallet(userContext) && !isConnected) {
+      const civicConnector = connectors.find(c => c.name === 'Civic');
+      console.log('Debug - Wallet connection state:', {
+        isClient,
+        hasUser: !!userContext.user,
+        hasWallet: userHasWallet(userContext),
+        isConnected,
+        civicConnector: !!civicConnector,
+        connectorsCount: connectors.length
+      });
+      if (civicConnector) {
+        console.log('Attempting auto-connection to embedded wallet...');
+        connect({ connector: civicConnector });
+      }
+    }
+  }, [isClient, userContext.user, isConnected, connectors, connect]);
+
+  // Function to get the correct explorer URL based on chain
+  const getExplorerUrl = (address: string) => {
+    if (!chain) return `https://bscscan.com/address/${address}`;
+    
+    switch (chain.id) {
+      case bsc.id:
+        return `https://bscscan.com/address/${address}`;
+      case bscTestnet.id:
+        return `https://testnet.bscscan.com/address/${address}`;
+      default:
+        return `https://bscscan.com/address/${address}`;
+    }
+  };
+
+  const openInExplorer = () => {
+    if (address) {
+      window.open(getExplorerUrl(address), '_blank');
+    }
+  };
+
   if (!isClient) {
     return (
       <div className="dashboard-wallet-widget">
-        <h4>Wallet Status</h4>
+        <h4>Wallet & Authentication</h4>
         <p>Loading...</p>
       </div>
     );
@@ -328,9 +355,11 @@ const DashboardWalletWidget = () => {
   if (!userContext.user) {
     return (
       <div className="dashboard-wallet-widget">
-        <h4>Wallet Status</h4>
-        <p>Sign in to access your wallet</p>
-        <AuthButton />
+        <h4>Wallet & Authentication</h4>
+        <p>Sign in to access your wallet and dashboard features</p>
+        <div className="auth-section-inline">
+          <AuthButton />
+        </div>
       </div>
     );
   }
@@ -338,222 +367,302 @@ const DashboardWalletWidget = () => {
   if (!userHasWallet(userContext)) {
     return (
       <div className="dashboard-wallet-widget">
-        <h4>Wallet Setup</h4>
+        <h4>Wallet & Authentication</h4>
+        <div className="auth-section-inline">
+          <AuthButton />
+        </div>
         <p>Create your embedded wallet to get started</p>
-        <button className="quick-create-wallet-btn" onClick={() => {
-          // Trigger wallet creation (you can expand this)
-          window.location.hash = 'settings';
-        }}>
+        <button 
+          className="quick-create-wallet-btn" 
+          onClick={async () => {
+            try {
+              await userContext.createWallet();
+              // Connect to the embedded wallet after creation
+              const civicConnector = connectors.find(c => c.name === 'Civic');
+              if (civicConnector) {
+                connect({ connector: civicConnector });
+              }
+            } catch (error) {
+              console.error('Failed to create wallet:', error);
+            }
+          }}
+        >
           <Wallet size={16} />
-          Set Up Wallet
+          Create Wallet
         </button>
+        <p className="wallet-description">
+          Your embedded wallet will be secured by Civic's non-custodial infrastructure. 
+          No one, including Civic or this app, will have access to your private keys.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="dashboard-wallet-widget">
-      <h4>Your Wallet</h4>
-      <div className="wallet-quick-info">
+      <h4>Wallet & Authentication</h4>
+      <div className="auth-section-inline">
+        <AuthButton />
+      </div>
+      {/* Debug info - can be removed later */}
+      <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '8px' }}>
+        User: {userContext.user ? '✓' : '✗'} | Wallet: {userHasWallet(userContext) ? '✓' : '✗'} | Connected: {isConnected ? '✓' : '✗'}
+      </div>
+      <div className="wallet-management-inline">
         <div className="wallet-address-display">
           <span className="address-label">Address:</span>
-          <code className="address-short">
-            {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Loading...'}
-          </code>
+          <div className="address-container-inline">
+            <code className="address-short">
+              {address ? (showFullAddress ? address : `${address.slice(0, 6)}...${address.slice(-4)}`) : 'Not Connected'}
+            </code>
+            {address && (
+              <>
+                <button 
+                  className="icon-btn-small"
+                  onClick={() => setShowFullAddress(!showFullAddress)}
+                  title={showFullAddress ? "Show short address" : "Show full address"}
+                >
+                  <ExternalLink size={12} />
+                </button>
+                <button 
+                  className="icon-btn-small"
+                  onClick={() => navigator.clipboard.writeText(address)}
+                  title="Copy address"
+                >
+                  <Copy size={12} />
+                </button>
+                <button 
+                  className="icon-btn-small"
+                  onClick={openInExplorer}
+                  title={`View on ${chain?.id === bscTestnet.id ? 'BSC Testnet' : 'BSC'} Explorer`}
+                >
+                  <Globe size={12} />
+                </button>
+              </>
+            )}
+          </div>
         </div>
         <div className="wallet-balance-display">
           <span className="balance-label">Balance:</span>
           <span className="balance-amount">
-            {balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : 'Loading...'}
+            {balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : 
+             (isConnected ? 'Loading...' : 'Not Connected')}
           </span>
         </div>
         <div className="wallet-status-display">
           <span className={`connection-indicator ${isConnected ? 'connected' : 'disconnected'}`}>
-            {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+            {isConnected ? `Connected on ${chain?.name || 'Unknown Network'}` : 'Disconnected'}
           </span>
         </div>
+
+        {/* Connect Button */}
+        {!isConnected && (
+          <button className="connect-wallet-btn-inline" onClick={() => {
+            const civicConnector = connectors.find(c => c.name === 'Civic');
+            if (civicConnector) {
+              connect({ connector: civicConnector });
+            }
+          }}>
+            <Wallet size={14} />
+            Connect Wallet
+          </button>
+        )}
+
+        {/* Chain Switcher */}
+        <div className="chain-switcher-inline">
+          <label>Switch Network:</label>
+          <div className="chain-buttons-inline">
+            <button
+              className={`chain-btn-inline ${chain?.id === bsc.id ? 'active' : ''}`}
+              onClick={() => switchChain({ chainId: bsc.id })}
+            >
+              BSC
+            </button>
+            <button
+              className={`chain-btn-inline ${chain?.id === bscTestnet.id ? 'active' : ''}`}
+              onClick={() => switchChain({ chainId: bscTestnet.id })}
+            >
+              BSC Testnet
+            </button>
+          </div>
+        </div>
+
+        <p className="wallet-description">
+          Your embedded wallet is secured by Civic's non-custodial infrastructure. 
+          No one, including Civic or this app, has access to your private keys.
+        </p>
       </div>
-      <button className="manage-wallet-btn" onClick={() => {
-        // Navigate to settings
-        const settingsItem = document.querySelector('[data-section="settings"]') as HTMLElement;
-        if (settingsItem) settingsItem.click();
-      }}>
-        Manage Wallet
-      </button>
     </div>
   );
 };
 
-const placeholderContent: Record<HubSection, JSX.Element> = {
-  dashboard: (
-    <>
-      <h2 className="hub-title">Welcome to SmartSentinels Hub</h2>
-      <p className="hub-desc">
-        Manage your NFTs, AI agents, devices, and marketplace activity in one secure dashboard.
-      </p>
-      
-      {/* Dashboard Grid */}
-      <div className="dashboard-grid">
-        <DashboardWalletWidget />
-        
-        <div className="dashboard-stats-widget">
-          <h4>Quick Stats</h4>
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-number">0</span>
-              <span className="stat-label">NFTs</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">0</span>
-              <span className="stat-label">Agents</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">0</span>
-              <span className="stat-label">Devices</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="dashboard-actions-widget">
-          <h4>Quick Actions</h4>
-          <div className="action-buttons">
-            <button className="action-btn" onClick={() => {
-              const nftsItem = document.querySelector('[data-section="nfts"]') as HTMLElement;
-              if (nftsItem) nftsItem.click();
-            }}>
-              <LucideImage size={16} />
-              View NFTs
-            </button>
-            <button className="action-btn" onClick={() => {
-              const agentsItem = document.querySelector('[data-section="agents"]') as HTMLElement;
-              if (agentsItem) agentsItem.click();
-            }}>
-              <Bot size={16} />
-              My Agents
-            </button>
-            <button className="action-btn" onClick={() => {
-              const devicesItem = document.querySelector('[data-section="devices"]') as HTMLElement;
-              if (devicesItem) devicesItem.click();
-            }}>
-              <Cpu size={16} />
-              Device Status
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  ),
-  nfts: (
-    <>
-      <h3 className="hub-section-title">NFT Collection</h3>
-      <div className="hub-placeholder">[NFT Collection View Placeholder]</div>
-    </>
-  ),
-  agents: (
-    <>
-      <h3 className="hub-section-title">My Agents</h3>
-      <div className="hub-placeholder">[Agents View Placeholder]</div>
-    </>
-  ),
-  devices: (
-    <>
-      <h3 className="hub-section-title">Devices Monitor</h3>
-      <div className="hub-placeholder">[Devices Monitor Placeholder]</div>
-    </>
-  ),
-  marketplace: (
-    <>
-      <h3 className="hub-section-title">Marketplace</h3>
-      <div className="hub-placeholder">[COMING SOON]</div>
-    </>
-  ),
-  logs: (
-    <>
-      <h3 className="hub-section-title">Activity Logs</h3>
-      <div className="hub-placeholder">[Activity Logs Placeholder]</div>
-    </>
-  ),
-  settings: (
-    <>
-      <h3 className="hub-section-title">Settings</h3>
-      <div className="hub-settings-content">
-        <div className="auth-section">
-          <h4>Account & Authentication</h4>
-          <div className="auth-controls">
-            <AuthButton />
-          </div>
-          <p className="auth-description">
-            Manage your identity verification and account settings with Civic Pass.
-          </p>
-        </div>
-        
-        <div className="wallet-management-section">
-          <h4>Wallet Management</h4>
-          <WalletSection />
-          <p className="wallet-description">
-            Your embedded wallet is secured by Civic&apos;s non-custodial infrastructure. 
-            No one, including Civic or this app, has access to your private keys.
-          </p>
-        </div>
-      </div>
-    </>
-  ),
-};
-
 const SmartSentinelsHub = () => {
-  const [active, setActive] = useState<HubSection>("dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const showSection = (sectionName: string) => {
+    // If clicking the same section, hide it. Otherwise, show the new section
+    setActiveSection(prev => prev === sectionName ? null : sectionName);
+    
+    // Scroll to section after making it visible (only if not hiding)
+    if (activeSection !== sectionName) {
+      setTimeout(() => {
+        const section = document.querySelector(`.${sectionName}-section`);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
 
   return (
     <Wrapper>
       <HeaderOne />
       <div className="hub-layout">
-        {/* Semicircle toggle button */}
-        <button
-          className="hub-sidebar-toggle"
-          onClick={() => setSidebarOpen((v) => !v)}
-          aria-label={sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-        >
-          <div className="semicircle-toggle">
-            <span className="arrow-icon"></span>
-          </div>
-        </button>
-        {/* Sidebar */}
-        <aside className={`hub-sidebar${sidebarOpen ? " open" : ""}`}>
-          {/* Auth Button at Top */}
-          <div className="sidebar-auth-section">
-            <AuthButton />
-            <SidebarWalletIndicator />
-          </div>
+        {/* Main Content - No Sidebar */}
+        <main className="hub-main-content">
+          {/* Dashboard Content with Dynamic Sections */}
+          <h2 className="hub-title">Welcome to SmartSentinels Hub</h2>
+          <p className="hub-desc">
+            Manage your NFTs, AI agents, devices, and marketplace activity in one secure dashboard.
+          </p>
           
-          <nav>
-            <ul>
-              {menuItems.map((item) => (
-                <li
-                  key={item.key}
-                  className={active === item.key ? "active" : ""}
-                  data-section={item.key}
-                  onClick={() => {
-                    setActive(item.key as HubSection);
-                    setSidebarOpen(false);
-                  }}
+          {/* Dashboard Grid */}
+          <div className="dashboard-grid">
+            <DashboardWalletWidget onShowSection={showSection} />
+            
+            <div className="dashboard-stats-widget">
+              <h4>Quick Stats</h4>
+              <div className="stats-grid">
+                <div className="stat-item">
+                  <span className="stat-number">0</span>
+                  <span className="stat-label">NFTs</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">0</span>
+                  <span className="stat-label">Agents</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">0</span>
+                  <span className="stat-label">Devices</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="dashboard-actions-widget">
+              <h4>Navigation & Quick Actions</h4>
+              <div className="action-buttons">
+                <button 
+                  className={`action-btn ${activeSection === 'nfts' ? 'active' : ''}`} 
+                  onClick={() => showSection('nfts')}
                 >
-                  <span className="hub-sidebar-icon">{item.icon}</span>
-                  <span className="hub-sidebar-label">{item.label}</span>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-        {/* Backdrop for mobile */}
-        {sidebarOpen && (
-          <div
-            className="hub-sidebar-backdrop"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-        {/* Main Content */}
-        <main className="hub-main-content">{placeholderContent[active]}</main>
+                  <LucideImage size={16} />
+                  View NFTs
+                </button>
+                <button 
+                  className={`action-btn ${activeSection === 'agents' ? 'active' : ''}`} 
+                  onClick={() => showSection('agents')}
+                >
+                  <Bot size={16} />
+                  My Agents
+                </button>
+                <button 
+                  className={`action-btn ${activeSection === 'devices' ? 'active' : ''}`} 
+                  onClick={() => showSection('devices')}
+                >
+                  <Cpu size={16} />
+                  Device Status
+                </button>
+                <button 
+                  className={`action-btn ${activeSection === 'marketplace' ? 'active' : ''}`} 
+                  onClick={() => showSection('marketplace')}
+                >
+                  <ShoppingCart size={16} />
+                  Marketplace
+                </button>
+                <button 
+                  className={`action-btn ${activeSection === 'logs' ? 'active' : ''}`} 
+                  onClick={() => showSection('logs')}
+                >
+                  <List size={16} />
+                  Activity Logs
+                </button>
+                <button 
+                  className={`action-btn ${activeSection === 'settings' ? 'active' : ''}`} 
+                  onClick={() => showSection('settings')}
+                >
+                  <Settings size={16} />
+                  Settings & Wallet
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Conditionally Rendered Sections - Only One Active at a Time */}
+          {activeSection === 'nfts' && (
+            <div className="hub-section nft-section">
+              <h3 className="hub-section-title">
+                <LucideImage size={24} />
+                NFT Collection
+              </h3>
+              <div className="hub-placeholder">[NFT Collection View Placeholder]</div>
+            </div>
+          )}
+
+          {activeSection === 'agents' && (
+            <div className="hub-section agents-section">
+              <h3 className="hub-section-title">
+                <Bot size={24} />
+                My AI Agents
+              </h3>
+              <div className="hub-placeholder">[AI Agents View Placeholder]</div>
+            </div>
+          )}
+
+          {activeSection === 'devices' && (
+            <div className="hub-section devices-section">
+              <h3 className="hub-section-title">
+                <Cpu size={24} />
+                Device Monitor
+              </h3>
+              <div className="hub-placeholder">[Device Monitor Placeholder]</div>
+            </div>
+          )}
+
+          {activeSection === 'marketplace' && (
+            <div className="hub-section marketplace-section">
+              <h3 className="hub-section-title">
+                <ShoppingCart size={24} />
+                Marketplace
+              </h3>
+              <div className="hub-placeholder">[COMING SOON]</div>
+            </div>
+          )}
+
+          {activeSection === 'logs' && (
+            <div className="hub-section logs-section">
+              <h3 className="hub-section-title">
+                <List size={24} />
+                Activity Logs
+              </h3>
+              <div className="hub-placeholder">[Activity Logs Placeholder]</div>
+            </div>
+          )}
+
+          {activeSection === 'settings' && (
+            <div className="hub-section settings-section">
+              <h3 className="hub-section-title">
+                <Settings size={24} />
+                Settings & Configuration
+              </h3>
+              <div className="hub-settings-content">
+                <div className="settings-placeholder">
+                  <p>Additional settings and configuration options will be available here.</p>
+                  <p>All wallet management features are now available in the main dashboard.</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
       <FooterOne />
       <style jsx global>{`
@@ -681,6 +790,110 @@ const SmartSentinelsHub = () => {
           color: #b0b0b0;
           font-size: 0.9rem;
           margin-top: 16px;
+          line-height: 1.5;
+        }
+        .wallet-management-inline {
+          margin-top: 16px;
+          padding: 12px;
+          background: rgba(255,255,255,0.02);
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        .status-label {
+          color: #b0b0b0;
+          font-size: 0.9rem;
+          margin-right: 8px;
+        }
+        .address-container-inline {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .icon-btn-small {
+          background: rgba(255,255,255,0.1);
+          color: #fff;
+          border: none;
+          padding: 4px;
+          border-radius: 3px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+        }
+        .icon-btn-small:hover {
+          background: rgba(250, 249, 86, 0.2);
+          color: var(--tg-primary-color);
+        }
+        .connect-wallet-btn-inline {
+          background: #22c55e;
+          color: #fff;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.85rem;
+          margin: 12px 0;
+          width: 100%;
+          justify-content: center;
+        }
+        .connect-wallet-btn-inline:hover {
+          background: #16a34a;
+          transform: translateY(-1px);
+        }
+        .chain-switcher-inline {
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .chain-switcher-inline label {
+          color: #fff;
+          font-weight: 500;
+          margin-bottom: 8px;
+          display: block;
+          font-size: 0.85rem;
+        }
+        .chain-buttons-inline {
+          display: flex;
+          gap: 6px;
+        }
+        .chain-btn-inline {
+          background: rgba(255,255,255,0.1);
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.2);
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          flex: 1;
+          text-align: center;
+        }
+        .chain-btn-inline:hover {
+          background: rgba(250, 249, 86, 0.2);
+          color: var(--tg-primary-color);
+          border-color: rgba(250, 249, 86, 0.4);
+        }
+        .chain-btn-inline.active {
+          background: rgba(250, 249, 86, 0.15);
+          color: var(--tg-primary-color);
+          border-color: rgba(250, 249, 86, 0.5);
+        }
+        .settings-placeholder {
+          background: #191919;
+          border-radius: 12px;
+          padding: 24px;
+          color: #b0b0b0;
+          text-align: center;
+          border: 1px solid rgba(255,255,255,0.07);
+        }
+        .settings-placeholder p {
+          margin-bottom: 12px;
           line-height: 1.5;
         }
         .wallet-section {
@@ -854,123 +1067,79 @@ const SmartSentinelsHub = () => {
           color: var(--tg-primary-color);
           border-color: rgba(250, 249, 86, 0.4);
         }
-        .hub-sidebar {
-          width: 250px;
-          background: #181818;
-          border-right: 1px solid rgba(255,255,255,0.07);
-          position: fixed;
-          top: 0;
-          left: 0;
-          height: 100vh;
-          z-index: 100;
-          padding-top: 120px;
-          transition: transform 0.3s;
-        }
-        .hub-sidebar nav ul {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-        .hub-sidebar nav ul li {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 16px 32px;
-          color: #fff;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          border-left: 4px solid transparent;
-          transition: background 0.2s, border-color 0.2s;
-        }
-        .hub-sidebar nav ul li.active,
-        .hub-sidebar nav ul li:hover {
-          background: #232323;
-          color: var(--tg-primary-color);
-          border-left: 4px solid var(--tg-primary-color);
-        }
-        .hub-sidebar-icon {
-          display: flex;
-          align-items: center;
-        }
-        .hub-sidebar-label {
-          flex: 1;
-        }
-        .sidebar-auth-section {
-          padding: 20px;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
-          margin-bottom: 10px;
-        }
-        .sidebar-wallet-indicator {
+        .auth-section-inline {
+          padding: 12px;
+          border: 1px solid rgba(250, 249, 86, 0.3);
+          border-radius: 8px;
+          background: rgba(250, 249, 86, 0.02);
           margin-top: 12px;
-          padding: 8px;
-          background: rgba(255,255,255,0.03);
-          border-radius: 6px;
+        }
+        .auth-section-inline .custom-civic-button .login-button,
+        .auth-section-inline .custom-civic-button button {
+          width: 100% !important;
+          padding: 8px 12px !important;
+          font-size: 12px !important;
+          border-radius: 6px !important;
+          background: rgba(250, 249, 86, 0.1) !important;
+          border: 1px solid rgba(250, 249, 86, 0.3) !important;
+          color: #000 !important;
+          font-weight: 600 !important;
+          transition: all 0.2s ease !important;
+        }
+        .auth-section-inline .custom-civic-button .login-button:hover,
+        .auth-section-inline .custom-civic-button button:hover {
+          background: var(--tg-primary-color) !important;
+          border-color: var(--tg-primary-color) !important;
+          transform: translateY(-1px) !important;
+        }
+        .hub-main-content {
+          margin-left: 0;
+          padding: 120px 40px 40px 40px;
+          width: 100%;
+          min-height: 80vh;
+          background: #101010;
+          color: #fff;
+        }
+        .auth-section-inline {
+          margin: 16px 0;
+          padding: 12px;
+          background: rgba(255,255,255,0.05);
+          border-radius: 8px;
           border: 1px solid rgba(255,255,255,0.1);
         }
-        .wallet-indicator-connected,
-        .wallet-indicator-setup {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.8rem;
-        }
-        .wallet-indicator-connected {
-          color: #22c55e;
-        }
-        .wallet-indicator-setup {
-          color: #fbbf24;
-        }
-        .indicator-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-        }
-        .indicator-dot.connected {
-          background: #22c55e;
-          box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
-        }
-        .indicator-dot.disconnected {
-          background: #f59e0b;
-          box-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
-        }
-        .indicator-text {
-          font-size: 0.75rem;
-          font-weight: 500;
-        }
-        .sidebar-auth-section .auth-button-wrapper {
+        .auth-section-inline .auth-button-wrapper {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           gap: 8px;
         }
-        .sidebar-auth-section .auth-btn {
+        .auth-section-inline .auth-btn {
           width: 100%;
           background: var(--tg-primary-color);
           color: #000;
           border: none;
-          padding: 12px 16px;
-          border-radius: 8px;
+          padding: 8px 12px;
+          border-radius: 6px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
-          font-size: 14px;
+          gap: 6px;
+          font-size: 12px;
         }
-        .sidebar-auth-section .auth-btn:hover {
+        .auth-section-inline .auth-btn:hover {
           background: #faf956;
           transform: translateY(-1px);
         }
-        /* Custom Civic UserButton styling using proper className approach */
-        .sidebar-auth-section .custom-civic-button .login-button,
-        .sidebar-auth-section .custom-civic-button button {
+        /* Custom Civic UserButton styling for inline display */
+        .auth-section-inline .custom-civic-button .login-button,
+        .auth-section-inline .custom-civic-button button {
           width: 100% !important;
-          padding: 6px 10px !important;
-          font-size: 11px !important;
-          border-radius: 4px !important;
+          padding: 8px 12px !important;
+          font-size: 12px !important;
+          border-radius: 6px !important;
           background: rgba(255, 255, 255, 0.1) !important;
           border: 1px solid rgba(255, 255, 255, 0.2) !important;
           color: #fff !important;
@@ -983,114 +1152,40 @@ const SmartSentinelsHub = () => {
           font-weight: 500 !important;
           transition: all 0.2s ease !important;
         }
-        .sidebar-auth-section .custom-civic-button .login-button:hover,
-        .sidebar-auth-section .custom-civic-button button:hover {
+        .auth-section-inline .custom-civic-button .login-button:hover,
+        .auth-section-inline .custom-civic-button button:hover {
           background: rgba(250, 249, 86, 0.15) !important;
           border-color: rgba(250, 249, 86, 0.4) !important;
           transform: translateY(-1px) !important;
         }
-        /* Hide the dropdown arrow */
-        .sidebar-auth-section .custom-civic-button button::after,
-        .sidebar-auth-section .custom-civic-button .login-button::after,
-        .sidebar-auth-section .custom-civic-button svg,
-        .sidebar-auth-section .custom-civic-button [data-testid*="arrow"],
-        .sidebar-auth-section .custom-civic-button [class*="arrow"] {
-          display: none !important;
+        .hub-section {
+          margin: 40px 0;
+          padding: 32px 0;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          animation: fadeInSection 0.5s ease-in;
         }
-        /* Custom dropdown styling */
-        .custom-civic-dropdown {
-          background: #232323 !important;
-          color: #fff !important;
-          border: 1px solid rgba(250, 249, 86, 0.3) !important;
-          font-size: 12px !important;
-          padding: 8px 12px !important;
-          border-radius: 6px !important;
-          transition: all 0.2s ease !important;
-        }
-        .custom-civic-dropdown:hover {
-          background: #2a2a2a !important;
-          border-color: var(--tg-primary-color) !important;
-        }
-        /* Responsive UserButton styling */
-        @media (max-width: 320px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 3px 5px !important;
-            font-size: 8px !important;
-            min-height: 24px !important;
-            max-height: 28px !important;
+        @keyframes fadeInSection {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
-        @media (min-width: 321px) and (max-width: 375px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 4px 6px !important;
-            font-size: 9px !important;
-            min-height: 26px !important;
-            max-height: 30px !important;
-          }
+        .hub-section:first-of-type {
+          border-top: none;
+          margin-top: 80px;
         }
-        @media (min-width: 376px) and (max-width: 425px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 5px 8px !important;
-            font-size: 10px !important;
-            min-height: 28px !important;
-            max-height: 32px !important;
-          }
-        }
-        @media (min-width: 426px) and (max-width: 768px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 6px 10px !important;
-            font-size: 11px !important;
-            min-height: 30px !important;
-            max-height: 34px !important;
-          }
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 7px 12px !important;
-            font-size: 12px !important;
-            min-height: 32px !important;
-            max-height: 36px !important;
-          }
-        }
-        @media (min-width: 1025px) and (max-width: 1440px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 8px 14px !important;
-            font-size: 13px !important;
-            min-height: 34px !important;
-            max-height: 38px !important;
-          }
-        }
-        @media (min-width: 1441px) and (max-width: 2160px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 9px 16px !important;
-            font-size: 14px !important;
-            min-height: 36px !important;
-            max-height: 40px !important;
-          }
-        }
-        @media (min-width: 2161px) {
-          .sidebar-auth-section .custom-civic-button .login-button,
-          .sidebar-auth-section .custom-civic-button button {
-            padding: 10px 18px !important;
-            font-size: 15px !important;
-            min-height: 38px !important;
-            max-height: 42px !important;
-          }
-        }
-        .hub-main-content {
-          margin-left: 250px;
-          padding: 120px 40px 40px 40px;
-          width: 100%;
-          min-height: 80vh;
-          background: #101010;
-          color: #fff;
+        .hub-section-title {
+          font-size: 1.8rem;
+          font-weight: 600;
+          margin-bottom: 24px;
+          color: var(--tg-primary-color);
+          display: flex;
+          align-items: center;
+          gap: 12px;
         }
         .hub-title {
           font-size: 2.5rem;
@@ -1158,6 +1253,9 @@ const SmartSentinelsHub = () => {
           border-radius: 4px;
           font-family: 'Courier New', monospace;
           font-size: 0.8rem;
+          word-break: break-all;
+          max-width: 200px;
+          overflow-wrap: break-word;
         }
         .balance-amount {
           color: var(--tg-primary-color);
@@ -1177,6 +1275,10 @@ const SmartSentinelsHub = () => {
         .connection-indicator.disconnected {
           background: rgba(239, 68, 68, 0.1);
           color: #ef4444;
+        }
+        .connection-indicator.connecting {
+          background: rgba(245, 158, 11, 0.1);
+          color: #f59e0b;
         }
         .quick-create-wallet-btn,
         .manage-wallet-btn {
@@ -1247,6 +1349,23 @@ const SmartSentinelsHub = () => {
           border-color: rgba(250, 249, 86, 0.4);
           transform: translateY(-1px);
         }
+        .action-btn.active {
+          background: rgba(250, 249, 86, 0.15);
+          color: var(--tg-primary-color);
+          border-color: rgba(250, 249, 86, 0.5);
+          box-shadow: 0 0 10px rgba(250, 249, 86, 0.2);
+          position: relative;
+        }
+        .action-btn.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: var(--tg-primary-color);
+          border-radius: 0 3px 3px 0;
+        }
         .hub-section-title {
           font-size: 1.5rem;
           font-weight: 600;
@@ -1286,19 +1405,6 @@ const SmartSentinelsHub = () => {
         }
         .semicircle-toggle:hover {
           background: #faf956;
-        }
-        .arrow-icon {
-          color: #000;
-          font-size: 16px;
-          font-weight: 700;
-          line-height: 1;
-        }
-        .arrow-icon::after {
-          content: "${sidebarOpen ? "\\f053" : "\\f054"}";
-          font-family: "Font Awesome 5 Free";
-          font-weight: 700;
-          color: #000;
-          line-height: 1;
         }
         .hub-sidebar-toggle-text {
           color: var(--tg-primary-color);
