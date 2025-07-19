@@ -498,8 +498,64 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
 
 const SmartSentinelsHub = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [authMessage, setAuthMessage] = useState<string>("");
+  const [isClient, setIsClient] = useState(false);
+  
+  // Get authentication and wallet status
+  const userContext = useUser();
+  const { isConnected, address } = useAccount();
+  const { connect, connectors } = useConnect();
+
+  // Auto connect hook for automatic wallet connection
+  useAutoConnect();
+
+  // Only render on client to avoid SSR issues
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Clear auth message when user authentication status changes
+  useEffect(() => {
+    if (authMessage && userContext.user && userHasWallet(userContext) && isConnected) {
+      setAuthMessage("");
+    }
+  }, [userContext.user, isConnected, authMessage]);
+
+  // Define which sections require authentication/wallet
+  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs'];
+  const requiresWallet = ['nfts', 'agents', 'marketplace'];
+
+  // Helper function to get button styling based on auth status
+  const getButtonClass = (sectionName: string) => {
+    let className = `action-btn ${activeSection === sectionName ? 'active' : ''}`;
+    return className;
+  };
 
   const showSection = (sectionName: string) => {
+    // Clear any previous messages
+    setAuthMessage("");
+
+    // Check if section requires authentication
+    if (protectedSections.includes(sectionName)) {
+      if (!userContext.user) {
+        setAuthMessage("Please sign in to access this feature.");
+        return;
+      }
+
+      // Check if section requires wallet connection
+      if (requiresWallet.includes(sectionName)) {
+        if (!userHasWallet(userContext)) {
+          setAuthMessage("Please create your embedded wallet to access this feature.");
+          return;
+        }
+        
+        if (!isConnected) {
+          setAuthMessage("Please connect your wallet to access this feature.");
+          return;
+        }
+      }
+    }
+
     // If clicking the same section, hide it. Otherwise, show the new section
     setActiveSection(prev => prev === sectionName ? null : sectionName);
     
@@ -552,42 +608,42 @@ const SmartSentinelsHub = () => {
               <h4>Navigation & Quick Actions</h4>
               <div className="action-buttons">
                 <button 
-                  className={`action-btn ${activeSection === 'nfts' ? 'active' : ''}`} 
+                  className={getButtonClass('nfts')}
                   onClick={() => showSection('nfts')}
                 >
                   <LucideImage size={16} />
-                  View NFTs
+                  View my NFTs
                 </button>
                 <button 
-                  className={`action-btn ${activeSection === 'agents' ? 'active' : ''}`} 
+                  className={getButtonClass('agents')}
                   onClick={() => showSection('agents')}
                 >
                   <Bot size={16} />
                   My Agents
                 </button>
                 <button 
-                  className={`action-btn ${activeSection === 'devices' ? 'active' : ''}`} 
+                  className={getButtonClass('devices')}
                   onClick={() => showSection('devices')}
                 >
                   <Cpu size={16} />
                   Device Status
                 </button>
                 <button 
-                  className={`action-btn ${activeSection === 'marketplace' ? 'active' : ''}`} 
+                  className={getButtonClass('marketplace')}
                   onClick={() => showSection('marketplace')}
                 >
                   <ShoppingCart size={16} />
-                  Marketplace
+                  Marketplace - Coming Soon
                 </button>
                 <button 
-                  className={`action-btn ${activeSection === 'logs' ? 'active' : ''}`} 
+                  className={getButtonClass('logs')}
                   onClick={() => showSection('logs')}
                 >
                   <List size={16} />
                   Activity Logs
                 </button>
                 <button 
-                  className={`action-btn ${activeSection === 'settings' ? 'active' : ''}`} 
+                  className={getButtonClass('settings')}
                   onClick={() => showSection('settings')}
                 >
                   <Settings size={16} />
@@ -596,6 +652,15 @@ const SmartSentinelsHub = () => {
               </div>
             </div>
           </div>
+
+          {/* Authentication Message */}
+          {authMessage && (
+            <div className="auth-message">
+              <div className="auth-message-content">
+                <span className="auth-message-text">{authMessage}</span>
+              </div>
+            </div>
+          )}
 
           {/* Conditionally Rendered Sections - Only One Active at a Time */}
           {activeSection === 'nfts' && (
@@ -669,7 +734,7 @@ const SmartSentinelsHub = () => {
         .hub-layout {
           display: flex;
           min-height: 70vh;
-          background: #101010;
+          background: #0adab9;
         }
         .auth-widget {
           margin: 20px 0;
@@ -735,6 +800,36 @@ const SmartSentinelsHub = () => {
           opacity: 0.6;
           cursor: not-allowed;
           transform: none;
+        }
+        .auth-message {
+          margin: 32px 0;
+          padding: 24px;
+          background: rgba(245, 158, 11, 0.1);
+          border: 1px solid rgba(245, 158, 11, 0.3);
+          border-radius: 12px;
+          animation: fadeInMessage 0.3s ease-in;
+        }
+        @keyframes fadeInMessage {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .auth-message-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+          text-align: center;
+        }
+        .auth-message-text {
+          color: #f59e0b;
+          font-weight: 600;
+          font-size: 1rem;
         }
         .user-info {
           display: flex;
@@ -1097,7 +1192,7 @@ const SmartSentinelsHub = () => {
           padding: 120px 40px 40px 40px;
           width: 100%;
           min-height: 80vh;
-          background: #101010;
+          background: #000000;
           color: #fff;
         }
         .auth-section-inline {
@@ -1342,6 +1437,7 @@ const SmartSentinelsHub = () => {
           align-items: center;
           gap: 12px;
           font-size: 0.9rem;
+          position: relative;
         }
         .action-btn:hover {
           background: rgba(250, 249, 86, 0.2);

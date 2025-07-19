@@ -5,14 +5,14 @@ import TeamFounder from "./TeamFounder"
 import team_data from "@/data/TeamData";
 import Link from "next/link";
 
-import team_bg from "@/assets/img/update/bg/bg-gradient1-1.jpg"
+
 
 const Team = () => {
    
    return (
       <div className="pt-130 pb-140 overflow-hidden position-relative z-index-common">
-         <div className="bg-gradient-2">
-            <Image src={team_bg} alt="img" />
+         <div className="bg-gradient-1">
+            
          </div>
          <TeamFounder />
 

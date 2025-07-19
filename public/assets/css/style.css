@@ -3186,7 +3186,7 @@ label {
 .bg-gradient-1:after {
     content: '';
     position: absolute;
-    background: linear-gradient(to top,rgba(31, 31, 31, 1), transparent 50%);
+    background: #000000;
     filter: blur(175px);
     inset: 0;
 }
@@ -3420,12 +3420,7 @@ label {
     position: absolute;
     left: 50%;
     z-index: -1;
-    background: linear-gradient(
-        0.41deg,
-        #1f1f1f 19.48%,     /* Replace primary color with dark gray */
-        #1f1f1f -13.62%,     /* Keep it solid dark */
-        #000 267.11%         /* Pure black for deep fade */
-    );
+    background: #000000;
     filter: blur(225px);
     top: -1292px;
     width: 1873px;

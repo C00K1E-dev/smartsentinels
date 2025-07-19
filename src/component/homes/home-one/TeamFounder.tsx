@@ -37,7 +37,7 @@ const TeamFounder = () => {
       <div className="pb-110">
          <div className="container">
             <div className="section-title text-center mb-50">
-               <h2 className="title style2">Active founders</h2>
+               <h2 className="title style2">Active Founders</h2>
             </div>
             <div className="row gy-4 justify-content-center">
                {founder_data.map((item) => (

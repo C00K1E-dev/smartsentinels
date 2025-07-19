@@ -31,7 +31,7 @@ const event_data_custom = [
 const EventArea = () => {
   return (
     <div className="pt-130 pb-140 bg-black2 overflow-hidden position-relative z-index-common">
-      <div className="bg-gradient-4">
+      <div className="bg-gradient-1">
         <Image src={event_bg} alt="img" />
       </div>
 

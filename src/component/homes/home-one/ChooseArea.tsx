@@ -79,7 +79,7 @@ const ChooseArea = () => {
   return (
     <div className="wcu-area-1 pt-130 pb-140 position-relative" id="feature">
       <div className="bg-gradient-1">
-        <Image src={choose_thumb_1} alt="Background Gradient" />
+        
       </div>
       <div className="container">
         <div className="mb-25">
