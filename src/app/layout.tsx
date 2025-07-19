@@ -1,6 +1,9 @@
 import CivicAuthWrapper from "@/component/common/CivicAuthWrapper";
 import "../styles/index.css"
 import ComingSoonOverlay from "@/component/homes/home-one/ComingSoonOverlay";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+
 const isDev = process.env.NODE_ENV === 'development'
 
 export default function RootLayout({
@@ -19,6 +22,8 @@ export default function RootLayout({
           <ComingSoonOverlay />
           {children}
         </CivicAuthWrapper>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
