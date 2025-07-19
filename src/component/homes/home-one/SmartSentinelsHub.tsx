@@ -391,7 +391,7 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
           Create Wallet
         </button>
         <p className="wallet-description">
-          Your embedded wallet will be secured by Civic's non-custodial infrastructure. 
+          Your embedded wallet will be secured by Civic&apos;s non-custodial infrastructure. 
           No one, including Civic or this app, will have access to your private keys.
         </p>
       </div>
@@ -488,7 +488,7 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
         </div>
 
         <p className="wallet-description">
-          Your embedded wallet is secured by Civic's non-custodial infrastructure. 
+          Your embedded wallet is secured by Civic&apos;s non-custodial infrastructure. 
           No one, including Civic or this app, has access to your private keys.
         </p>
       </div>
