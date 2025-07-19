@@ -21,6 +21,7 @@ import {
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
 import Wrapper from "../../../layouts/Wrapper";
+import WalletActivity from "../../common/WalletActivity";
 import { UserButton, useUser, SignInButton } from "@civic/auth-web3/react";
 import { userHasWallet } from "@civic/auth-web3";
 import { useAutoConnect } from "@civic/auth-web3/wagmi";
@@ -650,7 +651,7 @@ const SmartSentinelsHub = () => {
                   onClick={() => showSection('logs')}
                 >
                   <List size={16} />
-                  Activity Logs
+                  Wallet Activity
                 </button>
                 <button 
                   className={getButtonClass('settings')}
@@ -951,9 +952,18 @@ const SmartSentinelsHub = () => {
             <div className="hub-section logs-section">
               <h3 className="hub-section-title">
                 <List size={24} />
-                Activity Logs
+                Wallet Activity
               </h3>
-              <div className="hub-placeholder">[Activity Logs Placeholder]</div>
+              <div className="wallet-activity-description">
+                <p>View your recent transactions and wallet activity from BSCScan</p>
+              </div>
+              {isConnected && address ? (
+                <WalletActivity walletAddress={address} />
+              ) : (
+                <div className="hub-placeholder">
+                  <p>Connect your wallet to view transaction history</p>
+                </div>
+              )}
             </div>
           )}
 
@@ -1720,6 +1730,19 @@ const SmartSentinelsHub = () => {
           text-align: center;
           font-size: 1.1rem;
           border: 1px solid rgba(255,255,255,0.07);
+        }
+        .wallet-activity-description {
+          margin-bottom: 24px;
+          padding: 16px;
+          background: rgba(255,255,255,0.03);
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        .wallet-activity-description p {
+          color: #e0e0e0;
+          margin: 0;
+          font-size: 0.95rem;
+          line-height: 1.5;
         }
         .hub-sidebar-toggle {
           display: none;
