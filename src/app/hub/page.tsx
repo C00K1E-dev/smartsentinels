@@ -1,5 +1,5 @@
-import SmartSentinelsHub from "../../component/homes/home-one/SmartSentinelsHub";
+import ClientHubWrapper from "../../component/homes/home-one/ClientHubWrapper";
 
 export default function HubPage() {
-  return <SmartSentinelsHub />;
+  return <ClientHubWrapper />;
 }

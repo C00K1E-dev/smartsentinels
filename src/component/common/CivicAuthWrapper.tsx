@@ -1,10 +1,17 @@
 "use client";
-import { CivicAuthProvider } from "@civic/auth/nextjs";
+import { CivicAuthProvider } from "@civic/auth-web3/react";
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
+import { wagmiConfig } from "@/utils/wagmi";
+import { bsc } from "wagmi/chains";
 
 interface CivicAuthWrapperProps {
   children: ReactNode;
 }
+
+// Create QueryClient for Wagmi
+const queryClient = new QueryClient();
 
 // Error boundary wrapper for Civic Auth to handle iframe detection issues
 export default function CivicAuthWrapper({ children }: CivicAuthWrapperProps) {
@@ -93,9 +100,13 @@ export default function CivicAuthWrapper({ children }: CivicAuthWrapperProps) {
 
   try {
     return (
-      <CivicAuthProvider>
-        {children}
-      </CivicAuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig}>
+          <CivicAuthProvider clientId={process.env.NEXT_PUBLIC_CIVIC_AUTH_CLIENT_ID || "c73876ac-8c58-4561-aead-afb37563e0d6"} initialChain={bsc}>
+            {children}
+          </CivicAuthProvider>
+        </WagmiProvider>
+      </QueryClientProvider>
     );
   } catch (error) {
     console.warn('Civic Auth Provider error caught:', error);
