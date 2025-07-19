@@ -321,7 +321,7 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
         connect({ connector: civicConnector });
       }
     }
-  }, [isClient, userContext.user, isConnected, connectors, connect]);
+  }, [isClient, userContext.user, userContext, isConnected, connectors, connect]);
 
   // Function to get the correct explorer URL based on chain
   const getExplorerUrl = (address: string) => {
@@ -519,7 +519,7 @@ const SmartSentinelsHub = () => {
     if (authMessage && userContext.user && userHasWallet(userContext) && isConnected) {
       setAuthMessage("");
     }
-  }, [userContext.user, isConnected, authMessage]);
+  }, [userContext.user, userContext, isConnected, authMessage]);
 
   // Define which sections require authentication/wallet
   const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs'];
