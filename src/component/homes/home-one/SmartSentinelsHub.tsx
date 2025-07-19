@@ -14,6 +14,9 @@ import {
   Copy,
   ExternalLink,
   Globe,
+  DollarSign,
+  Rocket,
+  Key,
 } from "lucide-react";
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
@@ -608,11 +611,18 @@ const SmartSentinelsHub = () => {
               <h4>Navigation & Quick Actions</h4>
               <div className="action-buttons">
                 <button 
+                  className={getButtonClass('nfts-hub')}
+                  onClick={() => showSection('nfts-hub')}
+                >
+                  <LucideImage size={16} />
+                  NFTs Hub - Featured Collections
+                </button>
+                <button 
                   className={getButtonClass('nfts')}
                   onClick={() => showSection('nfts')}
                 >
                   <LucideImage size={16} />
-                  View my NFTs
+                  My NFTs
                 </button>
                 <button 
                   className={getButtonClass('agents')}
@@ -663,6 +673,240 @@ const SmartSentinelsHub = () => {
           )}
 
           {/* Conditionally Rendered Sections - Only One Active at a Time */}
+          {activeSection === 'nfts-hub' && (
+            <div className="hub-section nfts-hub-section">
+              <h3 className="hub-section-title">
+                <LucideImage size={24} />
+                NFTs Hub - Featured Collections
+              </h3>
+              <div className="nft-collections-grid">
+                <div className="nft-collection-card">
+                  <div className="collection-media">
+                    <video 
+                      src="/assets/img/nft-collections/first-collection/genesis.mp4" 
+                      className="collection-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    >
+                      <source src="/assets/img/nft-collections/first-collection/genesis.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <div className="collection-info">
+                    <h4>SmartSentinels Genesis Collection</h4>
+                    
+                    <p className="collection-description">
+                      The original SmartSentinels NFT collection featuring 1,000 Genesis NFTs. 
+                      Genesis holders enjoy exclusive early supporter benefits including revenue sharing, 2x AI token generation.
+                    </p>
+                    <div className="early-supporter-benefits">
+                      <div className="benefit-highlight">
+                        <span className="benefit-icon">💰</span>
+                        <span>10% Revenue Share divided among all Genesis holders</span>
+                      </div>
+                      <div className="revenue-share-explanation">
+                        <span className="explanation-text">
+                          📊 Example: If 1,000 Genesis NFTs are minted, each holder gets 0.01% of future sales revenue
+                        </span>
+                      </div>
+                      <div className="benefit-highlight">
+                        <span className="benefit-icon">🤖</span>
+                        <span>100% Boost on AI Agent Token Generation</span>
+                      </div>
+                      <div className="revenue-share-explanation">
+                        <span className="explanation-text">
+                          🚀 Example: Normal users earn 1 token per task, Genesis holders earn 2 tokens per task automatically
+                        </span>
+                      </div>
+                      
+                    </div>
+                    <div className="collection-stats">
+                      <div className="stat">
+                        <span className="stat-label">Total Supply:</span>
+                        <span className="stat-value">1,000</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Price:</span>
+                        <span className="stat-value">1000 SSTL</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Minted:</span>
+                        <span className="stat-value">247 / 1,000</span>
+                      </div>
+                    </div>
+                    <button className="mint-button genesis-exclusive">
+                      <LucideImage size={16} />
+                      Mint Genesis - Early Supporter
+                    </button>
+                  </div>
+                </div>
+
+                <div className="nft-collection-card">
+                  <div className="collection-media">
+                    <video 
+                      src="/assets/img/nft-collections/second-collection/AIAudit.mp4" 
+                      className="collection-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    >
+                      <source src="/assets/img/nft-collections/second-collection/AIAudit.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <div className="collection-info">
+                    <h4>AI Audit Collection</h4>
+                    <p className="collection-description">
+                      Get access to our AI Agent that performs smart contract auditing services. This AI Agent runs on our 
+                      device infrastructure and conducts professional audit work across the blockchain ecosystem. When the 
+                      AI Agent audits smart contracts and generates tokens, these tokens are automatically distributed 
+                      among all NFT holders from this collection.
+                    </p>
+                    <div className="early-supporter-benefits">
+                      <div className="benefit-highlight">
+                        <span className="benefit-icon">🔍</span>
+                        <span>Access to AI Audit Agent Services</span>
+                      </div>
+                      <div className="revenue-share-explanation">
+                        <span className="explanation-text">
+                          🤖 Get access to our AI Agent running on device infrastructure - performing professional smart contract audits
+                        </span>
+                      </div>
+                      <div className="benefit-highlight">
+                        <span className="benefit-icon">⚡</span>
+                        <span>Token Distribution from AI Agent Work</span>
+                      </div>
+                      <div className="revenue-share-explanation">
+                        <span className="explanation-text">
+                          💰 When our AI Agent audits contracts and generates tokens, they&apos;re automatically distributed among all collection holders
+                        </span>
+                      </div>
+                      
+                    </div>
+                    <div className="collection-stats">
+                      <div className="stat">
+                        <span className="stat-label">Total Supply:</span>
+                        <span className="stat-value">1,000</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Price:</span>
+                        <span className="stat-value">1000 SSTL</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Minted:</span>
+                        <span className="stat-value">892 / 1,000</span>
+                      </div>
+                    </div>
+                    <button className="mint-button premium">
+                      <Bot size={16} />
+                      Mint AI Audit Agent
+                    </button>
+                  </div>
+                </div>
+
+                <div className="nft-collection-card coming-soon">
+                  <div className="collection-media">
+                    <div className="placeholder-image">
+                      <div className="coming-soon-placeholder">
+                        Coming Soon<br/>Q4 2025
+                      </div>
+                    </div>
+                  </div>
+                  <div className="collection-info">
+                    <h4>3rd Collection</h4>
+                    <p className="collection-description">
+                      Our third NFT collection is currently in development. Details about this collection&apos;s unique features, 
+                      utility, and benefits will be announced soon. Stay tuned for more information.
+                    </p>
+                    <div className="collection-stats">
+                      <div className="stat">
+                        <span className="stat-label">Total Supply:</span>
+                        <span className="stat-value">TBA</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Price:</span>
+                        <span className="stat-value">TBA</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Status:</span>
+                        <span className="stat-value">Coming Q4 2025</span>
+                      </div>
+                    </div>
+                    <button className="mint-button disabled" disabled>
+                      <Globe size={16} />
+                      Coming Soon
+                    </button>
+                  </div>
+                </div>
+
+                <div className="nft-collection-card coming-soon">
+                  <div className="collection-media">
+                    <div className="placeholder-image">
+                      <div className="coming-soon-placeholder">
+                        Coming Soon<br/>Q1 2026
+                      </div>
+                    </div>
+                  </div>
+                  <div className="collection-info">
+                    <h4>4th Collection</h4>
+                    <p className="collection-description">
+                      Our fourth NFT collection is in early planning stages. This collection will introduce new innovative features 
+                      and expand the SmartSentinels ecosystem with additional utility and benefits.
+                    </p>
+                    <div className="collection-stats">
+                      <div className="stat">
+                        <span className="stat-label">Total Supply:</span>
+                        <span className="stat-value">TBA</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Price:</span>
+                        <span className="stat-value">TBA</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-label">Status:</span>
+                        <span className="stat-value">Coming Q1 2026</span>
+                      </div>
+                    </div>
+                    <button className="mint-button disabled" disabled>
+                      <Globe size={16} />
+                      Coming Soon
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="nft-hub-info">
+                <h4>About SmartSentinels NFTs</h4>
+                <p>
+                  SmartSentinels NFT collections are more than just digital art - they&apos;re your gateway to the future of AI-powered 
+                  digital ownership. Each NFT provides unique utility within our ecosystem, from revenue sharing rights to exclusive 
+                  access to advanced AI features.
+                </p>
+                <div className="nft-benefits">
+                  <div className="benefit-item">
+                    <Bot size={20} />
+                    <span>AI Agent Access</span>
+                  </div>
+                  <div className="benefit-item">
+                    <DollarSign size={20} />
+                    <span>Revenue Sharing</span>
+                  </div>
+                  <div className="benefit-item">
+                    <Rocket size={20} />
+                    <span>Boosters</span>
+                  </div>
+                  <div className="benefit-item">
+                    <Key size={20} />
+                    <span>Exclusive Access</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeSection === 'nfts' && (
             <div className="hub-section nft-section">
               <h3 className="hub-section-title">
@@ -1651,6 +1895,363 @@ const SmartSentinelsHub = () => {
           .hub-placeholder {
             font-size: 1.3rem;
             padding: 60px;
+          }
+        }
+        /* NFT Collections Styles */
+        .nft-collections-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 24px;
+          margin-bottom: 40px;
+        }
+        .nft-collection-card {
+          background: #191919;
+          border-radius: 16px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.1);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        .nft-collection-card:hover {
+          border-color: rgba(250, 249, 86, 0.5);
+          transform: translateY(-4px);
+          box-shadow: 0 8px 32px rgba(250, 249, 86, 0.1);
+        }
+        .nft-collection-card.coming-soon {
+          opacity: 0.8;
+          position: relative;
+        }
+        .nft-collection-card.coming-soon::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(45deg, transparent 40%, rgba(250, 249, 86, 0.1) 50%, transparent 60%);
+          z-index: 1;
+          pointer-events: none;
+        }
+        .collection-media {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          position: relative;
+          overflow: hidden;
+          border-radius: 12px 12px 0 0;
+        }
+        .collection-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        .collection-image:hover {
+          transform: scale(1.05);
+        }
+        .collection-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+          border-radius: 12px 12px 0 0;
+        }
+        .collection-video:hover {
+          transform: scale(1.05);
+        }
+        .coming-soon-image {
+          filter: grayscale(50%) brightness(0.7);
+        }
+        .placeholder-video,
+        .placeholder-image {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+        .video-placeholder,
+        .image-placeholder {
+          color: #666;
+          font-size: 0.9rem;
+          text-align: center;
+          padding: 20px;
+          background: rgba(0,0,0,0.3);
+          border-radius: 8px;
+          border: 2px dashed rgba(255,255,255,0.2);
+        }
+        .coming-soon-placeholder {
+          font-size: 1.2rem;
+          color: var(--tg-primary-color);
+          border-color: rgba(250, 249, 86, 0.3);
+          background: rgba(250, 249, 86, 0.05);
+        }
+        .collection-info {
+          padding: 24px;
+        }
+        .collection-info h4 {
+          color: var(--tg-primary-color);
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 12px;
+        }
+        .collection-description {
+          color: #e0e0e0;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
+        .collection-stats {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 20px;
+          padding: 16px;
+          background: rgba(255,255,255,0.03);
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .stat-label {
+          color: #b0b0b0;
+          font-size: 0.85rem;
+        }
+        .stat-value {
+          color: var(--tg-primary-color);
+          font-weight: 600;
+          font-size: 0.85rem;
+        }
+        .mint-button {
+          width: 100%;
+          background: linear-gradient(135deg, var(--tg-primary-color) 0%, #faf956 100%);
+          color: #000;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-size: 0.95rem;
+          position: relative;
+          overflow: hidden;
+        }
+        .mint-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transition: left 0.5s ease;
+        }
+        .mint-button:hover::before {
+          left: 100%;
+        }
+        .mint-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(250, 249, 86, 0.3);
+        }
+        .mint-button.premium {
+          background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+          color: #fff;
+        }
+        .mint-button.premium:hover {
+          box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        .mint-button.utility {
+          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+          color: #fff;
+        }
+        .mint-button.utility:hover {
+          box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+        }
+        .mint-button.disabled {
+          background: #333;
+          color: #666;
+          cursor: not-allowed;
+          transform: none;
+        }
+        .mint-button.disabled:hover {
+          transform: none;
+          box-shadow: none;
+        }
+        .mint-button.disabled::before {
+          display: none;
+        }
+        
+        /* Early Supporter Styles for Genesis Collection */
+        .early-supporter-badge {
+          background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+          color: #000;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          display: inline-block;
+          margin-bottom: 12px;
+          box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .early-supporter-benefits {
+          background: rgba(255, 215, 0, 0.05);
+          border: 1px solid rgba(255, 215, 0, 0.2);
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 20px;
+        }
+        
+        .benefit-highlight {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+          padding: 8px 0;
+        }
+        
+        .benefit-highlight:last-child {
+          margin-bottom: 0;
+        }
+        
+        .benefit-icon {
+          font-size: 1.1rem;
+          flex-shrink: 0;
+        }
+        
+        .benefit-highlight span:last-child {
+          color: #ffd700;
+          font-weight: 500;
+          font-size: 0.85rem;
+        }
+        
+        .revenue-share-explanation {
+          margin: 12px 0;
+          padding: 12px;
+          background: rgba(255, 215, 0, 0.08);
+          border-radius: 8px;
+          border-left: 3px solid #ffd700;
+        }
+        
+        .explanation-text {
+          color: #e6c200;
+          font-size: 0.8rem;
+          font-style: italic;
+          line-height: 1.4;
+          display: block;
+        }
+        
+        .mint-button.genesis-exclusive {
+          background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+          color: #000;
+          box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .mint-button.genesis-exclusive::after {
+          content: '⭐';
+          position: absolute;
+          top: 8px;
+          right: 12px;
+          font-size: 1rem;
+          animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+          0%, 100% { opacity: 0.7; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        .mint-button.genesis-exclusive:hover {
+          box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+          transform: translateY(-3px);
+        }
+        .nft-hub-info {
+          background: #191919;
+          border-radius: 16px;
+          padding: 32px;
+          border: 1px solid rgba(255,255,255,0.1);
+          margin-top: 40px;
+        }
+        .nft-hub-info h4 {
+          color: var(--tg-primary-color);
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin-bottom: 16px;
+        }
+        .nft-hub-info p {
+          color: #e0e0e0;
+          line-height: 1.6;
+          margin-bottom: 24px;
+        }
+        .nft-benefits {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 16px;
+        }
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px;
+          background: rgba(255,255,255,0.03);
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.05);
+          transition: all 0.2s ease;
+        }
+        .benefit-item:hover {
+          border-color: rgba(250, 249, 86, 0.3);
+          background: rgba(250, 249, 86, 0.02);
+        }
+        .benefit-item svg {
+          color: var(--tg-primary-color);
+          flex-shrink: 0;
+        }
+        .benefit-item span {
+          color: #fff;
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+          .nft-collections-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+          .collection-info {
+            padding: 16px;
+          }
+          .nft-hub-info {
+            padding: 20px;
+          }
+          .nft-benefits {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .collection-media {
+            aspect-ratio: 1 / 1;
+            max-height: 300px;
+          }
+        }
+        @media (max-width: 480px) {
+          .collection-stats {
+            padding: 12px;
+          }
+          .mint-button {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+          }
+          .collection-media {
+            aspect-ratio: 1 / 1;
+            max-height: 250px;
           }
         }
       `}</style>
