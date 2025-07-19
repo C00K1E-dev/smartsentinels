@@ -2284,6 +2284,29 @@ const SmartSentinelsHub = () => {
             background: rgba(0,0,0,0.5);
           }
         }
+        @media (max-width: 1024px) {
+          /* Large Mobile & Small Tablet - Force Vertical Layout */
+          .hub-header-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            text-align: center;
+          }
+          
+          .hub-header-content {
+            max-width: 100%;
+          }
+          
+          .hub-header-image {
+            justify-content: center;
+            margin-left: 0;
+            margin-right: 0;
+          }
+          
+          .hub-hero-image {
+            max-width: 280px;
+            max-height: 200px;
+          }
+        }
         @media (max-width: 768px) {
           .hub-main-content {
             padding: 104px 4vw 16px 4vw;
@@ -2325,19 +2348,19 @@ const SmartSentinelsHub = () => {
           
           /* Hub Header Responsive */
           .hub-header-section {
-            grid-template-columns: 1fr auto;
-            gap: 30px;
-            text-align: left;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            text-align: center;
           }
           
           .hub-header-content {
-            max-width: 400px;
+            max-width: 100%;
           }
           
           .hub-header-image {
-            justify-content: flex-end;
+            justify-content: center;
             margin-left: 0;
-            margin-right: -40px;
+            margin-right: 0;
           }
           
           .hub-hero-image {
