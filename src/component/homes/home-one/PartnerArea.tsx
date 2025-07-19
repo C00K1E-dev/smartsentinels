@@ -6,13 +6,14 @@ import Slider from "react-slick";
 import partnerThumb_1 from "@/assets/img/update/client/client-1-4.svg"
 import partnerThumb_2 from "@/assets/img/update/client/client-1-2.svg"
 import partnerThumb_3 from "@/assets/img/update/client/client-1-5.svg"
-import partnerThumb_4 from "@/assets/img/update/client/client-1-4.svg"
+import partnerThumb_4 from "@/assets/img/update/client/client-1-4.png"
 
 
 interface DataType {
    id: number;
    icon: StaticImageData;
    desc: JSX.Element;
+   link: string;
 }[];
 
 const partner_data: DataType[] = [
@@ -20,16 +21,25 @@ const partner_data: DataType[] = [
       id: 1,
       icon: partnerThumb_1,
       desc: (<>Built on BNB Chain, because winning starts with the right foundation</>),
+      link: "https://www.bnbchain.org/",
    },
    {
       id: 2,
       icon: partnerThumb_2,
       desc: (<>Powered by NVIDIA devices, because AI needs real performance.</>),
+      link: "https://www.nvidia.com/",
    },
    {
       id: 3,
       icon: partnerThumb_3,
       desc: (<>Powered by AMD, because the most advanced AI needs next-gen silicon.</>),
+      link: "https://www.amd.com/",
+   },
+   {
+      id: 4,
+      icon: partnerThumb_4,
+      desc: (<>Secured by Civic, because secure authentication matters.</>),
+      link: "https://www.civic.com/",
    },
  
 ];
@@ -101,7 +111,7 @@ const PartnerArea = () => {
                               <Image src={item.icon} alt="img" />
                            </div>
                            <p className="partner-card-text">{item.desc}</p>
-                           <Link className="btn btn3" href="/blog">EXPLORE</Link>
+                           <Link className="btn btn3" href={item.link} target="_blank" rel="noopener noreferrer">EXPLORE</Link>
                         </div>
                      </div>
                   ))}
