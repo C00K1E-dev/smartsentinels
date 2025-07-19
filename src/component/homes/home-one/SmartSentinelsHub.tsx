@@ -17,6 +17,12 @@ import {
   DollarSign,
   Rocket,
   Key,
+  Shield,
+  FileText,
+  Download,
+  CreditCard,
+  CheckCircle,
+  AlertTriangle,
 } from "lucide-react";
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
@@ -505,6 +511,15 @@ const SmartSentinelsHub = () => {
   const [authMessage, setAuthMessage] = useState<string>("");
   const [isClient, setIsClient] = useState(false);
   
+  // AI Audit state
+  const [auditCode, setAuditCode] = useState("");
+  const [selectedPackage, setSelectedPackage] = useState<'bronze' | 'silver' | 'gold' | null>(null);
+  const [auditResult, setAuditResult] = useState<string>("");
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
+  const [transactionHash, setTransactionHash] = useState<string>("");
+  
   // Get authentication and wallet status
   const userContext = useUser();
   const { isConnected, address } = useAccount();
@@ -526,13 +541,191 @@ const SmartSentinelsHub = () => {
   }, [userContext.user, userContext, isConnected, authMessage]);
 
   // Define which sections require authentication/wallet
-  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs'];
-  const requiresWallet = ['nfts', 'agents', 'marketplace'];
+  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs', 'ai-audit'];
+  const requiresWallet = ['nfts', 'agents', 'marketplace', 'ai-audit'];
 
   // Helper function to get button styling based on auth status
   const getButtonClass = (sectionName: string) => {
     let className = `action-btn ${activeSection === sectionName ? 'active' : ''}`;
     return className;
+  };
+
+  // AI Audit functions
+  const handleAuditSubmit = async () => {
+    if (!auditCode.trim() || !selectedPackage) {
+      alert('Please enter smart contract code and select an audit package.');
+      return;
+    }
+
+    setIsAuditing(true);
+    try {
+      const response = await fetch('/api/process-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          code: auditCode,
+          packageType: selectedPackage 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to process audit');
+      }
+
+      const data = await response.json();
+      setAuditResult(data.reply);
+      setShowPayment(true);
+    } catch (error) {
+      console.error('Audit error:', error);
+      alert('Failed to process audit. Please try again.');
+    } finally {
+      setIsAuditing(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    // Simulate payment process - replace with actual blockchain transaction
+    try {
+      // This would be replaced with actual smart contract interaction
+      const mockTxHash = "0x" + Math.random().toString(16).substr(2, 64);
+      setTransactionHash(mockTxHash);
+      setIsPaid(true);
+      setShowPayment(false);
+      alert(`Payment successful! Transaction: ${mockTxHash}`);
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Payment failed. Please try again.');
+    }
+  };
+
+  const generatePDF = () => {
+    if (!isPaid || !auditResult) {
+      alert('Payment required to download audit report.');
+      return;
+    }
+
+    // Generate comprehensive PDF content
+    const pdfContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartSentinels Audit Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        .header { text-align: center; border-bottom: 2px solid #f8f442; padding-bottom: 20px; margin-bottom: 30px; }
+        .package-badge { background: #f8f442; color: #000; padding: 5px 15px; border-radius: 15px; font-weight: bold; }
+        .section { margin-bottom: 25px; }
+        .section h3 { color: #333; border-left: 4px solid #f8f442; padding-left: 10px; }
+        .audit-content { background: #f9f9f9; padding: 20px; border-radius: 8px; white-space: pre-wrap; }
+        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; }
+        .transaction { font-family: monospace; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ SmartSentinels AI Audit Report</h1>
+        <span class="package-badge">${selectedPackage?.toUpperCase()} PACKAGE</span>
+        <p>Professional Smart Contract Security Analysis</p>
+    </div>
+    
+    <div class="section">
+        <h3>📋 Report Details</h3>
+        <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+        <p><strong>Package:</strong> ${selectedPackage?.toUpperCase()}</p>
+        <p><strong>Transaction:</strong> <span class="transaction">${transactionHash}</span></p>
+        <p><strong>Wallet:</strong> ${address}</p>
+    </div>
+    
+    <div class="section">
+        <h3>🔍 AI Security Analysis</h3>
+        <div class="audit-content">${auditResult}</div>
+    </div>
+    
+    <div class="section">
+        <h3>📊 Package Features Included</h3>
+        <ul>
+            ${getPackageFeatures(selectedPackage!).map(feature => `<li>${feature}</li>`).join('')}
+        </ul>
+    </div>
+    
+    <div class="footer">
+        <p>This report was generated by SmartSentinels AI-powered audit system.</p>
+        <p>Powered by Ollama Infrastructure | SmartSentinels Hub</p>
+        <p><strong>Disclaimer:</strong> This AI-powered audit should be used in conjunction with manual review for production contracts.</p>
+    </div>
+</body>
+</html>
+    `;
+
+    // Create blob and download as HTML (can be saved as PDF by user)
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SmartSentinels-Audit-${selectedPackage?.toUpperCase()}-${Date.now()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Show instructions for PDF conversion
+    setTimeout(() => {
+      alert('Report downloaded as HTML file. You can print it as PDF using your browser (Ctrl+P → Save as PDF)');
+    }, 1000);
+  };
+
+  const resetAudit = () => {
+    setAuditCode("");
+    setSelectedPackage(null);
+    setAuditResult("");
+    setShowPayment(false);
+    setIsPaid(false);
+    setTransactionHash("");
+  };
+
+  const getPackagePrice = (pkg: string) => {
+    switch (pkg) {
+      case 'bronze': return '1000 SSTL';
+      case 'silver': return '2500 SSTL';
+      case 'gold': return '5000 SSTL';
+      default: return '0 SSTL';
+    }
+  };
+
+  const getPackageFeatures = (pkg: string) => {
+    switch (pkg) {
+      case 'bronze':
+        return [
+          'Basic vulnerability scan',
+          'Common security issues detection',
+          'Gas optimization suggestions',
+          'Standard compliance check'
+        ];
+      case 'silver':
+        return [
+          'Comprehensive vulnerability analysis',
+          'Advanced security patterns review',
+          'Detailed gas optimization',
+          'Multiple standard compliance',
+          'Logic flow analysis',
+          'Reentrancy attack detection'
+        ];
+      case 'gold':
+        return [
+          'Enterprise-grade security audit',
+          'Advanced threat modeling',
+          'Complete architecture review',
+          'Custom security recommendations',
+          'Formal verification suggestions',
+          'Economic attack vector analysis',
+          'Priority support',
+          'Detailed remediation guide'
+        ];
+      default:
+        return [];
+    }
   };
 
   const showSection = (sectionName: string) => {
@@ -581,10 +774,21 @@ const SmartSentinelsHub = () => {
         {/* Main Content - No Sidebar */}
         <main className="hub-main-content">
           {/* Dashboard Content with Dynamic Sections */}
-          <h2 className="hub-title">Welcome to SmartSentinels Hub</h2>
-          <p className="hub-desc">
-            Manage your NFTs, AI agents, devices, and marketplace activity in one secure dashboard.
-          </p>
+          <div className="hub-header-section">
+            <div className="hub-header-content">
+              <h2 className="hub-title">Welcome to SmartSentinels Hub</h2>
+              <p className="hub-desc">
+                Manage your NFTs, AI agents, devices, and marketplace activity in one secure dashboard.
+              </p>
+            </div>
+            <div className="hub-header-image">
+              <img 
+                src="/assets/img/hub/smartsentinels-hero.png" 
+                alt="SmartSentinels Hub" 
+                className="hub-hero-image"
+              />
+            </div>
+          </div>
           
           {/* Dashboard Grid */}
           <div className="dashboard-grid">
@@ -592,18 +796,27 @@ const SmartSentinelsHub = () => {
             
             <div className="dashboard-stats-widget">
               <h4>Quick Stats</h4>
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <span className="stat-number">0</span>
-                  <span className="stat-label">NFTs</span>
+              <div className="stats-content">
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <span className="stat-number">0</span>
+                    <span className="stat-label">NFTs</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">0</span>
+                    <span className="stat-label">Agents</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">0</span>
+                    <span className="stat-label">Devices</span>
+                  </div>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">0</span>
-                  <span className="stat-label">Agents</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">0</span>
-                  <span className="stat-label">Devices</span>
+                <div className="stats-image">
+                  <img 
+                    src="/assets/img/hub/dashboard-stats.png" 
+                    alt="Dashboard Statistics" 
+                    className="stats-visual"
+                  />
                 </div>
               </div>
             </div>
@@ -617,6 +830,13 @@ const SmartSentinelsHub = () => {
                 >
                   <LucideImage size={16} />
                   NFTs Hub - Featured Collections
+                </button>
+                <button 
+                  className={getButtonClass('ai-audit')}
+                  onClick={() => showSection('ai-audit')}
+                >
+                  <Shield size={16} />
+                  AI Audit - Smart Contract Analysis
                 </button>
                 <button 
                   className={getButtonClass('nfts')}
@@ -977,6 +1197,185 @@ const SmartSentinelsHub = () => {
                 <div className="settings-placeholder">
                   <p>Additional settings and configuration options will be available here.</p>
                   <p>All wallet management features are now available in the main dashboard.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'ai-audit' && (
+            <div className="hub-section ai-audit-section">
+              <h3 className="hub-section-title">
+                <Shield size={24} />
+                AI Smart Contract Audit
+              </h3>
+              
+              <div className="ai-audit-container">
+                <div className="audit-intro">
+                  <div className="audit-intro-content">
+                    <div className="audit-description">
+                      <h4>Professional Smart Contract Security Analysis</h4>
+                      <p>
+                        Get your smart contracts audited by our advanced AI agent running on Ollama infrastructure. 
+                        Our AI performs comprehensive security analysis, vulnerability detection, and provides 
+                        detailed recommendations to ensure your smart contract is secure and optimized.
+                      </p>
+                      <div className="audit-features">
+                        <div className="feature-item">
+                          <Shield size={18} />
+                          <span>Advanced Security Analysis</span>
+                        </div>
+                        <div className="feature-item">
+                          <Bot size={18} />
+                          <span>AI-Powered Detection</span>
+                        </div>
+                        <div className="feature-item">
+                          <FileText size={18} />
+                          <span>Detailed PDF Reports</span>
+                        </div>
+                        <div className="feature-item">
+                          <CheckCircle size={18} />
+                          <span>Compliance Verification</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="audit-image">
+                      <img 
+                        src="/assets/img/hub/ai-audit-visual.png" 
+                        alt="AI Smart Contract Audit" 
+                        className="audit-visual"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {!auditResult && (
+                  <div className="audit-form-section">
+                    <h4>Submit Your Smart Contract for Audit</h4>
+                    
+                    <div className="package-selection">
+                      <h5>Select Audit Package</h5>
+                      <div className="packages-grid">
+                        {['bronze', 'silver', 'gold'].map((pkg) => (
+                          <div 
+                            key={pkg}
+                            className={`package-card ${selectedPackage === pkg ? 'selected' : ''}`}
+                            onClick={() => setSelectedPackage(pkg as any)}
+                          >
+                            <div className="package-header">
+                              <h6>{pkg.charAt(0).toUpperCase() + pkg.slice(1)}</h6>
+                              <span className="package-price">{getPackagePrice(pkg)}</span>
+                            </div>
+                            <div className="package-features">
+                              {getPackageFeatures(pkg).map((feature, index) => (
+                                <div key={index} className="feature">
+                                  <CheckCircle size={14} />
+                                  <span>{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="code-input-section">
+                      <label htmlFor="smart-contract-code">Smart Contract Code</label>
+                      <textarea
+                        id="smart-contract-code"
+                        value={auditCode}
+                        onChange={(e) => setAuditCode(e.target.value)}
+                        placeholder="Paste your Solidity smart contract code here..."
+                        className="code-textarea"
+                        rows={15}
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleAuditSubmit}
+                      disabled={!auditCode.trim() || !selectedPackage || isAuditing}
+                      className="audit-submit-btn"
+                    >
+                      {isAuditing ? (
+                        <>
+                          <div className="spinner"></div>
+                          Analyzing Contract...
+                        </>
+                      ) : (
+                        <>
+                          <Bot size={16} />
+                          Start AI Audit Analysis
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {auditResult && (
+                  <div className="audit-results-section">
+                    <h4>Audit Analysis Complete</h4>
+                    <div className="audit-preview">
+                      <div className="preview-header">
+                        <AlertTriangle size={20} />
+                        <span>Audit Report Preview</span>
+                      </div>
+                      <div className="preview-content">
+                        <p>Package: <strong>{selectedPackage?.toUpperCase()}</strong></p>
+                        <div className="preview-text">
+                          {auditResult.substring(0, 300)}...
+                        </div>
+                      </div>
+                    </div>
+
+                    {!isPaid ? (
+                      <div className="payment-section">
+                        <div className="payment-info">
+                          <h5>Complete Payment to Download Full Report</h5>
+                          <p>Price: <strong>{getPackagePrice(selectedPackage!)}</strong></p>
+                          <p>You will receive a detailed PDF report with complete analysis and recommendations.</p>
+                        </div>
+                        <button
+                          onClick={handlePayment}
+                          className="payment-btn"
+                        >
+                          <CreditCard size={16} />
+                          Pay & Download Report
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="download-section">
+                        <div className="success-indicator">
+                          <CheckCircle size={24} />
+                          <span>Payment Successful!</span>
+                        </div>
+                        <p>Transaction: <code>{transactionHash}</code></p>
+                        <button
+                          onClick={generatePDF}
+                          className="download-btn"
+                        >
+                          <Download size={16} />
+                          Download Audit Report (PDF)
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={resetAudit}
+                      className="reset-btn"
+                    >
+                      Start New Audit
+                    </button>
+                  </div>
+                )}
+
+                <div className="audit-disclaimer">
+                  <h5>Important Disclaimer</h5>
+                  <p>
+                    Our AI agent is specifically trained for smart contract security analysis and operates with advanced 
+                    pattern recognition capabilities. While this audit provides comprehensive vulnerability detection and 
+                    security recommendations based on extensive training data, we recommend treating this as one component 
+                    of your security strategy. For mission-critical contracts managing substantial assets, consider 
+                    complementing this analysis with additional security measures and testing protocols.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1547,6 +1946,43 @@ const SmartSentinelsHub = () => {
           color: #e0e0e0;
           margin-bottom: 40px;
         }
+        
+        /* Hub Header Section with Image */
+        .hub-header-section {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 20px;
+          align-items: center;
+          margin-bottom: 40px;
+        }
+        
+        .hub-header-content {
+          max-width: 650px;
+        }
+        
+        .hub-header-image {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          background: transparent;
+          margin-left: -20px;
+        }
+        
+        .hub-hero-image {
+          max-width: 300px;
+          max-height: 200px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          background: transparent;
+          filter: drop-shadow(0 4px 12px rgba(250, 249, 86, 0.2));
+          transition: all 0.3s ease;
+        }
+        
+        .hub-hero-image:hover {
+          filter: drop-shadow(0 8px 20px rgba(250, 249, 86, 0.3));
+          transform: translateY(-2px);
+        }
         .dashboard-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1655,6 +2091,38 @@ const SmartSentinelsHub = () => {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 16px;
+        }
+        
+        /* Stats Content Layout */
+        .stats-content {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+        
+        .stats-image {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 12px;
+          background: transparent;
+        }
+        
+        .stats-visual {
+          max-width: 100%;
+          max-height: 120px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          background: transparent;
+          filter: drop-shadow(0 2px 8px rgba(250, 249, 86, 0.15));
+          transition: all 0.3s ease;
+        }
+        
+        .stats-visual:hover {
+          filter: drop-shadow(0 4px 12px rgba(250, 249, 86, 0.25));
+          transform: scale(1.02);
         }
         .stat-item {
           text-align: center;
@@ -1844,6 +2312,38 @@ const SmartSentinelsHub = () => {
           .stat-number {
             font-size: 1.4rem;
           }
+          
+          /* Stats Image Responsive */
+          .stats-visual {
+            max-height: 100px;
+          }
+          
+          /* Audit Image Responsive */
+          .audit-visual {
+            max-height: 250px;
+          }
+          
+          /* Hub Header Responsive */
+          .hub-header-section {
+            grid-template-columns: 1fr auto;
+            gap: 30px;
+            text-align: left;
+          }
+          
+          .hub-header-content {
+            max-width: 400px;
+          }
+          
+          .hub-header-image {
+            justify-content: flex-end;
+            margin-left: 0;
+            margin-right: -40px;
+          }
+          
+          .hub-hero-image {
+            max-width: 280px;
+            max-height: 180px;
+          }
         }
         @media (max-width: 575px) {
           .hub-title {
@@ -1855,6 +2355,16 @@ const SmartSentinelsHub = () => {
           .hub-placeholder {
             padding: 10px;
             font-size: 0.95rem;
+          }
+          
+          /* Hub Header Mobile */
+          .hub-header-section {
+            gap: 20px;
+          }
+          
+          .hub-hero-image {
+            max-width: 200px;
+            max-height: 130px;
           }
         }
         @media (max-width: 426px) {
@@ -1870,6 +2380,44 @@ const SmartSentinelsHub = () => {
           .hub-title {
             font-size: 1rem;
           }
+          
+          /* Mobile Header - Stack and Center */
+          .hub-header-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            text-align: center;
+          }
+          
+          .hub-header-content {
+            max-width: 100%;
+          }
+          
+          .hub-header-image {
+            justify-content: center;
+            margin-left: 0;
+            margin-right: 0;
+          }
+          
+          .hub-hero-image {
+            max-width: 200px;
+            max-height: 130px;
+          }
+          
+          /* Stats Image Responsive */
+          .stats-visual {
+            max-height: 80px;
+          }
+          
+          /* Audit Image Responsive */
+          .audit-visual {
+            max-height: 200px;
+          }
+          
+          /* Wallet Address Mobile Optimization */
+          .address-short {
+            font-size: 0.75rem;
+            max-width: 150px;
+          }
         }
         @media (max-width: 376px) {
           .hub-sidebar {
@@ -1882,6 +2430,44 @@ const SmartSentinelsHub = () => {
           }
           .hub-title {
             font-size: 0.95rem;
+          }
+          
+          /* Mobile Header - Stack and Center */
+          .hub-header-section {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            text-align: center;
+          }
+          
+          .hub-header-image {
+            justify-content: center;
+            margin-left: 0;
+            margin-right: 0;
+          }
+          
+          .hub-hero-image {
+            max-width: 180px;
+            max-height: 120px;
+          }
+          
+          /* Stats Image Responsive */
+          .stats-visual {
+            max-height: 70px;
+          }
+          
+          /* Audit Image Responsive */
+          .audit-visual {
+            max-height: 150px;
+          }
+          
+          /* Wallet Address Mobile Optimization */
+          .address-short {
+            font-size: 0.75rem;
+            max-width: 160px;
+          }
+          
+          .icon-btn-small {
+            padding: 3px;
           }
         }
         @media (max-width: 320px) {
@@ -1903,6 +2489,83 @@ const SmartSentinelsHub = () => {
             padding: 6px;
             font-size: 0.85rem;
           }
+          
+          /* Mobile Header - Stack and Center */
+          .hub-header-section {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            text-align: center;
+          }
+          
+          .hub-header-image {
+            justify-content: center;
+            margin-left: 0;
+            margin-right: 0;
+          }
+          
+          .hub-hero-image {
+            max-width: 150px;
+            max-height: 100px;
+          }
+          
+          /* Action Button Mobile Optimization */
+          .action-btn {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+          }
+          
+          .action-btn svg {
+            min-width: 14px;
+            flex-shrink: 0;
+          }
+          
+          /* Stats Image Responsive */
+          .stats-visual {
+            max-height: 60px;
+          }
+          
+          /* Audit Image Responsive */
+          .audit-visual {
+            max-height: 120px;
+          }
+          
+          /* Wallet Address Mobile Optimization */
+          .wallet-address-display {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+          }
+          
+          .address-container-inline {
+            flex-wrap: wrap;
+            gap: 4px;
+            width: 100%;
+          }
+          
+          .address-short {
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          
+          .icon-btn-small {
+            padding: 3px;
+            min-width: 24px;
+            height: 24px;
+          }
+          
+          .icon-btn-small svg {
+            width: 10px;
+            height: 10px;
+          }
         }
         @media (min-width: 2160px) {
           .hub-main-content {
@@ -1918,6 +2581,38 @@ const SmartSentinelsHub = () => {
           .hub-placeholder {
             font-size: 1.3rem;
             padding: 60px;
+          }
+          
+          /* 4K Resolution - Move image more to the left */
+          .hub-header-section {
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            max-width: 1400px;
+            margin: 0 auto 40px auto;
+          }
+          
+          .hub-header-content {
+            max-width: 800px;
+          }
+          
+          .hub-header-image {
+            margin-left: -80px;
+            justify-content: flex-start;
+          }
+          
+          .hub-hero-image {
+            max-width: 400px;
+            max-height: 280px;
+          }
+          
+          /* Stats Image Responsive */
+          .stats-visual {
+            max-height: 160px;
+          }
+          
+          /* Audit Image Responsive */
+          .audit-visual {
+            max-height: 400px;
           }
         }
         /* NFT Collections Styles */
@@ -2275,6 +2970,526 @@ const SmartSentinelsHub = () => {
           .collection-media {
             aspect-ratio: 1 / 1;
             max-height: 250px;
+          }
+        }
+
+        /* AI Audit Section Styles */
+        .ai-audit-container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .audit-intro {
+          background: #191919;
+          border-radius: 16px;
+          padding: 32px;
+          margin-bottom: 32px;
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .audit-intro-content {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 32px;
+          align-items: center;
+        }
+
+        .audit-description h4 {
+          color: var(--tg-primary-color);
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 16px;
+        }
+
+        .audit-description p {
+          color: #e0e0e0;
+          line-height: 1.6;
+          margin-bottom: 24px;
+          font-size: 1rem;
+        }
+
+        .audit-features {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+
+        .feature-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #fff;
+          font-size: 0.9rem;
+        }
+
+        .feature-item svg {
+          color: var(--tg-primary-color);
+          flex-shrink: 0;
+        }
+
+        .audit-image {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .audit-visual {
+          max-width: 100%;
+          max-height: 300px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          border-radius: 12px;
+          filter: drop-shadow(0 4px 16px rgba(250, 249, 86, 0.2));
+          transition: all 0.3s ease;
+        }
+
+        .audit-visual:hover {
+          filter: drop-shadow(0 6px 20px rgba(250, 249, 86, 0.3));
+          transform: scale(1.02);
+        }
+
+        .audit-form-section {
+          background: #191919;
+          border-radius: 16px;
+          padding: 32px;
+          margin-bottom: 32px;
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .audit-form-section h4 {
+          color: var(--tg-primary-color);
+          font-size: 1.3rem;
+          margin-bottom: 24px;
+        }
+
+        .package-selection {
+          margin-bottom: 32px;
+        }
+
+        .package-selection h5 {
+          color: #fff;
+          font-size: 1.1rem;
+          margin-bottom: 16px;
+        }
+
+        .packages-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+
+        .package-card {
+          background: rgba(255,255,255,0.03);
+          border: 2px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 20px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .package-card:hover {
+          border-color: rgba(250, 249, 86, 0.5);
+          background: rgba(250, 249, 86, 0.03);
+        }
+
+        .package-card.selected {
+          border-color: var(--tg-primary-color);
+          background: rgba(250, 249, 86, 0.05);
+          box-shadow: 0 0 20px rgba(250, 249, 86, 0.2);
+        }
+
+        .package-card.selected::before {
+          content: '✓';
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: var(--tg-primary-color);
+          color: #000;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 14px;
+        }
+
+        .package-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+
+        .package-header h6 {
+          color: var(--tg-primary-color);
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0;
+          text-transform: capitalize;
+        }
+
+        .package-price {
+          background: rgba(250, 249, 86, 0.1);
+          color: var(--tg-primary-color);
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+
+        .package-features {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .feature {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #e0e0e0;
+          font-size: 0.85rem;
+        }
+
+        .feature svg {
+          color: #22c55e;
+          flex-shrink: 0;
+        }
+
+        .code-input-section {
+          margin-bottom: 24px;
+        }
+
+        .code-input-section label {
+          color: #fff;
+          font-weight: 600;
+          display: block;
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+
+        .code-textarea {
+          width: 100%;
+          background: #0a0a0a;
+          border: 2px solid rgba(255,255,255,0.1);
+          border-radius: 8px;
+          padding: 16px;
+          color: #fff;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          resize: vertical;
+          transition: border-color 0.2s ease;
+        }
+
+        .code-textarea:focus {
+          outline: none;
+          border-color: var(--tg-primary-color);
+          box-shadow: 0 0 0 3px rgba(250, 249, 86, 0.1);
+        }
+
+        .code-textarea::placeholder {
+          color: #666;
+          font-style: italic;
+        }
+
+        .audit-submit-btn {
+          background: linear-gradient(135deg, var(--tg-primary-color) 0%, #faf956 100%);
+          color: #000;
+          border: none;
+          padding: 16px 32px;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          font-size: 1rem;
+          width: 100%;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .audit-submit-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .audit-submit-btn:hover::before {
+          left: 100%;
+        }
+
+        .audit-submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(250, 249, 86, 0.4);
+        }
+
+        .audit-submit-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .audit-results-section {
+          background: #191919;
+          border-radius: 16px;
+          padding: 32px;
+          margin-bottom: 32px;
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .audit-results-section h4 {
+          color: var(--tg-primary-color);
+          font-size: 1.3rem;
+          margin-bottom: 24px;
+        }
+
+        .audit-preview {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 24px;
+        }
+
+        .preview-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 16px;
+          color: var(--tg-primary-color);
+          font-weight: 600;
+        }
+
+        .preview-content p {
+          color: #e0e0e0;
+          margin-bottom: 12px;
+        }
+
+        .preview-text {
+          background: #0a0a0a;
+          padding: 16px;
+          border-radius: 8px;
+          color: #b0b0b0;
+          font-family: 'Courier New', monospace;
+          font-size: 0.85rem;
+          line-height: 1.4;
+          border-left: 3px solid var(--tg-primary-color);
+        }
+
+        .payment-section {
+          background: rgba(245, 158, 11, 0.05);
+          border: 1px solid rgba(245, 158, 11, 0.2);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          text-align: center;
+        }
+
+        .payment-info h5 {
+          color: #f59e0b;
+          margin-bottom: 12px;
+          font-size: 1.1rem;
+        }
+
+        .payment-info p {
+          color: #e0e0e0;
+          margin-bottom: 12px;
+        }
+
+        .payment-btn {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          color: #fff;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-size: 1rem;
+          margin: 16px auto 0;
+        }
+
+        .payment-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .download-section {
+          background: rgba(34, 197, 94, 0.05);
+          border: 1px solid rgba(34, 197, 94, 0.2);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          text-align: center;
+        }
+
+        .success-indicator {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          color: #22c55e;
+          font-weight: 600;
+          font-size: 1.1rem;
+          margin-bottom: 16px;
+        }
+
+        .download-section p {
+          color: #e0e0e0;
+          margin-bottom: 16px;
+          word-break: break-all;
+        }
+
+        .download-section code {
+          background: #0a0a0a;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-family: 'Courier New', monospace;
+          color: var(--tg-primary-color);
+        }
+
+        .download-btn {
+          background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+          color: #fff;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-size: 1rem;
+          margin: 0 auto;
+        }
+
+        .download-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+
+        .reset-btn {
+          background: rgba(255,255,255,0.1);
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.2);
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: block;
+          margin: 0 auto;
+        }
+
+        .reset-btn:hover {
+          background: rgba(255,255,255,0.15);
+          border-color: rgba(255,255,255,0.3);
+        }
+
+        .audit-disclaimer {
+          background: rgba(239, 68, 68, 0.05);
+          border: 1px solid rgba(239, 68, 68, 0.2);
+          border-radius: 12px;
+          padding: 24px;
+          margin-top: 32px;
+        }
+
+        .audit-disclaimer h5 {
+          color: #ef4444;
+          margin-bottom: 12px;
+          font-size: 1rem;
+        }
+
+        .audit-disclaimer p {
+          color: #e0e0e0;
+          line-height: 1.6;
+          font-size: 0.9rem;
+          margin: 0;
+        }
+
+        /* Responsive AI Audit Styles */
+        @media (max-width: 768px) {
+          .audit-intro-content {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+
+          .audit-features {
+            grid-template-columns: 1fr;
+          }
+
+          .packages-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .audit-intro,
+          .audit-form-section,
+          .audit-results-section {
+            padding: 20px;
+          }
+
+          .ai-brain {
+            padding: 20px;
+          }
+
+          .ai-brain svg {
+            width: 48px;
+            height: 48px;
+          }
+
+          .scanning-effect {
+            width: 100px;
+            height: 100px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .audit-intro,
+          .audit-form-section,
+          .audit-results-section,
+          .audit-disclaimer {
+            padding: 16px;
+          }
+
+          .packages-grid {
+            gap: 12px;
+          }
+
+          .package-card {
+            padding: 16px;
+          }
+
+          .code-textarea {
+            padding: 12px;
+            font-size: 0.8rem;
+          }
+
+          .audit-submit-btn,
+          .payment-btn,
+          .download-btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
           }
         }
       `}</style>

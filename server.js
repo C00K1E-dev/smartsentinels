@@ -13,11 +13,40 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/process-code', async (req, res) => {
-    const { code } = req.body;
+    const { code, packageType = 'bronze' } = req.body;
 
     if (!code) {
         return res.status(400).json({ error: 'Code is required' });
     }
+
+    // Define different prompts based on package type
+    const getPromptForPackage = (pkg, code) => {
+        const basePrompt = `You are Smart Sentinel, an AI Agent that is an expert in Solidity language. You will analyze this smart contract and generate a report with findings in a professional, succinct, and informative manner.`;
+        
+        switch (pkg) {
+            case 'bronze':
+                return `${basePrompt} Focus on basic security vulnerabilities, common issues, and gas optimization. Provide a concise report suitable for basic security review. In the end, grade the smart contract on a scale from 1 to 10 where 1 being the highest risk and 10 being a perfect smart contract. Also provide the numbers of risks, errors, recommendations and vulnerabilities found:\n\n${code}`;
+            
+            case 'silver':
+                return `${basePrompt} Perform a comprehensive analysis including advanced security patterns, detailed vulnerability assessment, gas optimization, reentrancy checks, and compliance verification. Provide detailed explanations and recommendations. In the end, grade the smart contract on a scale from 1 to 10 where 1 being the highest risk and 10 being a perfect smart contract. Also provide detailed statistics of risks, errors, recommendations and vulnerabilities found:\n\n${code}`;
+            
+            case 'gold':
+                return `${basePrompt} Conduct an enterprise-grade security audit including advanced threat modeling, complete architecture review, economic attack vectors, formal verification suggestions, and comprehensive security recommendations. Provide detailed remediation steps, priority levels, and implementation guidance. Include risk assessment matrix and detailed compliance analysis. In the end, grade the smart contract on a scale from 1 to 10 where 1 being the highest risk and 10 being a perfect smart contract. Also provide comprehensive statistics and categorized breakdown of all findings:\n\n${code}`;
+            
+            default:
+                return `${basePrompt} Analyze this smart contract and provide findings:\n\n${code}`;
+        }
+    };
+
+    // Set different token limits based on package
+    const getTokenLimitForPackage = (pkg) => {
+        switch (pkg) {
+            case 'bronze': return 600;
+            case 'silver': return 1200;
+            case 'gold': return 2000;
+            default: return 400;
+        }
+    };
 
     try {
         let completedResponse = '';
@@ -27,8 +56,8 @@ app.post('/process-code', async (req, res) => {
             try {
                 const response = await axios.post(OLLAMA_API_URL, {
                     model: 'bronzesentinel',
-                    prompt: `You are Smart Sentinel, an AI Agent that is an expert in Solidity language you will analyse this smartcontract and you will generate a report with the findings in a professional, succinct, and informative manner. In the end you will also grade the smart contract on a scale from 1 to 10 where  1 being the highest risk and 10 being a perfect smart contract and also you will say the numbers of  the risks the errors the recommendations and vulnerabilities:\n\n${code}`,
-                    max_tokens: 400,
+                    prompt: getPromptForPackage(packageType, code),
+                    max_tokens: getTokenLimitForPackage(packageType),
                     stream: true // Important: Enable streaming in the request
                 }, {
                     headers: {
@@ -61,7 +90,11 @@ app.post('/process-code', async (req, res) => {
             }
         }
 
-        res.json({ reply: completedResponse.trim() });
+        res.json({ 
+            reply: completedResponse.trim(),
+            packageType: packageType,
+            timestamp: new Date().toISOString()
+        });
 
     } catch (error) {
         console.error('Outer Error calling Smart Sentinel API:', error.response ? error.response.data : error.message);
