@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Image as LucideImage,
@@ -852,14 +853,13 @@ const SmartSentinelsHub = () => {
               </p>
             </div>
             <div className="hub-header-image">
-              <img 
+              <Image 
                 src="/assets/img/hub/smartsentinels-hero.png" 
                 alt="SmartSentinels Hub" 
                 className="hub-hero-image"
-                loading="eager"
-                fetchPriority="high"
-                width="600"
-                height="400"
+                priority
+                width={600}
+                height={400}
               />
             </div>
           </div>
@@ -886,13 +886,12 @@ const SmartSentinelsHub = () => {
                   </div>
                 </div>
                 <div className="stats-image">
-                  <img 
+                  <Image 
                     src="/assets/img/hub/dashboard-stats.png" 
                     alt="Dashboard Statistics" 
                     className="stats-visual"
-                    loading="lazy"
-                    width="300"
-                    height="200"
+                    width={300}
+                    height={200}
                   />
                 </div>
               </div>
@@ -1316,10 +1315,12 @@ const SmartSentinelsHub = () => {
                       </div>
                     </div>
                     <div className="audit-image">
-                      <img 
+                      <Image 
                         src="/assets/img/hub/ai-audit-visual.png" 
                         alt="AI Smart Contract Audit" 
                         className="audit-visual"
+                        width={400}
+                        height={300}
                       />
                     </div>
                   </div>

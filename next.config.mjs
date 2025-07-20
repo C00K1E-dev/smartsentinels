@@ -12,13 +12,7 @@ const nextConfig = {
   // Compress for better performance
   compress: true,
   
-  // Optimize for LCP
-  experimental: {
-    optimizeCss: true,
-    scrollRestoration: true,
-  },
-  
-  // Enable SWC minification
+  // Enable SWC minification for better performance
   swcMinify: true,
   
   // Add headers to handle iframe detection issues in development + performance

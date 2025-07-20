@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ExternalLink, ArrowUpRight, ArrowDownLeft, Clock, Hash, Globe, RotateCcw } from 'lucide-react';
 import {
   fetchWalletTransactions,
@@ -32,13 +32,7 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
     { value: 'bsc-testnet' as NetworkType, label: 'BSC Testnet', currency: 'tBNB' }
   ];
 
-  useEffect(() => {
-    if (walletAddress) {
-      fetchActivityData();
-    }
-  }, [walletAddress, selectedNetwork]);
-
-  const fetchActivityData = async () => {
+  const fetchActivityData = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -59,7 +53,13 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [walletAddress, selectedNetwork]);
+
+  useEffect(() => {
+    if (walletAddress) {
+      fetchActivityData();
+    }
+  }, [walletAddress, selectedNetwork, fetchActivityData]);
 
   const openInExplorer = (hash: string) => {
     const explorerUrl = getExplorerUrl(selectedNetwork);
