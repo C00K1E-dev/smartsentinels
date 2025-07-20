@@ -591,9 +591,16 @@ const SmartSentinelsHub = () => {
   // Auto connect hook for automatic wallet connection
   useAutoConnect();
 
-  // Only render on client to avoid SSR issues
+  // Only render on client to avoid SSR issues - optimized for LCP
   useEffect(() => {
     setIsClient(true);
+    
+    // Preload critical resources for better LCP
+    const preloadImage = document.createElement('link');
+    preloadImage.rel = 'preload';
+    preloadImage.href = '/assets/img/hub/smartsentinels-hero.png';
+    preloadImage.as = 'image';
+    document.head.appendChild(preloadImage);
   }, []);
 
   // Clear auth message when user authentication status changes
@@ -849,6 +856,10 @@ const SmartSentinelsHub = () => {
                 src="/assets/img/hub/smartsentinels-hero.png" 
                 alt="SmartSentinels Hub" 
                 className="hub-hero-image"
+                loading="eager"
+                fetchPriority="high"
+                width="600"
+                height="400"
               />
             </div>
           </div>
@@ -879,6 +890,9 @@ const SmartSentinelsHub = () => {
                     src="/assets/img/hub/dashboard-stats.png" 
                     alt="Dashboard Statistics" 
                     className="stats-visual"
+                    loading="lazy"
+                    width="300"
+                    height="200"
                   />
                 </div>
               </div>

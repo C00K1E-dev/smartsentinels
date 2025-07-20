@@ -1,0 +1,62 @@
+/* Critical CSS for above-the-fold content */
+.hub-layout {
+  display: grid;
+  min-height: 100vh;
+}
+
+.hub-main-content {
+  padding: 20px;
+  background: var(--tg-body-bg-color);
+  min-height: 100vh;
+}
+
+.hub-header-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(250, 249, 86, 0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(250, 249, 86, 0.1);
+}
+
+.hub-title {
+  color: var(--tg-primary-color);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.hub-desc {
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.hub-hero-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  contain: layout;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .hub-header-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .hub-title {
+    font-size: 2rem;
+  }
+  
+  .hub-desc {
+    font-size: 1rem;
+  }
+}
