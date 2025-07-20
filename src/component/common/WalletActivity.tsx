@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, ArrowUpRight, ArrowDownLeft, Clock, Hash, Globe } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, ArrowDownLeft, Clock, Hash, Globe, RotateCcw } from 'lucide-react';
 import {
   fetchWalletTransactions,
   fetchTokenTransfers,
@@ -109,13 +109,24 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
         <h4>Wallet Activity for</h4>
         <div className="address-display">
           <span className="address-text">{formatAddress(walletAddress)}</span>
-          <button 
-            onClick={() => window.open(`${getExplorerUrl(selectedNetwork)}/address/${walletAddress}`, '_blank')}
-            className="explorer-link"
-          >
-            <ExternalLink size={16} />
-            View on BSCScan
-          </button>
+          <div className="header-buttons">
+            <button 
+              onClick={() => window.open(`${getExplorerUrl(selectedNetwork)}/address/${walletAddress}`, '_blank')}
+              className="explorer-link"
+            >
+              <ExternalLink size={16} />
+              View on BSCScan
+            </button>
+            <button 
+              onClick={fetchActivityData}
+              className="refresh-btn"
+              disabled={loading}
+              title="Refresh wallet activity"
+            >
+              <RotateCcw size={16} className={loading ? 'spinning' : ''} />
+              Refresh
+            </button>
+          </div>
         </div>
       </div>
 
@@ -354,6 +365,45 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
           align-items: center;
           gap: 6px;
           font-size: 0.8rem;
+        }
+
+        .header-buttons {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .refresh-btn {
+          background: rgba(250, 249, 86, 0.1);
+          color: var(--tg-primary-color);
+          border: 1px solid rgba(250, 249, 86, 0.3);
+          padding: 6px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.8rem;
+        }
+
+        .refresh-btn:hover {
+          background: rgba(250, 249, 86, 0.2);
+          border-color: rgba(250, 249, 86, 0.5);
+        }
+
+        .refresh-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .spinning {
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         .network-selector {

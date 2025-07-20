@@ -23,6 +23,7 @@ import {
   CreditCard,
   CheckCircle,
   AlertTriangle,
+  Loader,
 } from "lucide-react";
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
@@ -248,9 +249,25 @@ const SidebarWalletIndicator = () => {
 // Real Civic Auth component using proper Next.js integration with error handling
 const AuthButton = () => {
   const [authError, setAuthError] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   
   // Call hooks at the top level - not inside try-catch
   const { user } = useUser();
+  
+  // Reset authenticating state when user is successfully signed in
+  useEffect(() => {
+    if (user && isAuthenticating) {
+      setIsAuthenticating(false);
+    }
+  }, [user, isAuthenticating]);
+
+  // Handle sign-in click
+  const handleSignIn = () => {
+    if (!isAuthenticating) {
+      setIsAuthenticating(true);
+      setAuthError(false);
+    }
+  };
   
   try {
     if (user) {
@@ -275,9 +292,34 @@ const AuthButton = () => {
       );
     }
 
+    // Show loading state when authenticating
+    if (isAuthenticating) {
+      return (
+        <div className="auth-button-wrapper">
+          <button 
+            className="auth-btn loading" 
+            disabled 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: '100%'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Loader size={14} className="spinner" />
+              <span>Signing In...</span>
+            </div>
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="auth-button-wrapper">
-        <SignInButton className="auth-btn login" />
+        <div onClick={handleSignIn}>
+          <SignInButton className="auth-btn login" />
+        </div>
       </div>
     );
   } catch (error) {
@@ -288,9 +330,9 @@ const AuthButton = () => {
     
     return (
       <div className="auth-button-wrapper">
-        <button className="auth-btn login" disabled>
-          <User size={16} />
-          Auth Loading...
+        <button className="auth-btn error" disabled>
+          <User size={14} />
+          Auth Error
         </button>
       </div>
     );
@@ -416,15 +458,29 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
       </div>
       {/* Debug info - can be removed later */}
       <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '8px' }}>
-        User: {userContext.user ? '✓' : '✗'} | Wallet: {userHasWallet(userContext) ? '✓' : '✗'} | Connected: {isConnected ? '✓' : '✗'}
+        {userContext.user && userHasWallet(userContext) && !isConnected ? (
+          <div className="loading-state" style={{ fontSize: '0.7rem' }}>
+            <Loader size={10} className="spinner" />
+            Connecting wallet...
+          </div>
+        ) : (
+          <>User: {userContext.user ? '✓' : '✗'} | Wallet: {userHasWallet(userContext) ? '✓' : '✗'} | Connected: {isConnected ? '✓' : '✗'}</>
+        )}
       </div>
       <div className="wallet-management-inline">
         <div className="wallet-address-display">
           <span className="address-label">Address:</span>
           <div className="address-container-inline">
-            <code className="address-short">
-              {address ? (showFullAddress ? address : `${address.slice(0, 6)}...${address.slice(-4)}`) : 'Not Connected'}
-            </code>
+            {userHasWallet(userContext) && !address ? (
+              <div className="loading-state">
+                <Loader size={12} className="spinner" />
+                <span>Loading address...</span>
+              </div>
+            ) : (
+              <code className="address-short">
+                {address ? (showFullAddress ? address : `${address.slice(0, 6)}...${address.slice(-4)}`) : 'Not Connected'}
+              </code>
+            )}
             {address && (
               <>
                 <button 
@@ -454,10 +510,17 @@ const DashboardWalletWidget = ({ onShowSection }: { onShowSection?: (section: st
         </div>
         <div className="wallet-balance-display">
           <span className="balance-label">Balance:</span>
-          <span className="balance-amount">
-            {balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : 
-             (isConnected ? 'Loading...' : 'Not Connected')}
-          </span>
+          {isConnected && !balance ? (
+            <div className="loading-state">
+              <Loader size={12} className="spinner" />
+              <span>Loading balance...</span>
+            </div>
+          ) : (
+            <span className="balance-amount">
+              {balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : 
+               (isConnected ? 'Loading...' : 'Not Connected')}
+            </span>
+          )}
         </div>
         <div className="wallet-status-display">
           <span className={`connection-indicator ${isConnected ? 'connected' : 'disconnected'}`}>
@@ -1428,15 +1491,19 @@ const SmartSentinelsHub = () => {
           background: var(--tg-primary-color);
           color: #000;
           border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
+          padding: 8px 16px;
+          border-radius: 6px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 14px;
+          gap: 6px;
+          font-size: 12px;
+          min-height: 32px;
+          max-height: 36px;
+          width: 100%;
+          justify-content: center;
         }
         .auth-btn:hover {
           background: #faf956;
@@ -1453,6 +1520,19 @@ const SmartSentinelsHub = () => {
           opacity: 0.6;
           cursor: not-allowed;
           transform: none;
+        }
+        .auth-btn.loading {
+          background: var(--tg-primary-color);
+          color: #000;
+          opacity: 0.9;
+          cursor: not-allowed;
+          pointer-events: none;
+          padding: 8px 16px;
+          min-height: 32px;
+          max-height: 36px;
+        }
+        .spinner {
+          animation: spin 1s linear infinite;
         }
         .auth-message {
           margin: 32px 0;
@@ -1556,6 +1636,17 @@ const SmartSentinelsHub = () => {
           display: flex;
           align-items: center;
           gap: 6px;
+        }
+        .loading-state {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--tg-primary-color);
+          font-size: 0.8rem;
+          font-style: italic;
+        }
+        .loading-state .spinner {
+          flex-shrink: 0;
         }
         .icon-btn-small {
           background: rgba(255,255,255,0.1);
