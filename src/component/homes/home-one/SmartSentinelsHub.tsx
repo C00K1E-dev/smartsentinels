@@ -26,6 +26,8 @@ import {
   AlertTriangle,
   Loader,
 } from "lucide-react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
 import Wrapper from "../../../layouts/Wrapper";
@@ -35,6 +37,9 @@ import { userHasWallet } from "@civic/auth-web3";
 import { useAutoConnect } from "@civic/auth-web3/wagmi";
 import { useAccount, useBalance, useConnect, useSwitchChain } from "wagmi";
 import { bsc, bscTestnet } from "wagmi/chains";
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 // Wallet management component
 const WalletSection = () => {
@@ -578,7 +583,86 @@ const SmartSentinelsHub = () => {
   // AI Audit state
   const [auditCode, setAuditCode] = useState("");
   const [selectedPackage, setSelectedPackage] = useState<'bronze' | 'silver' | 'gold' | null>(null);
-  const [auditResult, setAuditResult] = useState<string>("");
+
+  // Token Purchase state
+  const [showPurchaseForm, setShowPurchaseForm] = useState(false);
+  const [purchaseAmount, setPurchaseAmount] = useState("");
+  const [usdAmount, setUsdAmount] = useState("");
+
+  // Chart.js pie chart data configuration
+  const pieChartData = {
+    labels: [
+      'Proof of Useful Work (PoUW)',
+      'Liquidity + CEX Listings',
+      'Marketing & Growth',
+      'Team Allocation',
+      'Fundraise (Seed, Private, Public)',
+      'Strategic Reserve'
+    ],
+    datasets: [
+      {
+        data: [40, 15, 15, 10, 10, 10],
+        backgroundColor: [
+          '#a1a1aa', // Muted medium grey - PoUW (40%) - Subtle primary focus
+          '#9ca3af', // Cool medium grey - Liquidity (15%) - Secondary 
+          '#71717a', // Darker slate grey - Marketing (15%) - Secondary  
+          '#6b7280', // Deep grey - Team (10%) - Tertiary
+          '#52525b', // Dark charcoal grey - Fundraise (10%) - Tertiary
+          '#3f3f46', // Very dark charcoal - Strategic Reserve (10%) - Tertiary
+        ],
+        borderColor: [
+          '#71717a', '#84848f', '#6b7280', '#52525b', '#3f3f46', '#27272a'
+        ],
+        borderWidth: 2,
+        hoverBorderWidth: 3,
+        hoverOffset: 8,
+        hoverBackgroundColor: [
+          '#9ca3af', '#a1a1aa', '#6b7280', '#52525b', '#4b5563', '#374151'
+        ],
+      },
+    ],
+  };
+
+  const pieChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 15,
+          font: {
+            size: 12,
+            family: 'inherit',
+          },
+          color: '#faf956', // Brand yellow text for legend
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            const label = context.label || '';
+            const value = context.parsed;
+            return `${label}: ${value}%`;
+          }
+        },
+        backgroundColor: 'rgba(17, 24, 39, 0.95)', // Dark background
+        titleColor: '#faf956', // Brand yellow title
+        bodyColor: '#f3f4f6', // Light gray body
+        borderColor: '#faf956', // Brand yellow border
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
+      },
+    },
+    elements: {
+      arc: {
+        borderWidth: 2,
+      },
+    },
+  };  const [auditResult, setAuditResult] = useState<string>("");
   const [isAuditing, setIsAuditing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
@@ -612,7 +696,7 @@ const SmartSentinelsHub = () => {
   }, [userContext.user, userContext, isConnected, authMessage]);
 
   // Define which sections require authentication/wallet
-  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs', 'ai-audit'];
+  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs', 'ai-audit', 'seed-funding'];
   const requiresWallet = ['nfts', 'agents', 'marketplace', 'ai-audit'];
 
   // Helper function to get button styling based on auth status
@@ -799,6 +883,40 @@ const SmartSentinelsHub = () => {
     }
   };
 
+  // Token Purchase Functions
+  const tokenPrice = 0.015; // $0.015 per SSTL
+  
+  const handlePurchaseAmountChange = (value: string, isUSD: boolean) => {
+    if (isUSD) {
+      setUsdAmount(value);
+      const tokens = value ? (parseFloat(value) / tokenPrice).toFixed(2) : "";
+      setPurchaseAmount(tokens);
+    } else {
+      setPurchaseAmount(value);
+      const usd = value ? (parseFloat(value) * tokenPrice).toFixed(2) : "";
+      setUsdAmount(usd);
+    }
+  };
+
+  const handleTokenPurchase = () => {
+    if (!purchaseAmount || parseFloat(purchaseAmount) <= 0) {
+      alert('Please enter a valid token amount.');
+      return;
+    }
+    
+    const totalCost = parseFloat(usdAmount);
+    const tokenAmount = parseFloat(purchaseAmount);
+    
+    // In a real implementation, this would integrate with a payment processor
+    // and smart contract for the token purchase
+    alert(`Purchase initiated:\n${tokenAmount.toLocaleString()} SSTL tokens\nTotal cost: $${totalCost.toLocaleString()}\n\nThis is a demo - real implementation would process payment.`);
+    
+    // Reset form
+    setPurchaseAmount("");
+    setUsdAmount("");
+    setShowPurchaseForm(false);
+  };
+
   const showSection = (sectionName: string) => {
     // Clear any previous messages
     setAuthMessage("");
@@ -837,6 +955,22 @@ const SmartSentinelsHub = () => {
       }, 100);
     }
   };
+
+  // Handle URL parameters to automatically open sections
+  useEffect(() => {
+    if (isClient) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const section = urlParams.get('section');
+      console.log('URL section parameter:', section); // Debug log
+      if (section === 'seed-funding') {
+        console.log('Opening seed-funding section'); // Debug log
+        // Add a small delay to ensure component is fully rendered
+        setTimeout(() => {
+          showSection('seed-funding');
+        }, 100);
+      }
+    }
+  }, [isClient]);
 
   return (
     <Wrapper>
@@ -900,6 +1034,13 @@ const SmartSentinelsHub = () => {
             <div className="dashboard-actions-widget">
               <h4>Navigation & Quick Actions</h4>
               <div className="action-buttons">
+                <button 
+                  className={getButtonClass('seed-funding')}
+                  onClick={() => showSection('seed-funding')}
+                >
+                  <DollarSign size={16} />
+                  Seed Funding - Token Sale
+                </button>
                 <button 
                   className={getButtonClass('nfts-hub')}
                   onClick={() => showSection('nfts-hub')}
@@ -1273,6 +1414,236 @@ const SmartSentinelsHub = () => {
                 <div className="settings-placeholder">
                   <p>Additional settings and configuration options will be available here.</p>
                   <p>All wallet management features are now available in the main dashboard.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'seed-funding' && (
+            <div className="hub-section seed-funding-section">
+              <h3 className="hub-section-title">
+                <DollarSign size={24} />
+                Seed Funding - SSTL Token Sale
+              </h3>
+              
+              <div className="seed-funding-container">
+                {/* Token Overview */}
+                <div className="token-overview">
+                  <div className="token-overview-content">
+                    <div className="token-info">
+                      <h4>SSTL Token Details</h4>
+                      <div className="token-details-grid">
+                        <div className="detail-item">
+                          <span className="detail-label">Token Name:</span>
+                          <span className="detail-value">SmartSentinels Token (SSTL)</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Total Supply:</span>
+                          <span className="detail-value">100,000,000 SSTL</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Current Price:</span>
+                          <span className="detail-value">0.015 USD1</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Smart Contract:</span>
+                          <span className="detail-value">0x1234...5678 (BSC)</span>
+                        </div>
+                      </div>
+                      
+                      <div className="buy-section">
+                        <h5>Purchase SSTL Tokens</h5>
+                        <p>Join our Seed Round and be part of the SmartSentinels ecosystem. Payment accepted in USD1 stablecoin.</p>
+                        
+                        
+                        
+                        {!showPurchaseForm ? (
+                          <button 
+                            className="buy-token-btn"
+                            onClick={() => setShowPurchaseForm(true)}
+                          >
+                            <DollarSign size={16} />
+                            Buy SSTL Tokens
+                          </button>
+                        ) : (
+                          <div className="purchase-form">
+                            <div className="purchase-inputs">
+                              <div className="input-group">
+                                <label>USD1 Amount</label>
+                                <input
+                                  type="number"
+                                  placeholder="Enter USD1 amount"
+                                  value={usdAmount}
+                                  onChange={(e) => handlePurchaseAmountChange(e.target.value, true)}
+                                  className="purchase-input"
+                                />
+                              </div>
+                              <div className="input-separator">OR</div>
+                              <div className="input-group">
+                                <label>SSTL Tokens</label>
+                                <input
+                                  type="number"
+                                  placeholder="Enter token amount"
+                                  value={purchaseAmount}
+                                  onChange={(e) => handlePurchaseAmountChange(e.target.value, false)}
+                                  className="purchase-input"
+                                />
+                              </div>
+                            </div>
+                            
+                            {purchaseAmount && usdAmount && (
+                              <div className="purchase-summary">
+                                <div className="summary-item">
+                                  <span>Tokens:</span>
+                                  <span>{parseFloat(purchaseAmount).toLocaleString()} SSTL</span>
+                                </div>
+                                <div className="summary-item">
+                                  <span>Total Cost:</span>
+                                  <span>{parseFloat(usdAmount).toLocaleString()} USD1</span>
+                                </div>
+                                <div className="summary-item">
+                                  <span>Price per Token:</span>
+                                  <span>0.015 USD1</span>
+                                </div>
+                              </div>
+                            )}
+                            
+                            <div className="purchase-actions">
+                              <button 
+                                className="confirm-purchase-btn"
+                                onClick={handleTokenPurchase}
+                                disabled={!purchaseAmount || parseFloat(purchaseAmount) <= 0}
+                              >
+                                Confirm Purchase
+                              </button>
+                              <button 
+                                className="cancel-purchase-btn"
+                                onClick={() => {
+                                  setShowPurchaseForm(false);
+                                  setPurchaseAmount("");
+                                  setUsdAmount("");
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="tokenomics-chart">
+                      <h4>Token Allocation</h4>
+                      <div className="pie-chart-container">
+                        <div className="chart-responsive-wrapper">
+                          <Pie data={pieChartData} options={pieChartOptions} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detailed Tokenomics Table */}
+                <div className="tokenomics-details">
+                  <h4>Token Allocation Details</h4>
+                  <div className="allocation-grid">
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Proof of Useful Work (PoUW)</span>
+                        <span className="allocation-percentage">40% • 40,000,000 SSTL</span>
+                        <span className="allocation-details">Dynamically minted when AI agents complete tasks</span>
+                      </div>
+                    </div>
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Liquidity + CEX Listings</span>
+                        <span className="allocation-percentage">15% • 15,000,000 SSTL</span>
+                        <span className="allocation-details">7% DEX (2yr lock), 8% CEX (gradual release)</span>
+                      </div>
+                    </div>
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Strategic Reserve</span>
+                        <span className="allocation-percentage">10% • 10,000,000 SSTL</span>
+                        <span className="allocation-details">12mo lock, then 24mo linear vesting</span>
+                      </div>
+                    </div>
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Marketing & Growth</span>
+                        <span className="allocation-percentage">15% • 15,000,000 SSTL</span>
+                        <span className="allocation-details">Monthly release over 12 months</span>
+                      </div>
+                    </div>
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Team Allocation</span>
+                        <span className="allocation-percentage">10% • 10,000,000 SSTL</span>
+                        <span className="allocation-details">12mo cliff, then 12mo linear vesting</span>
+                      </div>
+                    </div>
+                    <div className="allocation-item">
+                      <div className="allocation-info">
+                        <span className="allocation-category">Fundraise (Seed, Private, Public)</span>
+                        <span className="allocation-percentage">10% • 10,000,000 SSTL</span>
+                        <span className="allocation-details">Seed: 6+6mo; Private: 4+4mo; Public: optional cliff</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Token Distribution */}
+                <div className="ai-distribution">
+                  <h4>AI-Generated Token Distribution (PoUW)</h4>
+                  <p>Each time an AI agent generates tokens through Proof of Useful Work:</p>
+                  <div className="distribution-grid">
+                    <div className="distribution-item">
+                      <span className="percentage">60%</span>
+                      <span className="recipient">NFT Holders / Stakers</span>
+                    </div>
+                    <div className="distribution-item">
+                      <span className="percentage">20%</span>
+                      <span className="recipient">Treasury / Staking Pool</span>
+                    </div>
+                    <div className="distribution-item">
+                      <span className="percentage">10%</span>
+                      <span className="recipient">Burn (Deflationary)</span>
+                    </div>
+                    <div className="distribution-item">
+                      <span className="percentage">10%</span>
+                      <span className="recipient">Business Clients</span>
+                    </div>
+                  </div>
+                  <div className="distribution-example">
+                    <strong>Example:</strong> 10 tokens generated → 6 to NFT holders, 2 to Treasury, 1 burned, 1 to Business client
+                  </div>
+                </div>
+
+                {/* Token Utility */}
+                <div className="token-utility">
+                  <h4>Token Utility</h4>
+                  <div className="utility-grid">
+                    <div className="utility-item">
+                      <Bot size={20} />
+                      <span>Payment for AI audit services and future SmartSentinels agents</span>
+                    </div>
+                    <div className="utility-item">
+                      <Settings size={20} />
+                      <span>Staking and governance participation</span>
+                    </div>
+                    <div className="utility-item">
+                      <Rocket size={20} />
+                      <span>Incentives for contributing to Proof of Useful Work</span>
+                    </div>
+                    <div className="utility-item">
+                      <Key size={20} />
+                      <span>Access to SmartSentinels Hub exclusive features</span>
+                    </div>
+                    <div className="utility-item">
+                      <DollarSign size={20} />
+                      <span>Potential for buyback/burn from protocol revenue</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2033,7 +2404,7 @@ const SmartSentinelsHub = () => {
           margin-top: 80px;
         }
         .hub-section-title {
-          font-size: 1.8rem;
+          font-size: 1.4rem;
           font-weight: 600;
           margin-bottom: 24px;
           color: var(--tg-primary-color);
@@ -2305,18 +2676,27 @@ const SmartSentinelsHub = () => {
           font-size: 1.1rem;
           border: 1px solid rgba(255,255,255,0.07);
         }
+        .logs-section {
+          background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+          border-radius: 16px;
+          padding: 32px;
+          border: 1px solid rgba(250, 249, 86, 0.1);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
         .wallet-activity-description {
           margin-bottom: 24px;
-          padding: 16px;
+          padding: 20px;
           background: rgba(255,255,255,0.03);
-          border-radius: 8px;
+          border-radius: 12px;
           border: 1px solid rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
         }
         .wallet-activity-description p {
           color: #e0e0e0;
           margin: 0;
-          font-size: 0.95rem;
-          line-height: 1.5;
+          font-size: 1rem;
+          line-height: 1.6;
+          text-align: center;
         }
         .hub-sidebar-toggle {
           display: none;
@@ -2413,6 +2793,42 @@ const SmartSentinelsHub = () => {
             max-height: 200px;
           }
         }
+        @media (max-width: 2160px) {
+          .logs-section {
+            padding: 28px;
+          }
+          .wallet-activity-description {
+            padding: 18px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.95rem;
+          }
+        }
+        @media (max-width: 1440px) {
+          .logs-section {
+            padding: 24px;
+          }
+          .wallet-activity-description {
+            padding: 16px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.9rem;
+          }
+        }
+        @media (max-width: 1024px) {
+          .logs-section {
+            padding: 20px;
+            border-radius: 12px;
+          }
+          .wallet-activity-description {
+            padding: 14px;
+            margin-bottom: 20px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+          }
+        }
         @media (max-width: 768px) {
           .hub-main-content {
             padding: 104px 4vw 16px 4vw;
@@ -2426,6 +2842,18 @@ const SmartSentinelsHub = () => {
           .hub-placeholder {
             padding: 14px;
             font-size: 0.98rem;
+          }
+          .logs-section {
+            padding: 16px;
+            border-radius: 10px;
+          }
+          .wallet-activity-description {
+            padding: 12px;
+            margin-bottom: 16px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.85rem;
+            line-height: 1.4;
           }
           .dashboard-grid {
             grid-template-columns: 1fr;
@@ -2485,6 +2913,18 @@ const SmartSentinelsHub = () => {
             padding: 10px;
             font-size: 0.95rem;
           }
+          .logs-section {
+            padding: 12px;
+            border-radius: 8px;
+          }
+          .wallet-activity-description {
+            padding: 10px;
+            margin-bottom: 12px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.8rem;
+            line-height: 1.3;
+          }
           
           /* Hub Header Mobile */
           .hub-header-section {
@@ -2494,6 +2934,34 @@ const SmartSentinelsHub = () => {
           .hub-hero-image {
             max-width: 200px;
             max-height: 130px;
+          }
+        }
+        @media (max-width: 425px) {
+          .logs-section {
+            padding: 10px;
+            border-radius: 6px;
+          }
+          .wallet-activity-description {
+            padding: 8px;
+            margin-bottom: 10px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.78rem;
+            line-height: 1.25;
+          }
+        }
+        @media (max-width: 375px) {
+          .logs-section {
+            padding: 8px;
+            border-radius: 6px;
+          }
+          .wallet-activity-description {
+            padding: 6px;
+            margin-bottom: 8px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.75rem;
+            line-height: 1.2;
           }
         }
         @media (max-width: 426px) {
@@ -2617,6 +3085,18 @@ const SmartSentinelsHub = () => {
           .hub-placeholder {
             padding: 6px;
             font-size: 0.85rem;
+          }
+          .logs-section {
+            padding: 6px;
+            border-radius: 4px;
+          }
+          .wallet-activity-description {
+            padding: 4px;
+            margin-bottom: 6px;
+          }
+          .wallet-activity-description p {
+            font-size: 0.7rem;
+            line-height: 1.1;
           }
           
           /* Mobile Header - Stack and Center */
@@ -2747,7 +3227,7 @@ const SmartSentinelsHub = () => {
         /* NFT Collections Styles */
         .nft-collections-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
           gap: 24px;
           margin-bottom: 40px;
         }
@@ -3042,7 +3522,7 @@ const SmartSentinelsHub = () => {
         }
         .nft-benefits {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
           gap: 16px;
         }
         .benefit-item {
@@ -3068,37 +3548,428 @@ const SmartSentinelsHub = () => {
           font-weight: 500;
           font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
+
+        /* NFT Hub Responsive Breakpoints */
+        @media (max-width: 2160px) {
           .nft-collections-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
           }
           .collection-info {
-            padding: 16px;
+            padding: 22px;
           }
           .nft-hub-info {
-            padding: 20px;
-          }
-          .nft-benefits {
-            grid-template-columns: 1fr;
-            gap: 12px;
-          }
-          .collection-media {
-            aspect-ratio: 1 / 1;
-            max-height: 300px;
+            padding: 30px;
           }
         }
-        @media (max-width: 480px) {
+
+        @media (max-width: 1440px) {
+          .nft-collections-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 36px;
+          }
+          .collection-info {
+            padding: 20px;
+          }
+          .collection-info h4 {
+            font-size: 1.1rem;
+          }
+          .collection-description {
+            font-size: 0.85rem;
+          }
+          .nft-hub-info {
+            padding: 28px;
+            margin-top: 36px;
+          }
+          .nft-hub-info h4 {
+            font-size: 1.2rem;
+          }
+          .nft-benefits {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .nft-collections-grid {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+          }
+          .collection-info {
+            padding: 18px;
+          }
+          .collection-info h4 {
+            font-size: 1.05rem;
+          }
+          .collection-description {
+            font-size: 0.8rem;
+            margin-bottom: 18px;
+          }
           .collection-stats {
-            padding: 12px;
+            padding: 14px;
+            margin-bottom: 18px;
+          }
+          .stat-label, .stat-value {
+            font-size: 0.8rem;
           }
           .mint-button {
             padding: 12px 20px;
             font-size: 0.9rem;
           }
+          .nft-hub-info {
+            padding: 24px;
+            margin-top: 32px;
+          }
+          .nft-hub-info h4 {
+            font-size: 1.1rem;
+          }
+          .nft-hub-info p {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+          }
+          .nft-benefits {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+          .benefit-item {
+            padding: 14px;
+          }
+          .benefit-item span {
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .nft-collections-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+          }
+          .collection-info {
+            padding: 16px;
+          }
+          .collection-info h4 {
+            font-size: 1rem;
+          }
+          .collection-description {
+            font-size: 0.75rem;
+            margin-bottom: 16px;
+          }
+          .collection-stats {
+            padding: 12px;
+            margin-bottom: 16px;
+          }
+          .stat-label, .stat-value {
+            font-size: 0.75rem;
+          }
+          .mint-button {
+            padding: 10px 18px;
+            font-size: 0.85rem;
+          }
+          .nft-hub-info {
+            padding: 20px;
+            margin-top: 28px;
+          }
+          .nft-hub-info h4 {
+            font-size: 1rem;
+          }
+          .nft-hub-info p {
+            font-size: 0.85rem;
+            margin-bottom: 18px;
+          }
+          .nft-benefits {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .benefit-item {
+            padding: 12px;
+            gap: 10px;
+          }
+          .benefit-item svg {
+            width: 18px;
+            height: 18px;
+          }
+          .benefit-item span {
+            font-size: 0.8rem;
+          }
           .collection-media {
             aspect-ratio: 1 / 1;
+            max-height: 300px;
+          }
+          .early-supporter-benefits {
+            padding: 14px;
+            margin-bottom: 16px;
+          }
+          .benefit-highlight {
+            gap: 8px;
+            padding: 6px 0;
+          }
+          .benefit-highlight span:last-child {
+            font-size: 0.8rem;
+          }
+          .revenue-share-explanation {
+            padding: 10px;
+          }
+          .explanation-text {
+            font-size: 0.75rem;
+          }
+        }
+
+        @media (max-width: 425px) {
+          .nft-collections-grid {
+            gap: 12px;
+            margin-bottom: 24px;
+          }
+          .collection-info {
+            padding: 12px;
+          }
+          .collection-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+          }
+          .collection-description {
+            font-size: 0.7rem;
+            margin-bottom: 14px;
+          }
+          .collection-stats {
+            padding: 10px;
+            margin-bottom: 14px;
+            gap: 6px;
+          }
+          .stat-label, .stat-value {
+            font-size: 0.7rem;
+          }
+          .mint-button {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            gap: 6px;
+          }
+          .mint-button svg {
+            width: 14px;
+            height: 14px;
+          }
+          .nft-hub-info {
+            padding: 16px;
+            margin-top: 24px;
+          }
+          .nft-hub-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+          }
+          .nft-hub-info p {
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+          }
+          .nft-benefits {
+            gap: 8px;
+          }
+          .benefit-item {
+            padding: 10px;
+            gap: 8px;
+            flex-direction: column;
+            text-align: center;
+          }
+          .benefit-item svg {
+            width: 16px;
+            height: 16px;
+          }
+          .benefit-item span {
+            font-size: 0.75rem;
+          }
+          .collection-media {
             max-height: 250px;
+          }
+          .early-supporter-benefits {
+            padding: 12px;
+            margin-bottom: 14px;
+          }
+          .benefit-highlight {
+            gap: 6px;
+            padding: 4px 0;
+            flex-direction: column;
+            text-align: center;
+          }
+          .benefit-icon {
+            font-size: 1rem;
+          }
+          .benefit-highlight span:last-child {
+            font-size: 0.75rem;
+          }
+          .revenue-share-explanation {
+            padding: 8px;
+            margin: 8px 0;
+          }
+          .explanation-text {
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .nft-collections-grid {
+            gap: 10px;
+            margin-bottom: 20px;
+          }
+          .collection-info {
+            padding: 10px;
+          }
+          .collection-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+          }
+          .collection-description {
+            font-size: 0.65rem;
+            margin-bottom: 12px;
+          }
+          .collection-stats {
+            padding: 8px;
+            margin-bottom: 12px;
+            gap: 4px;
+          }
+          .stat-label, .stat-value {
+            font-size: 0.65rem;
+          }
+          .mint-button {
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            gap: 4px;
+          }
+          .mint-button svg {
+            width: 12px;
+            height: 12px;
+          }
+          .nft-hub-info {
+            padding: 14px;
+            margin-top: 20px;
+          }
+          .nft-hub-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+          }
+          .nft-hub-info p {
+            font-size: 0.75rem;
+            margin-bottom: 14px;
+          }
+          .nft-benefits {
+            gap: 6px;
+          }
+          .benefit-item {
+            padding: 8px;
+            gap: 6px;
+          }
+          .benefit-item svg {
+            width: 14px;
+            height: 14px;
+          }
+          .benefit-item span {
+            font-size: 0.7rem;
+          }
+          .collection-media {
+            max-height: 220px;
+          }
+          .early-supporter-benefits {
+            padding: 10px;
+            margin-bottom: 12px;
+          }
+          .benefit-highlight span:last-child {
+            font-size: 0.7rem;
+          }
+          .explanation-text {
+            font-size: 0.65rem;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .nft-collections-grid {
+            gap: 8px;
+            margin-bottom: 16px;
+          }
+          .collection-info {
+            padding: 8px;
+          }
+          .collection-info h4 {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            text-align: center;
+          }
+          .collection-description {
+            font-size: 0.6rem;
+            margin-bottom: 10px;
+            text-align: center;
+          }
+          .collection-stats {
+            padding: 6px;
+            margin-bottom: 10px;
+            gap: 2px;
+          }
+          .stat {
+            flex-direction: column;
+            gap: 2px;
+            text-align: center;
+          }
+          .stat-label, .stat-value {
+            font-size: 0.6rem;
+          }
+          .mint-button {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            gap: 2px;
+            min-height: 32px;
+          }
+          .mint-button svg {
+            width: 10px;
+            height: 10px;
+          }
+          .nft-hub-info {
+            padding: 12px;
+            margin-top: 16px;
+          }
+          .nft-hub-info h4 {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-align: center;
+          }
+          .nft-hub-info p {
+            font-size: 0.7rem;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          .nft-benefits {
+            gap: 4px;
+          }
+          .benefit-item {
+            padding: 6px;
+            gap: 4px;
+            min-height: 36px;
+          }
+          .benefit-item svg {
+            width: 12px;
+            height: 12px;
+          }
+          .benefit-item span {
+            font-size: 0.65rem;
+            line-height: 1.1;
+          }
+          .collection-media {
+            max-height: 200px;
+          }
+          .early-supporter-benefits {
+            padding: 8px;
+            margin-bottom: 10px;
+          }
+          .benefit-icon {
+            font-size: 0.9rem;
+          }
+          .benefit-highlight span:last-child {
+            font-size: 0.65rem;
+          }
+          .revenue-share-explanation {
+            padding: 6px;
+            margin: 6px 0;
+          }
+          .explanation-text {
+            font-size: 0.6rem;
           }
         }
 
@@ -3557,70 +4428,2189 @@ const SmartSentinelsHub = () => {
           margin: 0;
         }
 
-        /* Responsive AI Audit Styles */
-        @media (max-width: 768px) {
+        /* AI Audit Responsive Breakpoints */
+        @media (max-width: 2160px) {
+          .ai-audit-container {
+            max-width: 1100px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 30px;
+          }
+          .audit-disclaimer {
+            padding: 22px;
+          }
+          .packages-grid {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+          }
+        }
+
+        @media (max-width: 1440px) {
+          .ai-audit-container {
+            max-width: 1000px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 28px;
+          }
+          .audit-description h4 {
+            font-size: 1.3rem;
+          }
+          .audit-description p {
+            font-size: 0.95rem;
+          }
+          .audit-features {
+            gap: 10px;
+          }
+          .feature-item {
+            font-size: 0.85rem;
+          }
+          .packages-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+          }
+          .package-card {
+            padding: 18px;
+          }
+          .audit-disclaimer {
+            padding: 20px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .ai-audit-container {
+            max-width: 900px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 24px;
+          }
           .audit-intro-content {
             grid-template-columns: 1fr;
             gap: 24px;
           }
-
+          .audit-description h4 {
+            font-size: 1.2rem;
+          }
+          .audit-description p {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+          }
           .audit-features {
             grid-template-columns: 1fr;
+            gap: 8px;
           }
-
+          .feature-item {
+            font-size: 0.8rem;
+          }
+          .audit-visual {
+            max-height: 250px;
+          }
           .packages-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
           }
-
-          .audit-intro,
-          .audit-form-section,
-          .audit-results-section {
-            padding: 20px;
-          }
-
-          .ai-brain {
-            padding: 20px;
-          }
-
-          .ai-brain svg {
-            width: 48px;
-            height: 48px;
-          }
-
-          .scanning-effect {
-            width: 100px;
-            height: 100px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .audit-intro,
-          .audit-form-section,
-          .audit-results-section,
-          .audit-disclaimer {
-            padding: 16px;
-          }
-
-          .packages-grid {
-            gap: 12px;
-          }
-
           .package-card {
             padding: 16px;
           }
+          .package-header h6 {
+            font-size: 1rem;
+          }
+          .package-price {
+            font-size: 0.85rem;
+          }
+          .feature {
+            font-size: 0.8rem;
+          }
+          .code-textarea {
+            padding: 14px;
+            font-size: 0.85rem;
+          }
+          .audit-disclaimer {
+            padding: 18px;
+          }
+        }
 
+        @media (max-width: 768px) {
+          .ai-audit-container {
+            max-width: 100%;
+            padding: 0 12px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 20px;
+            margin-bottom: 24px;
+          }
+          .audit-intro-content {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .audit-description h4 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+          }
+          .audit-description p {
+            font-size: 0.85rem;
+            margin-bottom: 18px;
+          }
+          .audit-features {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+          .feature-item {
+            font-size: 0.75rem;
+            gap: 6px;
+          }
+          .feature-item svg {
+            width: 16px;
+            height: 16px;
+          }
+          .audit-visual {
+            max-height: 200px;
+          }
+          .audit-form-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+          }
+          .package-selection h5 {
+            font-size: 1rem;
+            margin-bottom: 14px;
+          }
+          .packages-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          .package-card {
+            padding: 14px;
+          }
+          .package-header h6 {
+            font-size: 0.95rem;
+          }
+          .package-price {
+            font-size: 0.8rem;
+            padding: 3px 6px;
+          }
+          .feature {
+            font-size: 0.75rem;
+            gap: 6px;
+          }
+          .feature svg {
+            width: 12px;
+            height: 12px;
+          }
+          .code-input-section label {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+          }
           .code-textarea {
             padding: 12px;
             font-size: 0.8rem;
+            border-radius: 6px;
           }
-
-          .audit-submit-btn,
-          .payment-btn,
-          .download-btn {
+          .audit-submit-btn, .payment-btn, .download-btn {
             padding: 12px 20px;
             font-size: 0.9rem;
+            gap: 8px;
+          }
+          .audit-disclaimer {
+            padding: 16px;
+            margin-top: 24px;
+          }
+          .audit-disclaimer h5 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+          }
+          .audit-disclaimer p {
+            font-size: 0.8rem;
           }
         }
+
+        @media (max-width: 425px) {
+          .ai-audit-container {
+            padding: 0 8px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 16px;
+            margin-bottom: 20px;
+          }
+          .audit-description h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+          }
+          .audit-description p {
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+          }
+          .audit-features {
+            gap: 4px;
+          }
+          .feature-item {
+            font-size: 0.7rem;
+            gap: 4px;
+          }
+          .feature-item svg {
+            width: 14px;
+            height: 14px;
+          }
+          .audit-visual {
+            max-height: 180px;
+          }
+          .audit-form-section h4 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+          }
+          .package-selection h5 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+          }
+          .packages-grid {
+            gap: 6px;
+          }
+          .package-card {
+            padding: 12px;
+          }
+          .package-header {
+            margin-bottom: 12px;
+          }
+          .package-header h6 {
+            font-size: 0.9rem;
+          }
+          .package-price {
+            font-size: 0.75rem;
+            padding: 2px 5px;
+          }
+          .package-features {
+            gap: 6px;
+          }
+          .feature {
+            font-size: 0.7rem;
+            gap: 4px;
+          }
+          .feature svg {
+            width: 10px;
+            height: 10px;
+          }
+          .code-input-section label {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+          }
+          .code-textarea {
+            padding: 10px;
+            font-size: 0.75rem;
+            border-radius: 5px;
+          }
+          .audit-submit-btn, .payment-btn, .download-btn {
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            gap: 6px;
+          }
+          .audit-submit-btn svg, .payment-btn svg, .download-btn svg {
+            width: 14px;
+            height: 14px;
+          }
+          .audit-disclaimer {
+            padding: 14px;
+            margin-top: 20px;
+          }
+          .audit-disclaimer h5 {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+          }
+          .audit-disclaimer p {
+            font-size: 0.75rem;
+          }
+          .audit-preview {
+            padding: 16px;
+            margin-bottom: 20px;
+          }
+          .preview-header {
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+          }
+          .preview-text {
+            padding: 12px;
+            font-size: 0.75rem;
+          }
+          .payment-section, .download-section {
+            padding: 16px;
+            margin-bottom: 20px;
+          }
+          .payment-info h5 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+          }
+          .payment-info p {
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+          }
+          .success-indicator {
+            font-size: 1rem;
+            margin-bottom: 12px;
+          }
+          .download-section p {
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+          }
+          .reset-btn {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .ai-audit-container {
+            padding: 0 6px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 14px;
+            margin-bottom: 16px;
+          }
+          .audit-description h4 {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+          }
+          .audit-description p {
+            font-size: 0.75rem;
+            margin-bottom: 14px;
+          }
+          .feature-item {
+            font-size: 0.65rem;
+            gap: 3px;
+          }
+          .feature-item svg {
+            width: 12px;
+            height: 12px;
+          }
+          .audit-visual {
+            max-height: 160px;
+          }
+          .audit-form-section h4 {
+            font-size: 1rem;
+            margin-bottom: 14px;
+          }
+          .package-selection h5 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+          }
+          .packages-grid {
+            gap: 4px;
+          }
+          .package-card {
+            padding: 10px;
+          }
+          .package-header {
+            margin-bottom: 10px;
+          }
+          .package-header h6 {
+            font-size: 0.85rem;
+          }
+          .package-price {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+          }
+          .package-features {
+            gap: 4px;
+          }
+          .feature {
+            font-size: 0.65rem;
+            gap: 3px;
+          }
+          .feature svg {
+            width: 8px;
+            height: 8px;
+          }
+          .code-input-section label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+          }
+          .code-textarea {
+            padding: 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+          }
+          .audit-submit-btn, .payment-btn, .download-btn {
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            gap: 4px;
+          }
+          .audit-submit-btn svg, .payment-btn svg, .download-btn svg {
+            width: 12px;
+            height: 12px;
+          }
+          .audit-disclaimer {
+            padding: 12px;
+            margin-top: 16px;
+          }
+          .audit-disclaimer h5 {
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+          }
+          .audit-disclaimer p {
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .ai-audit-container {
+            padding: 0 4px;
+          }
+          .audit-intro, .audit-form-section, .audit-results-section {
+            padding: 12px;
+            margin-bottom: 12px;
+          }
+          .audit-description h4 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            text-align: center;
+          }
+          .audit-description p {
+            font-size: 0.7rem;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          .audit-features {
+            gap: 2px;
+          }
+          .feature-item {
+            font-size: 0.6rem;
+            gap: 2px;
+            justify-content: center;
+            text-align: center;
+          }
+          .feature-item svg {
+            width: 10px;
+            height: 10px;
+          }
+          .audit-visual {
+            max-height: 140px;
+          }
+          .audit-form-section h4 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          .package-selection h5 {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-align: center;
+          }
+          .packages-grid {
+            gap: 2px;
+          }
+          .package-card {
+            padding: 8px;
+          }
+          .package-header {
+            margin-bottom: 8px;
+            flex-direction: column;
+            gap: 4px;
+            text-align: center;
+          }
+          .package-header h6 {
+            font-size: 0.8rem;
+          }
+          .package-price {
+            font-size: 0.65rem;
+            padding: 1px 3px;
+          }
+          .package-features {
+            gap: 2px;
+          }
+          .feature {
+            font-size: 0.6rem;
+            gap: 2px;
+            justify-content: center;
+          }
+          .feature svg {
+            width: 6px;
+            height: 6px;
+          }
+          .code-input-section label {
+            font-size: 0.75rem;
+            margin-bottom: 3px;
+            text-align: center;
+          }
+          .code-textarea {
+            padding: 6px;
+            font-size: 0.65rem;
+            border-radius: 3px;
+            min-height: 120px;
+          }
+          .audit-submit-btn, .payment-btn, .download-btn {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            gap: 2px;
+            min-height: 32px;
+          }
+          .audit-submit-btn svg, .payment-btn svg, .download-btn svg {
+            width: 10px;
+            height: 10px;
+          }
+          .audit-disclaimer {
+            padding: 10px;
+            margin-top: 12px;
+          }
+          .audit-disclaimer h5 {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            text-align: center;
+          }
+          .audit-disclaimer p {
+            font-size: 0.65rem;
+            text-align: center;
+          }
+          .audit-preview {
+            padding: 10px;
+            margin-bottom: 12px;
+          }
+          .preview-header {
+            gap: 4px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            justify-content: center;
+          }
+          .preview-text {
+            padding: 8px;
+            font-size: 0.65rem;
+          }
+          .payment-section, .download-section {
+            padding: 10px;
+            margin-bottom: 12px;
+          }
+          .payment-info h5 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+          }
+          .payment-info p {
+            font-size: 0.7rem;
+            margin-bottom: 6px;
+          }
+          .success-indicator {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+          }
+          .download-section p {
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+          }
+          .reset-btn {
+            padding: 6px 16px;
+            font-size: 0.8rem;
+          }
+        }
+
+        /* Seed Funding Section Styles */
+        .seed-funding-section {
+          background: #191919;
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 12px;
+          padding: 24px;
+          margin-top: 24px;
+          transition: all 0.2s;
+        }
+
+        .seed-funding-section:hover {
+          border-color: rgba(250, 249, 86, 0.3);
+        }
+
+        .seed-funding-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .token-overview {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .token-overview:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .token-overview-content {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
+          align-items: start;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .token-info h4 {
+          color: var(--tg-primary-color);
+          margin-bottom: 16px;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .token-details-grid {
+          display: grid;
+          gap: 12px;
+          margin-bottom: 24px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .detail-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .detail-label {
+          color: #92939E;
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        .detail-value {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+
+        .buy-section {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 8px;
+          padding: 20px;
+          text-align: center;
+          transition: all 0.2s;
+        }
+
+        .buy-section:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .buy-section h5 {
+          color: var(--tg-primary-color);
+          margin-bottom: 8px;
+          font-size: 1.1rem;
+        }
+
+        .buy-section p {
+          color: #e0e0e0;
+          margin-bottom: 16px;
+        }
+
+        .payment-info-notice {
+          margin: 16px 0;
+          padding: 16px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 8px;
+          border-left: 4px solid var(--tg-primary-color);
+        }
+
+        .payment-method-info h6 {
+          color: var(--tg-primary-color);
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+
+        .payment-method-info p {
+          color: #d0d0d0;
+          margin-bottom: 0;
+          font-size: 0.85rem;
+          line-height: 1.4;
+        }
+
+        .buy-token-btn {
+          background: linear-gradient(135deg, #f8f442 0%, #b8b832 100%);
+          color: #000000;
+          border: none;
+          border-radius: 8px;
+          padding: 10px 20px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          justify-content: center;
+          margin: 0 auto;
+          transition: all 0.3s ease;
+        }
+
+        .buy-token-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(248, 244, 66, 0.3);
+        }
+
+        .purchase-form {
+          background: rgba(40, 40, 40, 0.8);
+          border: 1px solid #444;
+          border-radius: 12px;
+          padding: 20px;
+          margin-top: 15px;
+        }
+
+        .purchase-inputs {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .input-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .input-group label {
+          color: #f8f442;
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        .purchase-input {
+          padding: 10px 12px;
+          border: 1px solid #555;
+          border-radius: 8px;
+          background: rgba(60, 60, 60, 0.9);
+          color: white;
+          font-size: 0.9rem;
+          transition: border-color 0.3s ease;
+        }
+
+        .purchase-input:focus {
+          outline: none;
+          border-color: #f8f442;
+          box-shadow: 0 0 0 2px rgba(248, 244, 66, 0.2);
+        }
+
+        .input-separator {
+          text-align: center;
+          color: #888;
+          font-weight: 500;
+          font-size: 0.85rem;
+          margin: 10px 0;
+        }
+
+        .purchase-summary {
+          background: rgba(30, 30, 30, 0.9);
+          border: 1px solid #f8f442;
+          border-radius: 8px;
+          padding: 15px;
+          margin: 15px 0;
+        }
+
+        .summary-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 5px 0;
+          color: white;
+          font-size: 0.9rem;
+        }
+
+        .summary-item span:first-child {
+          color: #ccc;
+        }
+
+        .summary-item span:last-child {
+          color: #f8f442;
+          font-weight: 600;
+        }
+
+        .purchase-actions {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+        }
+
+        .confirm-purchase-btn, .cancel-purchase-btn {
+          flex: 1;
+          padding: 10px 16px;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .confirm-purchase-btn {
+          background: linear-gradient(135deg, #f8f442 0%, #e6d93c 100%);
+          color: #000;
+        }
+
+        .confirm-purchase-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(248, 244, 66, 0.4);
+        }
+
+        .confirm-purchase-btn:disabled {
+          background: #666;
+          color: #999;
+          cursor: not-allowed;
+        }
+
+        .cancel-purchase-btn {
+          background: transparent;
+          color: #ccc;
+          border: 1px solid #666;
+        }
+
+        .cancel-purchase-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: #999;
+        }
+
+        .tokenomics-chart {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+        }
+
+        .tokenomics-chart:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .tokenomics-chart h4 {
+          color: var(--tg-primary-color);
+          margin-bottom: 16px;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .pie-chart-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .chart-responsive-wrapper {
+          width: 100%;
+          max-width: 350px;
+          height: 350px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .pie-chart {
+          width: 200px;
+          height: 200px;
+        }
+
+        .pie-chart .pie-slice {
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          cursor: pointer;
+          transform-origin: 100px 100px;
+        }
+
+        .pie-chart .pie-slice:hover {
+          opacity: 0.8;
+          transform: scale(1.05);
+        }
+
+        .pie-tooltip {
+          position: fixed;
+          background: rgba(0, 0, 0, 0.9);
+          color: #ffffff;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          z-index: 1000;
+          border: 1px solid rgba(248, 244, 66, 0.3);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .pie-tooltip.visible {
+          opacity: 1;
+        }
+
+        .tooltip-content {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .tooltip-category {
+          font-weight: 600;
+          color: #f8f442;
+        }
+
+        .tooltip-percentage {
+          font-weight: 500;
+          color: #e0e0e0;
+        }
+
+        .chart-legend {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.9rem;
+          color: #e0e0e0;
+        }
+
+        .legend-color {
+          width: 16px;
+          height: 16px;
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+
+        .tokenomics-details {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .tokenomics-details:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .tokenomics-details h4 {
+          color: var(--tg-primary-color);
+          margin-bottom: 16px;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .allocation-grid {
+          display: grid;
+          gap: 16px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .allocation-item {
+          background: rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 6px;
+          padding: 12px;
+          transition: all 0.2s;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .allocation-item:hover {
+          background: rgba(250, 249, 86, 0.2);
+          border-color: rgba(250, 249, 86, 0.4);
+          transform: translateY(-1px);
+        }
+
+        .allocation-item-highlighted {
+          background: rgba(250, 249, 86, 0.1) !important;
+          border-left: 3px solid var(--tg-primary-color);
+        }
+
+        .allocation-item-highlighted:hover {
+          background: rgba(250, 249, 86, 0.15) !important;
+        }
+
+        .allocation-info {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .allocation-category {
+          color: #ffffff;
+          font-size: 0.9rem;
+          font-weight: 600;
+          line-height: 1.3;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .allocation-percentage {
+          color: var(--tg-primary-color);
+          font-weight: 700;
+          font-size: 0.95rem;
+          line-height: 1.2;
+        }
+
+        .allocation-details {
+          color: #b0b0b0;
+          font-size: 0.8rem;
+          line-height: 1.4;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .ai-distribution {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+        }
+
+        .ai-distribution:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .ai-distribution h4 {
+          color: var(--tg-primary-color);
+          margin-bottom: 16px;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .ai-distribution p {
+          color: #e0e0e0;
+          margin-bottom: 20px;
+          font-size: 0.9rem;
+        }
+
+        .distribution-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+
+        .distribution-item {
+          background: rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 6px;
+          padding: 12px;
+          text-align: center;
+          transition: all 0.2s;
+        }
+
+        .distribution-item:hover {
+          background: rgba(250, 249, 86, 0.2);
+          border-color: rgba(250, 249, 86, 0.4);
+          transform: translateY(-1px);
+        }
+
+        .percentage {
+          display: block;
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--tg-primary-color);
+          margin-bottom: 6px;
+        }
+
+        .recipient {
+          color: #e0e0e0;
+          font-size: 0.8rem;
+          line-height: 1.3;
+          word-wrap: break-word;
+        }
+
+        /* AI Distribution Responsive Breakpoints */
+        @media (max-width: 2160px) {
+          .ai-distribution {
+            padding: 22px;
+          }
+          .distribution-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+          }
+          .distribution-item {
+            padding: 14px;
+          }
+          .percentage {
+            font-size: 1.15rem;
+          }
+          .recipient {
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 1440px) {
+          .ai-distribution {
+            padding: 20px;
+          }
+          .ai-distribution h4 {
+            font-size: 1.05rem;
+          }
+          .distribution-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+          }
+          .distribution-item {
+            padding: 12px;
+          }
+          .percentage {
+            font-size: 1.1rem;
+          }
+          .recipient {
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .ai-distribution {
+            padding: 18px;
+          }
+          .ai-distribution h4 {
+            font-size: 1rem;
+          }
+          .ai-distribution p {
+            font-size: 0.85rem;
+          }
+          .distribution-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+          }
+          .distribution-item {
+            padding: 10px;
+          }
+          .percentage {
+            font-size: 1rem;
+            margin-bottom: 4px;
+          }
+          .recipient {
+            font-size: 0.75rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .ai-distribution {
+            padding: 16px;
+          }
+          .ai-distribution h4 {
+            font-size: 0.95rem;
+            gap: 6px;
+          }
+          .ai-distribution p {
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+          }
+          .distribution-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+          }
+          .distribution-item {
+            padding: 8px;
+          }
+          .percentage {
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+          }
+          .recipient {
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 425px) {
+          .ai-distribution {
+            padding: 12px;
+          }
+          .ai-distribution h4 {
+            font-size: 0.9rem;
+            gap: 4px;
+          }
+          .ai-distribution p {
+            font-size: 0.75rem;
+            margin-bottom: 12px;
+          }
+          .distribution-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+          }
+          .distribution-item {
+            padding: 6px;
+          }
+          .percentage {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+          }
+          .recipient {
+            font-size: 0.65rem;
+            line-height: 1.2;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .ai-distribution {
+            padding: 10px;
+          }
+          .ai-distribution h4 {
+            font-size: 0.85rem;
+          }
+          .ai-distribution p {
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+          }
+          .distribution-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+          }
+          .distribution-item {
+            padding: 4px;
+          }
+          .percentage {
+            font-size: 0.85rem;
+            margin-bottom: 1px;
+          }
+          .recipient {
+            font-size: 0.6rem;
+            line-height: 1.1;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .ai-distribution {
+            padding: 8px;
+          }
+          .ai-distribution h4 {
+            font-size: 0.8rem;
+            flex-direction: column;
+            gap: 2px;
+            text-align: center;
+          }
+          .ai-distribution p {
+            font-size: 0.65rem;
+            margin-bottom: 8px;
+            text-align: center;
+          }
+          .distribution-grid {
+            grid-template-columns: 1fr;
+            gap: 3px;
+          }
+          .distribution-item {
+            padding: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+          }
+          .percentage {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            margin-right: 4px;
+          }
+          .recipient {
+            font-size: 0.55rem;
+            line-height: 1;
+            flex: 1;
+          }
+        }
+
+        .distribution-example {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 6px;
+          padding: 16px;
+          color: #e0e0e0;
+          font-style: italic;
+          font-size: 0.9rem;
+        }
+
+        .token-utility {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+        }
+
+        .token-utility:hover {
+          border-color: rgba(250, 249, 86, 0.2);
+        }
+
+        .token-utility h4 {
+          color: var(--tg-primary-color);
+          margin-bottom: 16px;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .utility-grid {
+          display: grid;
+          gap: 14px;
+        }
+
+        .utility-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #e0e0e0;
+          padding: 14px;
+          background: rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 6px;
+          transition: all 0.2s;
+        }
+
+        .utility-item:hover {
+          background: rgba(250, 249, 86, 0.2);
+          border-color: rgba(250, 249, 86, 0.4);
+          transform: translateY(-1px);
+        }
+
+        .utility-item span {
+          font-size: 0.9rem;
+          line-height: 1.4;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .utility-item svg {
+          color: #78716c;
+          flex-shrink: 0;
+        }
+
+        /* Token Utility Responsive Breakpoints */
+        @media (max-width: 2160px) {
+          .token-utility {
+            padding: 22px;
+          }
+          .utility-grid {
+            gap: 12px;
+          }
+          .utility-item {
+            padding: 12px;
+          }
+          .utility-item span {
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 1440px) {
+          .token-utility {
+            padding: 20px;
+          }
+          .token-utility h4 {
+            font-size: 1.05rem;
+          }
+          .utility-grid {
+            gap: 10px;
+          }
+          .utility-item {
+            padding: 10px;
+            gap: 10px;
+          }
+          .utility-item span {
+            font-size: 0.8rem;
+          }
+          .utility-item svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .token-utility {
+            padding: 18px;
+          }
+          .token-utility h4 {
+            font-size: 1rem;
+          }
+          .utility-grid {
+            gap: 8px;
+          }
+          .utility-item {
+            padding: 8px;
+            gap: 8px;
+          }
+          .utility-item span {
+            font-size: 0.75rem;
+          }
+          .utility-item svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .token-utility {
+            padding: 16px;
+          }
+          .token-utility h4 {
+            font-size: 0.95rem;
+            gap: 6px;
+          }
+          .utility-grid {
+            gap: 6px;
+          }
+          .utility-item {
+            padding: 6px;
+            gap: 6px;
+          }
+          .utility-item span {
+            font-size: 0.7rem;
+            line-height: 1.3;
+          }
+          .utility-item svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+
+        @media (max-width: 425px) {
+          .token-utility {
+            padding: 12px;
+          }
+          .token-utility h4 {
+            font-size: 0.9rem;
+            gap: 4px;
+          }
+          .utility-grid {
+            gap: 4px;
+          }
+          .utility-item {
+            padding: 4px;
+            gap: 4px;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+          }
+          .utility-item span {
+            font-size: 0.65rem;
+            line-height: 1.2;
+          }
+          .utility-item svg {
+            width: 12px;
+            height: 12px;
+            margin-bottom: 2px;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .token-utility {
+            padding: 10px;
+          }
+          .token-utility h4 {
+            font-size: 0.85rem;
+          }
+          .utility-grid {
+            gap: 3px;
+          }
+          .utility-item {
+            padding: 3px;
+            gap: 2px;
+          }
+          .utility-item span {
+            font-size: 0.6rem;
+            line-height: 1.1;
+          }
+          .utility-item svg {
+            width: 10px;
+            height: 10px;
+            margin-bottom: 1px;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .token-utility {
+            padding: 8px;
+          }
+          .token-utility h4 {
+            font-size: 0.8rem;
+            text-align: center;
+            justify-content: center;
+          }
+          .utility-grid {
+            gap: 2px;
+          }
+          .utility-item {
+            padding: 2px;
+            gap: 1px;
+            min-height: 40px;
+            justify-content: center;
+          }
+          .utility-item span {
+            font-size: 0.55rem;
+            line-height: 1;
+            text-align: center;
+            max-width: 100%;
+          }
+          .utility-item svg {
+            width: 8px;
+            height: 8px;
+            margin-bottom: 1px;
+          }
+        }
+
+        /* Responsive Design for Seed Funding */
+        
+        /* 2160px+ (4K Displays) */
+        @media (min-width: 2160px) {
+          .seed-funding-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 24px;
+          }
+          
+          .chart-responsive-wrapper {
+            max-width: 450px;
+            height: 450px;
+          }
+        }
+
+        /* 1440px+ (Large Desktop) */
+        @media (min-width: 1440px) and (max-width: 2159px) {
+          .seed-funding-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 400px;
+            height: 400px;
+          }
+        }
+
+        /* 1024px+ (Desktop/Laptop) */
+        @media (min-width: 1024px) and (max-width: 1439px) {
+          .seed-funding-container {
+            padding: 0 16px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 350px;
+            height: 350px;
+          }
+        }
+
+        /* 768px+ (Tablet) */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .seed-funding-container {
+            padding: 0 12px;
+          }
+
+          .token-overview {
+            padding: 20px;
+          }
+
+          .token-overview-content {
+            grid-template-columns: 1fr !important;
+            gap: 24px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 300px;
+            height: 300px;
+          }
+
+          .allocation-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          /* Tokenomics Details Responsive */
+          .tokenomics-details {
+            padding: 20px;
+          }
+
+          .tokenomics-details h4 {
+            font-size: 1rem;
+          }
+
+          .allocation-item {
+            padding: 10px;
+          }
+
+          .allocation-category {
+            font-size: 0.85rem;
+          }
+
+          .allocation-percentage {
+            font-size: 0.9rem;
+          }
+
+          .allocation-details {
+            font-size: 0.75rem;
+          }
+
+          .distribution-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+
+          .utility-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+          }
+
+          /* Purchase Form Responsive */
+          .buy-section {
+            padding: 16px;
+          }
+
+          .purchase-form {
+            padding: 16px;
+          }
+
+          .purchase-inputs {
+            gap: 12px;
+          }
+
+          .purchase-actions {
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .confirm-purchase-btn, .cancel-purchase-btn {
+            width: 100%;
+            padding: 12px 16px;
+          }
+        }
+
+        /* 425px+ (Large Mobile) */
+        @media (min-width: 425px) and (max-width: 767px) {
+          .seed-funding-container {
+            padding: 0 8px;
+          }
+
+          .seed-funding-section {
+            padding: 16px;
+            margin: 16px 0;
+          }
+
+          .token-overview {
+            padding: 16px;
+          }
+
+          .token-overview-content {
+            grid-template-columns: 1fr !important;
+            gap: 20px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 280px;
+            height: 280px;
+          }
+
+          .tokenomics-chart {
+            padding: 16px;
+          }
+
+          .allocation-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          /* Tokenomics Details Responsive */
+          .tokenomics-details {
+            padding: 16px;
+          }
+
+          .tokenomics-details h4 {
+            font-size: 0.95rem;
+          }
+
+          .allocation-item {
+            padding: 8px;
+          }
+
+          .allocation-category {
+            font-size: 0.8rem;
+          }
+
+          .allocation-percentage {
+            font-size: 0.85rem;
+          }
+
+          .allocation-details {
+            font-size: 0.7rem;
+          }
+
+          .allocation-item {
+            padding: 10px;
+          }
+
+          .distribution-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+          }
+
+          .distribution-item {
+            padding: 12px;
+          }
+
+          .utility-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .utility-item {
+            padding: 12px;
+          }
+
+          .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+          }
+
+          .detail-label,
+          .detail-value {
+            font-size: 0.85rem;
+          }
+
+          /* Purchase Form Responsive */
+          .buy-section {
+            padding: 12px;
+          }
+
+          .buy-section h5 {
+            font-size: 1rem;
+          }
+
+          .buy-section p {
+            font-size: 0.85rem;
+          }
+
+          .purchase-form {
+            padding: 12px;
+          }
+
+          .purchase-inputs {
+            gap: 10px;
+          }
+
+          .input-group label {
+            font-size: 0.85rem;
+          }
+
+          .purchase-input {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+          }
+
+          .purchase-actions {
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .confirm-purchase-btn, .cancel-purchase-btn {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+          }
+
+          .buy-token-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+          }
+        }
+
+        /* 375px+ (Medium Mobile) */
+        @media (min-width: 375px) and (max-width: 424px) {
+          .seed-funding-container {
+            padding: 0 6px;
+          }
+
+          .seed-funding-section {
+            padding: 12px;
+            margin: 12px 0;
+          }
+
+          .token-overview {
+            padding: 12px;
+          }
+
+          .token-overview-content {
+            grid-template-columns: 1fr !important;
+            gap: 16px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 250px;
+            height: 250px;
+          }
+
+          .tokenomics-chart {
+            padding: 12px;
+          }
+
+          .tokenomics-chart h4 {
+            font-size: 1rem;
+          }
+
+          .allocation-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          /* Tokenomics Details Responsive */
+          .tokenomics-details {
+            padding: 12px;
+          }
+
+          .tokenomics-details h4 {
+            font-size: 0.9rem;
+          }
+
+          .allocation-item {
+            padding: 6px;
+          }
+
+          .allocation-category {
+            font-size: 0.75rem;
+            line-height: 1.2;
+          }
+
+          .allocation-percentage {
+            font-size: 0.8rem;
+          }
+
+          .allocation-details {
+            font-size: 0.65rem;
+            line-height: 1.3;
+          }
+
+          .allocation-item {
+            padding: 8px;
+          }
+
+          .allocation-category {
+            font-size: 0.8rem;
+          }
+
+          .allocation-percentage {
+            font-size: 0.8rem;
+          }
+
+          .distribution-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          .distribution-item {
+            padding: 10px;
+          }
+
+          .percentage {
+            font-size: 1rem;
+          }
+
+          .utility-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          .utility-item {
+            padding: 10px;
+          }
+
+          .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+          }
+
+          .detail-label,
+          .detail-value {
+            font-size: 0.8rem;
+          }
+
+          /* Purchase Form Responsive */
+          .buy-section {
+            padding: 10px;
+          }
+
+          .buy-section h5 {
+            font-size: 0.9rem;
+          }
+
+          .buy-section p {
+            font-size: 0.8rem;
+          }
+
+          .purchase-form {
+            padding: 10px;
+          }
+
+          .purchase-inputs {
+            gap: 8px;
+          }
+
+          .input-group label {
+            font-size: 0.8rem;
+          }
+
+          .purchase-input {
+            padding: 6px 8px;
+            font-size: 0.8rem;
+          }
+
+          .purchase-summary {
+            padding: 10px;
+          }
+
+          .summary-item {
+            font-size: 0.8rem;
+          }
+
+          .purchase-actions {
+            flex-direction: column;
+            gap: 6px;
+          }
+
+          .confirm-purchase-btn, .cancel-purchase-btn {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+          }
+
+          .buy-token-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+          }
+        }
+
+        /* 320px+ (Small Mobile) */
+        @media (max-width: 374px) {
+          .seed-funding-container {
+            padding: 0 4px;
+          }
+
+          .seed-funding-section {
+            padding: 8px;
+            margin: 8px 0;
+          }
+
+          .token-overview {
+            padding: 8px;
+          }
+
+          .token-overview-content {
+            grid-template-columns: 1fr !important;
+            gap: 12px;
+          }
+
+          .chart-responsive-wrapper {
+            max-width: 220px;
+            height: 220px;
+          }
+
+          .tokenomics-chart {
+            padding: 8px;
+          }
+
+          .tokenomics-chart h4 {
+            font-size: 0.9rem;
+          }
+
+          .allocation-grid {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+
+          /* Tokenomics Details Responsive */
+          .tokenomics-details {
+            padding: 8px;
+          }
+
+          .tokenomics-details h4 {
+            font-size: 0.85rem;
+          }
+
+          .allocation-item {
+            padding: 4px;
+          }
+
+          .allocation-category {
+            font-size: 0.7rem;
+            line-height: 1.1;
+          }
+
+          .allocation-percentage {
+            font-size: 0.75rem;
+          }
+
+          .allocation-details {
+            font-size: 0.6rem;
+            line-height: 1.2;
+          }
+
+          .allocation-item {
+            padding: 6px;
+          }
+
+          .allocation-category {
+            font-size: 0.75rem;
+          }
+
+          .allocation-percentage {
+            font-size: 0.75rem;
+          }
+
+          .allocation-details {
+            font-size: 0.7rem;
+          }
+
+          .distribution-grid {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+
+          .distribution-item {
+            padding: 8px;
+          }
+
+          .percentage {
+            font-size: 0.9rem;
+          }
+
+          .recipient {
+            font-size: 0.75rem;
+          }
+
+          .utility-grid {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+
+          .utility-item {
+            padding: 8px;
+            gap: 8px;
+          }
+
+          .utility-item span {
+            font-size: 0.75rem;
+          }
+
+          .utility-item svg {
+            width: 16px;
+            height: 16px;
+          }
+
+          .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+          }
+
+          .detail-label,
+          .detail-value {
+            font-size: 0.75rem;
+          }
+
+          /* Purchase Form Responsive */
+          .buy-section {
+            padding: 8px;
+          }
+
+          .buy-section h5 {
+            font-size: 0.85rem;
+          }
+
+          .buy-section p {
+            font-size: 0.75rem;
+          }
+
+          .purchase-form {
+            padding: 8px;
+          }
+
+          .purchase-inputs {
+            gap: 6px;
+          }
+
+          .input-group label {
+            font-size: 0.75rem;
+          }
+
+          .purchase-input {
+            padding: 4px 6px;
+            font-size: 0.75rem;
+          }
+
+          .input-separator {
+            font-size: 0.7rem;
+            margin: 6px 0;
+          }
+
+          .purchase-summary {
+            padding: 8px;
+          }
+
+          .summary-item {
+            font-size: 0.75rem;
+          }
+
+          .purchase-actions {
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 8px;
+          }
+
+          .confirm-purchase-btn, .cancel-purchase-btn {
+            width: 100%;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+          }
+
+          .buy-token-btn {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+          }
+        }
+
+        /* Legacy 768px rule for backward compatibility */
+        @media (max-width: 768px) {
+          .table-header,
+          .table-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          .table-header span,
+          .table-row span {
+            padding: 4px 0;
+          }
+
+          .chart-legend {
+            grid-template-columns: 1fr;
+          }
+        }
+
       `}</style>
     </Wrapper>
   );

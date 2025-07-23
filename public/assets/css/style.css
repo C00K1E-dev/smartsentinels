@@ -4671,6 +4671,9 @@ label {
   .event-card-img a img {
     transition: 0.5s;
     width: 100%;
+    height: 250px;
+    object-fit: contain;
+    object-position: center;
   }
   .event-card-title {
     font-size: 22px;

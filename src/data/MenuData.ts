@@ -32,7 +32,6 @@ const menu_data: MenuItem[] = [
         has_dropdown: false,
         title: "RoadMap",
         link: "/#roadMap",
-        target: "_blank",
     },
     {
         id: 4,

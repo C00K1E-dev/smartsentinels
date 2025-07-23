@@ -644,16 +644,41 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
           .address-display {
             flex-direction: column;
             align-items: flex-start;
+            gap: 8px;
+          }
+
+          .header-buttons {
+            flex-wrap: wrap;
+            gap: 6px;
+          }
+
+          .network-buttons {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+
+          .tab-navigation {
+            flex-direction: column;
+            gap: 4px;
+          }
+
+          .tab-btn {
+            padding: 10px 12px;
+            font-size: 0.85rem;
           }
 
           .transaction-item {
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
+            padding: 12px;
           }
 
           .tx-main {
             width: 100%;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
           }
 
           .tx-secondary {
@@ -661,6 +686,200 @@ const WalletActivity: React.FC<WalletActivityProps> = ({ walletAddress }) => {
             flex-direction: column;
             align-items: flex-start;
             gap: 4px;
+          }
+
+          .view-tx-btn {
+            align-self: flex-end;
+          }
+        }
+
+        @media (max-width: 425px) {
+          .wallet-activity-container {
+            padding: 12px;
+          }
+
+          .wallet-header h4 {
+            font-size: 1rem;
+          }
+
+          .address-text {
+            padding: 6px 8px;
+            font-size: 0.8rem;
+          }
+
+          .explorer-link,
+          .refresh-btn {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+          }
+
+          .network-selector {
+            padding: 12px;
+          }
+
+          .network-selector h5 {
+            font-size: 0.8rem;
+          }
+
+          .network-btn {
+            padding: 6px 8px;
+            font-size: 0.7rem;
+          }
+
+          .tab-btn {
+            padding: 8px 10px;
+            font-size: 0.8rem;
+          }
+
+          .transaction-item {
+            padding: 10px;
+          }
+
+          .tx-icon {
+            width: 32px;
+            height: 32px;
+          }
+
+          .tx-arrow {
+            width: 16px;
+            height: 16px;
+          }
+
+          .tx-type {
+            font-size: 0.8rem;
+          }
+
+          .tx-amount {
+            font-size: 0.8rem;
+          }
+
+          .tx-secondary {
+            font-size: 0.7rem;
+          }
+
+          .tx-hash {
+            font-size: 0.65rem;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .wallet-activity-container {
+            padding: 10px;
+          }
+
+          .wallet-header h4 {
+            font-size: 0.9rem;
+          }
+
+          .address-text {
+            padding: 4px 6px;
+            font-size: 0.75rem;
+          }
+
+          .explorer-link,
+          .refresh-btn {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+          }
+
+          .network-selector {
+            padding: 10px;
+          }
+
+          .network-btn {
+            padding: 4px 6px;
+            font-size: 0.65rem;
+          }
+
+          .tab-btn {
+            padding: 6px 8px;
+            font-size: 0.75rem;
+          }
+
+          .transaction-item {
+            padding: 8px;
+          }
+
+          .tx-icon {
+            width: 28px;
+            height: 28px;
+          }
+
+          .tx-type {
+            font-size: 0.75rem;
+          }
+
+          .tx-amount {
+            font-size: 0.75rem;
+          }
+
+          .tx-secondary {
+            font-size: 0.65rem;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .wallet-activity-container {
+            padding: 8px;
+          }
+
+          .wallet-header h4 {
+            font-size: 0.85rem;
+          }
+
+          .address-text {
+            padding: 3px 4px;
+            font-size: 0.7rem;
+          }
+
+          .explorer-link,
+          .refresh-btn {
+            padding: 2px 4px;
+            font-size: 0.65rem;
+          }
+
+          .network-selector {
+            padding: 8px;
+          }
+
+          .network-btn {
+            padding: 3px 4px;
+            font-size: 0.6rem;
+          }
+
+          .tab-btn {
+            padding: 4px 6px;
+            font-size: 0.7rem;
+          }
+
+          .transaction-item {
+            padding: 6px;
+          }
+
+          .tx-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .tx-arrow {
+            width: 14px;
+            height: 14px;
+          }
+
+          .tx-type {
+            font-size: 0.7rem;
+          }
+
+          .tx-amount {
+            font-size: 0.7rem;
+          }
+
+          .tx-secondary {
+            font-size: 0.6rem;
+          }
+
+          .tx-hash {
+            font-size: 0.55rem;
           }
         }
       `}</style>

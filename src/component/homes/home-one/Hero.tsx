@@ -44,7 +44,7 @@ const Hero = () => {
               </p>
 
               <div className="btn-wrap">
-                <Link href="/fundraise" className="btn btn">
+                <Link href="/hub" className="btn btn" target="_blank">
                   Contribute Now
                 </Link>
                 <Link href="/whitepaper" className="btn btn">
