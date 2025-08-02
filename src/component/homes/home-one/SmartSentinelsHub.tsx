@@ -970,7 +970,7 @@ const SmartSentinelsHub = () => {
         }, 100);
       }
     }
-  }, [isClient]);
+  }, [isClient, showSection]);
 
   return (
     <Wrapper>
@@ -1663,7 +1663,7 @@ const SmartSentinelsHub = () => {
                       <h4>Professional Smart Contract Security Analysis</h4>
                       <p>
                         The first AI Agent reads Solidity contracts, scans for vulnerabilities (reentrancy, overflow, gas waste, etc.), and generates a detailed PDF report.
-                        It's inspired by Slither and MythX analysis engines, enriched by custom AI/NLP for context.
+                        It&apos;s inspired by Slither and MythX analysis engines, enriched by custom AI/NLP for context.
                         We plan to add more agents soon.
                       </p>
                       <p className="subdescription">
