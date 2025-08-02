@@ -1662,9 +1662,15 @@ const SmartSentinelsHub = () => {
                     <div className="audit-description">
                       <h4>Professional Smart Contract Security Analysis</h4>
                       <p>
-                        Get your smart contracts audited by our advanced AI agent running on Ollama infrastructure. 
-                        Our AI performs comprehensive security analysis, vulnerability detection, and provides 
-                        detailed recommendations to ensure your smart contract is secure and optimized.
+                        The first AI Agent reads Solidity contracts, scans for vulnerabilities (reentrancy, overflow, gas waste, etc.), and generates a detailed PDF report.
+                        It's inspired by Slither and MythX analysis engines, enriched by custom AI/NLP for context.
+                        We plan to add more agents soon.
+                      </p>
+                      <p className="subdescription">
+                        <span className="yellow">Coming Soon:</span> Our next AI Agent will specialize in <strong>legal and regulatory classification</strong> of crypto projects.  
+                        It will help founders identify whether their token qualifies as a utility, governance, or security asset based on criteria from MiCA, the SEC, and the Howey Test.  
+                        Trained on official regulations, legal case studies, and over 500+ tokenomics structures, this agent will deliver a <strong>Legal Compliance Summary</strong> — instantly.  
+                        Perfect for projects preparing for fundraising, exchange listing, or legal due diligence.
                       </p>
                       <div className="audit-features">
                         <div className="feature-item">
@@ -6608,6 +6614,53 @@ const SmartSentinelsHub = () => {
 
           .chart-legend {
             grid-template-columns: 1fr;
+          }
+        }
+
+         .audit-description p.subdescription {
+          color: #d1d5db;
+          line-height: 1.6;
+          margin-bottom: 24px;
+          font-size: 0.95rem;
+          padding: 16px;
+          background: rgba(255,255,255,0.03);
+          border-radius: 8px;
+          border-left: 3px solid var(--tg-primary-color);
+        }
+
+        .audit-description .yellow {
+          color: var(--tg-primary-color);
+          font-weight: 600;
+        }
+
+        .audit-description .subdescription strong {
+          color: var(--tg-primary-color);
+          font-weight: 600;
+        }
+
+        /* Responsive styles for subdescription */
+        @media (max-width: 768px) {
+          .audit-description p.subdescription {
+            font-size: 0.85rem;
+            padding: 12px;
+            margin-bottom: 20px;
+          }
+        }
+
+        @media (max-width: 425px) {
+          .audit-description p.subdescription {
+            font-size: 0.8rem;
+            padding: 10px;
+            margin-bottom: 16px;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .audit-description p.subdescription {
+            font-size: 0.75rem;
+            padding: 8px;
+            margin-bottom: 12px;
+            text-align: center;
           }
         }
 

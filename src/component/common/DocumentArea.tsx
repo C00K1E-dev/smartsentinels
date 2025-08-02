@@ -4,7 +4,12 @@ import Image from "next/image"
 
 import docShape from "@/assets/img/images/document_shape.png"
 
-const doc_data: string[] = ["Whitepaper", "Token Sale Terms", "Presentation", "Lightpaper"]
+const doc_data = [
+  { name: "Whitepaper", file: "/assets/documents/smart-sentinels-whitepaper.pdf" },
+  { name: "Token Sale Terms", file: "/assets/documents/token-sale-terms.pdf" },
+  { name: "Presentation", file: "/assets/documents/presentation.pdf" },
+  { name: "Lightpaper", file: "/assets/documents/lightpaper.pdf" }
+]
 
 const DocumentArea = () => {
    return (
@@ -29,16 +34,16 @@ const DocumentArea = () => {
                      <div className="document-wrap">
                         <h4 className="title">Read Documents</h4>
                         <ul className="list-wrap">
-                           {doc_data.map((list, i) => (
+                           {doc_data.map((doc, i) => (
                               <li key={i}>
-                                 <Link href="#">
+                                 <Link href={doc.file} target="_blank" download>
                                     <span className="icon"><i className="fas fa-file-pdf"></i></span>
-                                    {list}
+                                    {doc.name}
                                  </Link>
                               </li>
                            ))}
                         </ul>
-                        <Link href="#" className="btn">Download All</Link>
+                        <Link href="/assets/documents/smart-sentinels-whitepaper.pdf" className="btn" target="_blank" download>Download Whitepaper</Link>
                      </div>
                   </div>
                </div>
