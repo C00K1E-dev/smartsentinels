@@ -727,7 +727,7 @@ const SmartSentinelsHub = () => {
       // Use the proxy server URL
       const API_URL = process.env.NODE_ENV === 'production'
         ? 'https://86.122.74.26:5000/process-code'  // Your Express server running on your PC
-        : 'https://localhost:5000/process-code';     // Local development
+        : 'http://localhost:5000/process-code';     // Local development
       
       const response = await fetch(API_URL, {
         method: 'POST',

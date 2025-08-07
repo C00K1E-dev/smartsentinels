@@ -3,10 +3,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// HTTPS configuration
+const httpsOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'key.pem'))
+};
 
 // Environment configuration
 const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
@@ -197,6 +206,7 @@ Contract for analysis:\n\n${code}`;
     }
 });
 
-app.listen(PORT, () => {
+// Create HTTPS server
+https.createServer(httpsOptions, app).listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
