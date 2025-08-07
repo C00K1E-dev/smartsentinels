@@ -8,14 +8,19 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configure Ollama API URL based on environment
-const OLLAMA_API_URL = process.env.OLLAMA_API_URL || (() => {
-    // Check if we're in production (Vercel)
-    if (process.env.VERCEL) {
-        return 'http://86.122.74.26:11434/api/generate';  // Production AI agent
-    }
-    return 'http://localhost:11434/api/generate';  // Local development
-})();
+// Environment configuration
+const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY; // Add this to Vercel env variables
+const OLLAMA_BASE_URL = isProduction 
+    ? process.env.OLLAMA_API_URL || 'http://86.122.74.26:11434'
+    : 'http://localhost:11434';
+
+// Configure Ollama API URL
+const OLLAMA_API_URL = `${OLLAMA_BASE_URL}/api/generate`;
+
+// Log environment status
+console.log(`Environment: ${isProduction ? 'Production' : 'Development'}`);
+console.log(`API Base URL: ${OLLAMA_BASE_URL}`);
 
 // Log which URL we're using
 console.log(`Using Ollama API URL: ${OLLAMA_API_URL}`);
@@ -23,10 +28,11 @@ console.log(`Using Ollama API URL: ${OLLAMA_API_URL}`);
 // Configure CORS for different environments
 const corsOptions = {
     origin: process.env.VERCEL 
-        ? ['https://smartsentinels.vercel.app', 'https://www.smartsentinels.com']  // Add your Vercel deployment URLs
+        ? [process.env.NEXT_PUBLIC_APP_URL, 'https://smartsentinels.vercel.app']  // Use the environment variable
         : 'http://localhost:3000',  // Local development
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
 
 app.use(cors(corsOptions));
@@ -119,16 +125,25 @@ Contract for analysis:\n\n${code}`;
 
         while (!streamComplete) {
             try {
+                // Configure request headers
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(OLLAMA_API_KEY && { 'Authorization': `Bearer ${OLLAMA_API_KEY}` })
+                };
+
+                // Log request attempt (excluding sensitive data)
+                console.log(`Attempting to call Ollama API at ${OLLAMA_API_URL}`);
+                console.log(`Package Type: ${packageType}`);
+
                 const response = await axios.post(OLLAMA_API_URL, {
                     model: 'bronzesentinel',
                     prompt: getPromptForPackage(packageType, code),
                     max_tokens: getTokenLimitForPackage(packageType),
-                    stream: true // Important: Enable streaming in the request
+                    stream: true
                 }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    responseType: 'stream' // Important: Tell Axios to expect a stream
+                    headers,
+                    responseType: 'stream',
+                    timeout: 30000, // 30 second timeout
                 });
                 for await (const chunk of response.data) {
                     const decodedChunk = new TextDecoder().decode(chunk);
@@ -149,9 +164,23 @@ Contract for analysis:\n\n${code}`;
                     }
                 }
             } catch (innerError) {
-                console.error("Error within request:", innerError.response ? innerError.response.data : innerError);
+                const errorMessage = innerError.response?.data || innerError.message || 'Unknown error';
+                console.error("Error within request:", {
+                    message: errorMessage,
+                    url: OLLAMA_API_URL,
+                    status: innerError.response?.status,
+                    packageType,
+                    environment: isProduction ? 'production' : 'development'
+                });
+                
                 streamComplete = true; // Stop the loop on error
-                completedResponse += "\nError processing part of the request. Check server logs.";
+                
+                // Send a more informative error message
+                const userMessage = isProduction
+                    ? "Error connecting to AI service. Please check your network connection and try again."
+                    : `Error processing request: ${errorMessage}`;
+                    
+                completedResponse += `\n${userMessage}`;
             }
         }
 
