@@ -47,9 +47,9 @@ const Hero = () => {
                 <Link href="/hub" className="btn btn" target="_blank">
                   Contribute Now
                 </Link>
-                <Link href="/whitepaper" className="btn btn">
+                <a href="/assets/documents/smart-sentinels-whitepaper.pdf" className="btn btn" target="_blank" rel="noopener noreferrer">
                   Read Whitepaper
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -67,10 +67,10 @@ const Hero = () => {
 
           <div className="skill-feature">
             <div className="progress">
-              <div className="progress-bar" style={{ width: "32%" }}></div>
+              <div className="progress-bar" style={{ width: "0%" }}></div>
             </div>
             <div className="progress-value-max">
-              Live Progress: $144,000+ Raised
+              Live Progress: $0 Raised
             </div>
           </div>
 

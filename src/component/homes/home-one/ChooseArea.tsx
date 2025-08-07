@@ -27,27 +27,27 @@ interface ChooseDataType {
 const amount_data: AmountDataType[] = [
   {
     id: 1,
-    title: "Projected SSTL Value",
-    price: "$0.36 (Utility-Based Estimate)",
-    skill: "70%",
-    value: "50,000",
-    value_2: "180,000",
+    title: "Token Starting Price",
+    price: "$0.015 (Dynamic pricing as demand increases)",
+    skill: "15%",
+    value: "0.015",
+    value_2: "0.050+",
   },
   {
     id: 2,
-    title: "AI Agent Yield Projection",
-    price: "Avg SSTL: $0.36",
-    skill: "80%",
-    value: "60,000",
-    value_2: "216,000",
+    title: "Example: $10K Investment",
+    price: "~650,000 SSTL (early entry pricing)",
+    skill: "65%",
+    value: "10,000",
+    value_2: "650,000",
   },
   {
     id: 3,
-    title: "Estimated Breakeven",
-    price: "Q2 2026 (Based on PoUW yield)",
+    title: "Projected Token Value",
+    price: "$0.36 (Based on PoUW utility demand)",
     skill: "40%",
-    value: "20,000",
-    value_2: "80,000",
+    value: "0.015",
+    value_2: "0.36",
   },
 ];
 
@@ -104,12 +104,12 @@ const ChooseArea = () => {
           <div className="col-lg-5">
             <div className="wcu-amount-quantity">
               <div className="amount">
-                <h5 className="title">Initial Investment (Projection)</h5>
-                <p className="price">$50,000</p>
+                <h5 className="title">Example Investment</h5>
+                <p className="price">$10,000</p>
               </div>
               <div className="quantity">
-                <h5 className="title">SSTL Tokens</h5>
-                <p className="price">500,000 SSTL</p>
+                <h5 className="title">SSTL Tokens (Est.)</h5>
+                <p className="price">~650,000 SSTL*</p>
               </div>
             </div>
             <ul className="wcu-price-progress-wrap">
@@ -129,6 +129,9 @@ const ChooseArea = () => {
                 </li>
               ))}
             </ul>
+            <p className="sec-text" style={{ fontSize: '0.9rem', opacity: 0.8, marginTop: '15px' }}>
+              *Token amounts are estimates based on starting price of $0.015. Actual amounts will vary due to dynamic pricing mechanism that increases price based on demand throughout the seed round.
+            </p>
           </div>
           <div className="col-lg-6">
             {choose_data.map((item) => (

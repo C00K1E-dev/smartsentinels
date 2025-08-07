@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   LayoutDashboard,
@@ -40,6 +40,10 @@ import { bsc, bscTestnet } from "wagmi/chains";
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
+
+// Define which sections require authentication/wallet (moved outside component to prevent re-creation)
+const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs', 'ai-audit', 'seed-funding'];
+const requiresWallet = ['nfts', 'agents', 'marketplace', 'ai-audit'];
 
 // Wallet management component
 const WalletSection = () => {
@@ -680,6 +684,9 @@ const SmartSentinelsHub = () => {
   useEffect(() => {
     setIsClient(true);
     
+    // Set page title explicitly
+    document.title = 'SmartSentinels Hub | AI Mining Platform';
+    
     // Preload critical resources for better LCP
     const preloadImage = document.createElement('link');
     preloadImage.rel = 'preload';
@@ -694,10 +701,6 @@ const SmartSentinelsHub = () => {
       setAuthMessage("");
     }
   }, [userContext.user, userContext, isConnected, authMessage]);
-
-  // Define which sections require authentication/wallet
-  const protectedSections = ['nfts', 'agents', 'devices', 'marketplace', 'logs', 'ai-audit', 'seed-funding'];
-  const requiresWallet = ['nfts', 'agents', 'marketplace', 'ai-audit'];
 
   // Helper function to get button styling based on auth status
   const getButtonClass = (sectionName: string) => {
@@ -917,7 +920,7 @@ const SmartSentinelsHub = () => {
     setShowPurchaseForm(false);
   };
 
-  const showSection = (sectionName: string) => {
+  const showSection = useCallback((sectionName: string) => {
     // Clear any previous messages
     setAuthMessage("");
 
@@ -954,7 +957,7 @@ const SmartSentinelsHub = () => {
         }
       }, 100);
     }
-  };
+  }, [userContext, isConnected, activeSection]);
 
   // Handle URL parameters to automatically open sections
   useEffect(() => {
@@ -1540,6 +1543,17 @@ const SmartSentinelsHub = () => {
                         </div>
                       </div>
                     </div>
+                    {/* Token Sale Terms Button */}
+                <div style={{ textAlign: "center", marginTop: 24 }}>
+                  <a
+                    href="/assets/documents/token-sale-terms.pdf"
+                    className="btn btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Token Sale Terms
+                  </a>
+                </div>
                   </div>
                 </div>
 

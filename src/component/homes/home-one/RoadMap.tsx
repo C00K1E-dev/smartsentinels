@@ -91,7 +91,7 @@ const RoadMap = () => {
                </div>
             </div>
          </div>
-         <div className="container-fluid p-0">
+         <div className="container">
             <div className="slider-area position-relative">
                <Slider {...settings} ref={sliderRef} className="row roadMap-active2 roadmap-slider1">
                   {road_map_data.map((item) => (
