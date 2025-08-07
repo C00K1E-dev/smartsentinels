@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 5000;
 
 // HTTPS configuration
 const httpsOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'key.pem'))
+  key: fs.readFileSync(path.join(__dirname, 'ssl/key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'ssl/cert.pem'))
 };
 
 // Environment configuration
