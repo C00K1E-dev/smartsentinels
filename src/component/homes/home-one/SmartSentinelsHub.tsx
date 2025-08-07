@@ -724,33 +724,41 @@ const SmartSentinelsHub = () => {
 
     setIsAuditing(true);
     try {
-      // Use the proxy server URL with fallback
+      // Use the proxy server URL - HTTPS in production, HTTP in development
       const API_URL = process.env.NODE_ENV === 'production'
-        ? ['http://86.122.74.26:5000/process-code', 'https://86.122.74.26:5000/process-code']  // Try both HTTP and HTTPS
-        : ['http://localhost:5000/process-code'];   // Local development
+        ? ['https://86.122.74.26:5000/process-code']  // Production: HTTPS only
+        : ['http://localhost:5000/process-code'];     // Development: HTTP is fine for localhost
       
-      // Try each URL until one works
+      // Try the HTTPS endpoint with better error handling
       let response;
       let lastError;
-      for (const url of API_URL) {
-        try {
-          response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({ 
-              code: auditCode,
-              packageType: selectedPackage 
-            }),
-          });
-          if (response.ok) break;
-        } catch (error) {
-          lastError = error;
-          console.log(`Failed to connect to ${url}:`, error);
-          continue;
+      const url = API_URL[0]; // We only have one URL now (HTTPS in prod, HTTP in dev)
+      try {
+        console.log(`Attempting to connect to ${url}...`);
+        response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ 
+            code: auditCode,
+            packageType: selectedPackage 
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Server responded with ${response.status}: ${errorText}`);
+          throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
+      } catch (error) {
+        lastError = error;
+        console.error(`Failed to connect to ${url}:`, error);
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+          console.log('Network error - Please check if the server is running and accessible');
+        }
+        throw error;
       }
       
       if (!response?.ok) {
