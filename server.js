@@ -27,11 +27,9 @@ console.log(`Using Ollama API URL: ${OLLAMA_API_URL}`);
 
 // Configure CORS for different environments
 const corsOptions = {
-    origin: process.env.VERCEL 
-        ? [process.env.NEXT_PUBLIC_APP_URL, 'https://smartsentinels.vercel.app']  // Use the environment variable
-        : 'http://localhost:3000',  // Local development
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ['https://smartsentinels.net', 'https://www.smartsentinels.net', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true
 };
 

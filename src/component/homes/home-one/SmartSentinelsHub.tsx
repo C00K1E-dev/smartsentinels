@@ -724,8 +724,12 @@ const SmartSentinelsHub = () => {
 
     setIsAuditing(true);
     try {
-      // Connect to local AI agent server instead of Next.js API route
-      const response = await fetch('http://localhost:5000/process-code', {
+      // Use the proxy server URL
+      const API_URL = process.env.NODE_ENV === 'production'
+        ? 'http://86.122.74.26:5000/process-code'  // Your Express server running on your PC
+        : 'http://localhost:5000/process-code';     // Local development
+      
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -742,7 +746,7 @@ const SmartSentinelsHub = () => {
       }
 
       const data = await response.json();
-      // Parse the response to extract grade and statistics
+      // Parse the response from our server
       const lines = data.reply.split('\n');
       let grade = '';
       let stats = [];
