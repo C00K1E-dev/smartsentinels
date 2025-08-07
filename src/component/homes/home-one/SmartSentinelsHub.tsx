@@ -724,25 +724,37 @@ const SmartSentinelsHub = () => {
 
     setIsAuditing(true);
     try {
-      // Use the proxy server URL
+      // Use the proxy server URL with fallback
       const API_URL = process.env.NODE_ENV === 'production'
-        ? 'https://86.122.74.26:5000/process-code'  // Your Express server running on your PC
-        : 'http://localhost:5000/process-code';     // Local development
+        ? ['http://86.122.74.26:5000/process-code', 'https://86.122.74.26:5000/process-code']  // Try both HTTP and HTTPS
+        : ['http://localhost:5000/process-code'];   // Local development
       
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ 
-          code: auditCode,
-          packageType: selectedPackage 
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to process audit');
+      // Try each URL until one works
+      let response;
+      let lastError;
+      for (const url of API_URL) {
+        try {
+          response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ 
+              code: auditCode,
+              packageType: selectedPackage 
+            }),
+          });
+          if (response.ok) break;
+        } catch (error) {
+          lastError = error;
+          console.log(`Failed to connect to ${url}:`, error);
+          continue;
+        }
+      }
+      
+      if (!response?.ok) {
+        throw lastError || new Error('Failed to process audit');
       }
 
       const data = await response.json();
