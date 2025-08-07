@@ -27,7 +27,7 @@ console.log(`Using Ollama API URL: ${OLLAMA_API_URL}`);
 
 // Configure CORS for different environments
 const corsOptions = {
-    origin: ['https://smartsentinels.net', 'https://www.smartsentinels.net', 'http://localhost:3000'],
+    origin: '*', // Allow all origins for testing
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true
