@@ -10,7 +10,7 @@ const faq_data: DataType[] = [
       id: 1,
       page: "home_1",
       title: "How can I buy SSTL tokens?",
-      desc: "To purchase SSTL tokens, visit the fundraising section on our website. Connect your Web3 wallet (like MetaMask) and contribute BNB to receive SSTL tokens directly into your wallet.",
+      desc: "To purchase SSTL tokens, visit the fundraising section on our website. Connect your Web3 wallet (like MetaMask) and contribute USD1 to receive SSTL tokens directly into your wallet.",
    },
    {
       id: 2,
