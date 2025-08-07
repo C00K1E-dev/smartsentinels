@@ -35,7 +35,7 @@ const Docs = () => {
                                  </li>
                               ))}
                            </ul>
-                           <Link href="/assets/documents/smart-sentinels-whitepaper.pdf" target="_blank" className="btn">Download Whitepaper</Link>
+                           
                         </div>
                      </div>
                   </div>
