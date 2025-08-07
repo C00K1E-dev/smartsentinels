@@ -29,6 +29,12 @@ export default function ComingSoonOverlay() {
         <h1 className={styles.text}>
           COMING SOON! AI Agents working on delivering the most rewarding experience.
         </h1>
+        <p className={styles.notice} style={{ marginTop: 24, fontSize: 14, color: '#fff', textAlign: 'center' }}>
+          By using this platform, you agree to our
+          {' '}<a href="/assets/documents/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#f8f442', textDecoration: 'underline' }}>Terms and Conditions</a>
+          {' '}and
+          {' '}<a href="/assets/documents/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#f8f442', textDecoration: 'underline' }}>Privacy Policy</a>.
+        </p>
       </div>
     </div>
   );

@@ -62,19 +62,19 @@ const FooterOne = () => {
                            
                         </li>
                         <li>
-                           <Link href="contact.html">
+                           <a href="/assets/documents/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">
                               Terms and Condition
-                           </Link>
+                           </a>
                         </li>
                         <li>
-                           <Link href="contact.html">
+                           <a href="/assets/documents/privacy-policy.pdf" target="_blank" rel="noopener noreferrer">
                               Privacy Policy
-                           </Link>
+                           </a>
                         </li>
-                         <li>
-                           <Link href="contact.html">
+                        <li>
+                           <a href="/assets/documents/disclaimer.pdf" target="_blank" rel="noopener noreferrer">
                               Disclaimer
-                           </Link>
+                           </a>
                         </li>
                      </ul>
                   </div>
