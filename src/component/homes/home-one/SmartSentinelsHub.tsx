@@ -729,12 +729,17 @@ const SmartSentinelsHub = () => {
         ? ['https://86.122.74.26:5000/process-code']  // Production: HTTPS only
         : ['http://localhost:5000/process-code'];     // Development: HTTP is fine for localhost
       
-      // Try the HTTPS endpoint with better error handling
+      // Try the HTTPS endpoint with better error handling and extended timeout
       let response;
       let lastError;
       const url = API_URL[0]; // We only have one URL now (HTTPS in prod, HTTP in dev)
       try {
         console.log(`Attempting to connect to ${url}...`);
+        
+        // Create an AbortController for the timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutes timeout
+        
         response = await fetch(url, {
           method: 'POST',
           headers: {
@@ -745,18 +750,28 @@ const SmartSentinelsHub = () => {
             code: auditCode,
             packageType: selectedPackage 
           }),
+          signal: controller.signal
         });
+        
+        // Clear the timeout if the request completes
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
           const errorText = await response.text();
           console.error(`Server responded with ${response.status}: ${errorText}`);
           throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         lastError = error;
         console.error(`Failed to connect to ${url}:`, error);
-        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-          console.log('Network error - Please check if the server is running and accessible');
+        
+        if (error instanceof Error) {
+          if (error.name === 'AbortError') {
+            console.log('Request timed out after 5 minutes - The AI needs more time to process');
+            alert('The audit is taking longer than expected. Please try with a smaller code sample or try again later.');
+          } else if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+            console.log('Network error - Please check if the server is running and accessible');
+          }
         }
         throw error;
       }
