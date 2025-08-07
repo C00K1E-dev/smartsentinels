@@ -1,0 +1,103 @@
+.auditButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  width: 200px;
+  height: 40px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(35, 35, 35, 0.95);
+  border: 1px solid rgba(250, 249, 86, 0.3);
+  border-radius: 6px;
+  color: #faf956;
+  transition: all 0.2s ease;
+}
+
+.auditButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auditButton .spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.auditPreview {
+  background: rgba(35, 35, 35, 0.95);
+  border: 1px solid rgba(250, 249, 86, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.audit-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.audit-grade {
+  font-size: 24px;
+  font-weight: bold;
+  color: #faf956;
+  padding: 10px;
+  text-align: center;
+  background: rgba(50, 50, 50, 0.5);
+  border-radius: 8px;
+}
+
+.audit-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.stat-item {
+  background: rgba(50, 50, 50, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #f3f4f6;
+}
+
+.auditGrade {
+  font-size: 24px;
+  font-weight: bold;
+  color: #faf956;
+  margin-bottom: 15px;
+}
+
+.auditStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.statItem {
+  background: rgba(50, 50, 50, 0.5);
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.statValue {
+  font-size: 18px;
+  color: #faf956;
+}

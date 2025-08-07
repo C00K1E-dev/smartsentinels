@@ -27,6 +27,8 @@ import {
   Loader,
 } from "lucide-react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import '../../../styles/audit-button.css';
+import '../../../styles/audit-preview.css';
 import { Pie } from 'react-chartjs-2';
 import HeaderOne from "../../../layouts/headers/HeaderOne";
 import FooterOne from "../../../layouts/footers/FooterOne";
@@ -666,7 +668,12 @@ const SmartSentinelsHub = () => {
         borderWidth: 2,
       },
     },
-  };  const [auditResult, setAuditResult] = useState<string>("");
+  };  interface AuditResult {
+    full: string;
+    grade: string;
+    statistics: string[];
+  }
+  const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
   const [isAuditing, setIsAuditing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
@@ -717,10 +724,12 @@ const SmartSentinelsHub = () => {
 
     setIsAuditing(true);
     try {
-      const response = await fetch('/api/process-code', {
+      // Connect to local AI agent server instead of Next.js API route
+      const response = await fetch('http://localhost:5000/process-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ 
           code: auditCode,
@@ -733,8 +742,31 @@ const SmartSentinelsHub = () => {
       }
 
       const data = await response.json();
-      setAuditResult(data.reply);
-      setShowPayment(true);
+      // Parse the response to extract grade and statistics
+      const lines = data.reply.split('\n');
+      let grade = '';
+      let stats = [];
+      
+      // Extract grade and statistics from the formatted response
+      for (const line of lines) {
+        if (line.toLowerCase().includes('grade') && line.includes('/10')) {
+          grade = line;
+        }
+        if (line.match(/^[0-9]+\s+(critical|high|medium|low|risk|optimization|recommendation)/i)) {
+          stats.push(line);
+        }
+      }
+      
+      // Store the full result but display only grade and stats
+      setAuditResult({
+        full: data.reply,
+        grade: grade,
+        statistics: stats
+      });
+      
+      // Development mode: Skip payment and set as paid immediately
+      setIsPaid(true);
+      setShowPayment(false);
     } catch (error) {
       console.error('Audit error:', error);
       alert('Failed to process audit. Please try again.');
@@ -759,8 +791,8 @@ const SmartSentinelsHub = () => {
   };
 
   const generatePDF = () => {
-    if (!isPaid || !auditResult) {
-      alert('Payment required to download audit report.');
+    if (!auditResult?.full) {
+      alert('Please run the audit first to generate a report.');
       return;
     }
 
@@ -798,7 +830,7 @@ const SmartSentinelsHub = () => {
     
     <div class="section">
         <h3>🔍 AI Security Analysis</h3>
-        <div class="audit-content">${auditResult}</div>
+        <div class="audit-content">${auditResult.full}</div>
     </div>
     
     <div class="section">
@@ -837,7 +869,7 @@ const SmartSentinelsHub = () => {
   const resetAudit = () => {
     setAuditCode("");
     setSelectedPackage(null);
-    setAuditResult("");
+    setAuditResult(null);
     setShowPayment(false);
     setIsPaid(false);
     setTransactionHash("");
@@ -1765,15 +1797,15 @@ const SmartSentinelsHub = () => {
                       className="audit-submit-btn"
                     >
                       {isAuditing ? (
-                        <>
-                          <div className="spinner"></div>
-                          Analyzing Contract...
-                        </>
+                        <span className="loading-state">
+                          <Loader size={14} className="spinner" />
+                          <span>Analyzing</span>
+                        </span>
                       ) : (
-                        <>
-                          <Bot size={16} />
-                          Start AI Audit Analysis
-                        </>
+                        <span className="button-content">
+                          <Bot size={14} />
+                          <span>Start AI Audit</span>
+                        </span>
                       )}
                     </button>
                   </div>
@@ -1790,7 +1822,25 @@ const SmartSentinelsHub = () => {
                       <div className="preview-content">
                         <p>Package: <strong>{selectedPackage?.toUpperCase()}</strong></p>
                         <div className="preview-text">
-                          {auditResult.substring(0, 300)}...
+                          {auditResult.grade && (
+                            <div className="audit-grade">
+                              <h5>Security Grade:</h5>
+                              <div className="grade-value">{auditResult.grade}</div>
+                            </div>
+                          )}
+                          {auditResult.statistics && auditResult.statistics.length > 0 && (
+                            <div className="audit-statistics">
+                              <h5>Key Findings:</h5>
+                              <div className="stats-grid">
+                                {auditResult.statistics.map((stat, index) => (
+                                  <div key={index} className="stat-item">
+                                    <AlertTriangle size={14} className="stat-icon" />
+                                    {stat}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
